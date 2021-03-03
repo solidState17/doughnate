@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "701657276212",
+    "firebase_url": "https://doughnate-4572b-default-rtdb.firebaseio.com",
+    "project_id": "doughnate-4572b",
+    "storage_bucket": "doughnate-4572b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:701657276212:android:3fad9b0564fd2f73504f61",
+        "android_client_info": {
+          "package_name": "com.example.doughnate"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "701657276212-3ao9t28s8o37dmgdhg3fijogbdnp0j0t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDDtb3mxyfhPVpZENIYuImcadSe6I8y0xw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "701657276212-3ao9t28s8o37dmgdhg3fijogbdnp0j0t.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "701657276212-hqo8s1o4pgmqbarp9nca872c86ebmjhr.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.doughnate"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
