@@ -49,6 +49,8 @@ class _GoogleAuthState extends State<GoogleAuth> {
       photoURL = user.photoURL;
     });
 
+    photoURL = user.photoURL.toString(); // I added this
+
     final User currentUser = _firebaseAuth.currentUser;
     fireStore
         .collection("users")
