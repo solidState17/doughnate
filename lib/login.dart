@@ -66,12 +66,6 @@ class _GoogleAuthState extends State<GoogleAuth>{
   Widget build(BuildContext context){
     return Stack(
       children:[
-        // ShaderMask(shaderCallback: (rect) => LinearGradient(
-        //   begin:Alignment.bottomCenter,
-        //   end:Alignment.center,
-        //   colors:[Colors.black, Colors.transparent]
-        // ).createShader(rect),
-        // blendMode: BlendMode.darken,
         Container(
           decoration: BoxDecoration(
           image: DecorationImage(
@@ -121,26 +115,3 @@ class _GoogleAuthState extends State<GoogleAuth>{
   }
   
 }
-
-// Widget build(BuildContext context){
-//     return Scaffold(
-//       body: Center(
-//         child: Column(
-//           mainAxisAlignment: MainAxisAlignment.center,
-//           children:[
-//             SignInButton(
-//               Buttons.Google,
-//               text: "Sign up with Google",
-//               onPressed: () {},
-//               paddingTop:100,
-//             ),
-//             SizedBox(height:12),
-//             Text(
-//               "You don't have account? Sign up here",
-//               style:TextStyle(fontSize:16),
-//             )
-//           ],
-//         ),
-//       ),
-//     );
-//   }

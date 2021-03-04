@@ -6,6 +6,8 @@
 	<string>701657276212-hqo8s1o4pgmqbarp9nca872c86ebmjhr.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
 	<string>com.googleusercontent.apps.701657276212-hqo8s1o4pgmqbarp9nca872c86ebmjhr</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>701657276212-14gpu7lk2ftl94el1f4rn0e24m1pdaci.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
 	<string>AIzaSyAk_3RCc0rKj9jAkHB9dvzRwWw84gmvJvc</string>
 	<key>GCM_SENDER_ID</key>
@@ -30,5 +32,7 @@
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
 	<string>1:701657276212:ios:ce0e820d541c425f504f61</string>
+	<key>DATABASE_URL</key>
+	<string>https://doughnate-4572b-default-rtdb.firebaseio.com</string>
 </dict>
 </plist>
