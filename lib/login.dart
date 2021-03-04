@@ -6,6 +6,8 @@ import 'package:google_sign_in/google_sign_in.dart';
 // import 'package:rxdart/rxdart.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_signin_button/flutter_signin_button.dart';
+import './home.dart';
 
 String name,email,photoURL;
 
@@ -57,42 +59,88 @@ class _GoogleAuthState extends State<GoogleAuth>{
     });
     }
   });
-
-  // }
-  // if(!dBuser.exists){
-  //   users.add({
-  //     "authID": currentUser.uid,
-  //     "displayName": name,
-  //     "email": email,
-  //     "npo":"",
-  //     "profilePic": photoURL
-  //   });
-  // }
 }
 
   @override
+
   Widget build(BuildContext context){
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Doughnate"),
-      ),
-      body: Center(
-
-        child: Column(
-
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'Log in please',
-            ),
-            MaterialButton(
-              color:Colors.blue,
-              onPressed: () => signInWithGoogle(),
-            ),
-          ],
+    return Stack(
+      children:[
+        // ShaderMask(shaderCallback: (rect) => LinearGradient(
+        //   begin:Alignment.bottomCenter,
+        //   end:Alignment.center,
+        //   colors:[Colors.black, Colors.transparent]
+        // ).createShader(rect),
+        // blendMode: BlendMode.darken,
+        Container(
+          decoration: BoxDecoration(
+          image: DecorationImage(
+            image:AssetImage("assets/Doughnut.jpg"),
+            fit: BoxFit.cover,
+            colorFilter:
+            ColorFilter.mode(Colors.black54,BlendMode.darken
+            )
+          )
         ),
-      ),
+        ),
+        Scaffold(
+          backgroundColor: Colors.transparent,
+          body: Column(children: [
+            Flexible(child:Center
+            (child:Text(
+              "Doughnate",style:TextStyle(color: Colors.white,fontSize: 60,fontWeight: FontWeight.bold)
+              )
+              )
+            ),
+            Container(
+              height:50,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(50)
+              ),
+              child:Center(
+              child:SignInButton(
+                Buttons.Google,
+                  text: "Sign up with Google",
+                  onPressed: () {
+                    signInWithGoogle();
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => Home())
+                      );
+                  },)
+              ),
+            ),
+            SizedBox(
+              height:200,
+            )
+          ],
+          )
+        )
+      ]
     );
   }
+  
 }
 
+// Widget build(BuildContext context){
+//     return Scaffold(
+//       body: Center(
+//         child: Column(
+//           mainAxisAlignment: MainAxisAlignment.center,
+//           children:[
+//             SignInButton(
+//               Buttons.Google,
+//               text: "Sign up with Google",
+//               onPressed: () {},
+//               paddingTop:100,
+//             ),
+//             SizedBox(height:12),
+//             Text(
+//               "You don't have account? Sign up here",
+//               style:TextStyle(fontSize:16),
+//             )
+//           ],
+//         ),
+//       ),
+//     );
+//   }
