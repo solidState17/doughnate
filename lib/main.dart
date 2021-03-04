@@ -13,51 +13,35 @@ Future<void> main() async {
   runApp(MyApp());
 }
 
-// Future<UserCredential> signInWithGoogle() async {
-//   // Trigger the authentication flow
-//   final GoogleSignInAccount googleUser = await GoogleSignIn().signIn();
-//   // Obtain the auth details from the request
-//   final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
-//   // Create a new credential
-//   final GoogleAuthCredential credential = GoogleAuthProvider.credential(
-//     accessToken: googleAuth.accessToken,
-//     idToken: googleAuth.idToken,
-//   );
-//   // Once signed in, return the UserCredential
-//   final UserCredential: userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
-// }
-
 class MyApp extends StatelessWidget {
   final Future<FirebaseApp> _fbApp = Firebase.initializeApp();
-  // This widget is the root of your application. 
+  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-
-        primarySwatch: Colors.blue,
-
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
-      home: FutureBuilder(
-        future: _fbApp,
-        builder: (context,snapshot){
-          if(snapshot.hasError){
-            print("you have an error! ${snapshot.error.toString()}");
-            return Text("Something goes wrong!");
-          }else if(snapshot.hasData){
-            print("success!");
-            return GoogleAuth();
-          }else{
-            return Center(
-              child:CircularProgressIndicator(),
-            );
-          }
-        },
-      ) 
-      //MyHomePage(title: 'Flutter Demo Home Page'),
-    );
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+          visualDensity: VisualDensity.adaptivePlatformDensity,
+        ),
+        home: FutureBuilder(
+          future: _fbApp,
+          builder: (context, snapshot) {
+            if (snapshot.hasError) {
+              print("you have an error! ${snapshot.error.toString()}");
+              return Text("Something goes wrong!");
+            } else if (snapshot.hasData) {
+              print("success!");
+              return GoogleAuth();
+            } else {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+          },
+        )
+        //MyHomePage(title: 'Flutter Demo Home Page'),
+        );
   }
 }
 
@@ -84,16 +68,12 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
-
         title: Text(widget.title),
       ),
       body: Center(
-
         child: Column(
-
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
