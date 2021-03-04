@@ -18,8 +18,17 @@ class _HomeState extends State<Home> {
           return false;
         },
         child: Scaffold(
+          backgroundColor: const Color(0xfff5f5f5),
           appBar: AppBar(
-            title: const Text('Doughnate'),
+            elevation: 0,
+            centerTitle: true,
+            title: const Text('Doughnate', 
+              style: TextStyle(
+                fontFamily: 'Futura', 
+                fontSize: 30,
+                color: const Color(0xff707070),
+                fontWeight: FontWeight.w700,
+                )),
             automaticallyImplyLeading: false,
           ),
           // this is the home page
@@ -29,26 +38,30 @@ class _HomeState extends State<Home> {
           ),
 
           bottomNavigationBar: BottomNavigationBar(
+            // showUnselectedLabels: true,
+            backgroundColor: const Color(0xfff5f5f5),
+            elevation: 0,
             currentIndex: _currentIndex,
-            items: [
+            items: <BottomNavigationBarItem>[
               BottomNavigationBarItem(
                   icon: Icon(Icons.home),
-                  title: Text("Home"),
-                  backgroundColor: Colors.blue),
+                  label: "Home",
+              ),
               BottomNavigationBarItem(
                   icon: Icon(Icons.add_outlined),
-                  title: Text("Add"),
-                  backgroundColor: Colors.blue),
+                  label: "Add",
+              ),
               BottomNavigationBarItem(
                   icon: Icon(Icons.settings),
-                  title: Text("Settings"),
-                  backgroundColor: Colors.blue),
+                  label: "Settings",
+              ),
             ],
             onTap: (index) {
               setState(() {
                 _currentIndex = index;
               });
             },
+            selectedItemColor: const Color(0xff4d4d4d),
           ),
         ));
   }
