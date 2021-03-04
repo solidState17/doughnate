@@ -113,5 +113,4 @@ class _GoogleAuthState extends State<GoogleAuth>{
       ]
     );
   }
-  
 }
