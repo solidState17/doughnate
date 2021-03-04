@@ -8,12 +8,36 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:701657276212:android:3fad9b0564fd2f73504f61",
+        "mobilesdk_app_id": "1:701657276212:android:a0c18e7c30b1667a504f61",
         "android_client_info": {
           "package_name": "com.solidstate.doughnate"
         }
       },
       "oauth_client": [
+        {
+          "client_id": "701657276212-9c2bs9ptdmp0cff4vqmsf9vkkvq6205h.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.solidstate.doughnate",
+            "certificate_hash": "16f0c5597800796c7a2aadadf000d2006b577232"
+          }
+        },
+        {
+          "client_id": "701657276212-h9rd639l9mur9oc60vem6v1h3rficai5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.solidstate.doughnate",
+            "certificate_hash": "af6885347f765ebd8377b34ac22c6c035badcd5a"
+          }
+        },
+        {
+          "client_id": "701657276212-vbfta36gi2bdpiscq73brouqs7b9o20l.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.solidstate.doughnate",
+            "certificate_hash": "e494c3403ff6e10d2d6c9de47c05006a5ee86f9e"
+          }
+        },
         {
           "client_id": "701657276212-3ao9t28s8o37dmgdhg3fijogbdnp0j0t.apps.googleusercontent.com",
           "client_type": 3
@@ -35,7 +59,7 @@
               "client_id": "701657276212-hqo8s1o4pgmqbarp9nca872c86ebmjhr.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.solidstate.doughnate"
+                "bundle_id": "com.example.doughnate"
               }
             }
           ]
