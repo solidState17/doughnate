@@ -1,9 +1,5 @@
-// import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-// import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-// import 'package:rxdart/rxdart.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
@@ -50,7 +46,7 @@ class _GoogleAuthState extends State<GoogleAuth> {
       photoURL = user.photoURL;
     });
 
-    photoURL = user.photoURL.toString(); // I added this
+    photoURL = user.photoURL.toString();
 
     final User currentUser = _firebaseAuth.currentUser;
     fireStore
@@ -80,7 +76,7 @@ class _GoogleAuthState extends State<GoogleAuth> {
                 image: AssetImage("assets/Doughnut.jpg"),
                 fit: BoxFit.cover,
                 colorFilter:
-                    ColorFilter.mode(Colors.black54, BlendMode.darken))),
+                    ColorFilter.mode(Colors.black26, BlendMode.darken))),
       ),
       Scaffold(
           backgroundColor: Colors.transparent,
@@ -88,15 +84,18 @@ class _GoogleAuthState extends State<GoogleAuth> {
             children: [
               Flexible(
                   child: Center(
+                    child:Container(
                       child: Text("Doughnate",
                           style: TextStyle(
                               color: Colors.white,
                               fontSize: 60,
-                              fontWeight: FontWeight.bold)))),
+                              fontWeight: FontWeight.bold),
+                              ),
+                              ),
+                  ),
+                              ),          
               Container(
                 height: 50,
-                decoration:
-                    BoxDecoration(borderRadius: BorderRadius.circular(50)),
                 child: Center(
                     child: SignInButton(
                   Buttons.Google,
@@ -112,7 +111,7 @@ class _GoogleAuthState extends State<GoogleAuth> {
                 )),
               ),
               SizedBox(
-                height: 200,
+                height: 160,
               )
             ],
           ))

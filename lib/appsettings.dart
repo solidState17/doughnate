@@ -10,134 +10,98 @@ class AppSettings extends StatefulWidget {
 }
 
 class _AppSettings extends State<AppSettings> {
+  bool displayReimbursements = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        alignment: Alignment.center,
+      backgroundColor: const Color(0xfff5f5f5),
+        body: Center(
+            child: Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
         children: [
-          Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Container(
-                height: 450,
-                width: double.infinity,
-                margin: EdgeInsets.symmetric(horizontal:10),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    
-                  ],)
-              )
-            ],
-          ),
-          CustomPaint(
-            child:Container(
-              width:MediaQuery.of(context).size.width,
-              height:MediaQuery.of(context).size.width,
-            ),
-            painter: HeaderCurvedContainer(),
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Padding(
-                padding:EdgeInsets.all(20),
-                child:Text(
-                  "Profile", 
-                  style:TextStyle(
-                    fontSize: 35,
-                    letterSpacing: 1.5,
-                    color:Colors.blue,
-                    fontWeight:FontWeight.w600
-                    ),
+          Container(
+            child: Align(
+              alignment: Alignment.topLeft,
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Text("Settings",
+                style: TextStyle(
+                  fontFamily: 'Futura', 
+                  fontSize: 24,
+                  color: const Color(0xff707070),
+                  fontWeight: FontWeight.w700,
                   ),
-                 ),
-              Container(
-                padding: EdgeInsets.all(10.0),
-                width: MediaQuery.of(context).size.width/2,
-                height: MediaQuery.of(context).size.width/2,
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.white, width:5),
-                shape: BoxShape.circle,
-                color:Colors.white,
-                image: DecorationImage(
-                    fit:BoxFit.cover,
-                    image: AssetImage("assets/Doughnut.jpg")
-                    )
-              )
-              )
+                  textAlign: TextAlign.left,
+            ),
+              ),
+            ),
+            height: 80.0,
+            ),
+          CircleAvatar(
+              radius: 60, child: ClipOval(child: Image(image: NetworkImage(photoURL)))),
+          // input display name
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextFormField(
+              decoration: const InputDecoration(
+                labelText: "Name",
+                hintText: 'Enter your display name',
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: DropdownSearch(
+              items: [
+                "Prefer to be reimbursed (No NPO)",
+                "Amnesty International",
+                "Green Peace",
+                "Doctors Without Boarders"
+              ],
+              label: "NPO",
+              onChanged: print,
+              selectedItem: "Please Select",
+              validator: (String item) {
+                if (item == null)
+                  return "Required field";
+                else if (item == "Brazil")
+                  return "Invalid item";
+                else
+                  return null;
+              },
+            ),
+          ),
+          Row(
+            children: [
+              Text("Display Doughnations?"),
+              Switch(
+                  value: false,
+                  onChanged: (value) {
+                    setState(() {
+                      displayReimbursements = value;
+                    });
+                  },
+                  activeTrackColor: Colors.red,
+                  activeColor: Colors.blue)
             ],
           ),
-          Padding(padding: EdgeInsets.only(bottom: 270, left:184),
-          child: CircleAvatar(
-            backgroundColor: Colors.black54,
-            child: IconButton(
-              icon: Icon(
-                Icons.edit,
-                color: Colors.white,
-                ),
-              onPressed: () {},),
+          Spacer(),
+          Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: RaisedButton(onPressed: () {}, child: Text("Checkout out Solid State"), autofocus: true, clipBehavior: Clip.none),
           ),
-          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Align(alignment: Alignment.bottomRight, child: RaisedButton(onPressed: () {}, child: Text("Save"), autofocus: true, clipBehavior: Clip.none)),
+          )
         ],
       ),
-    );
-  } 
-}
+    )));
 
-class HeaderCurvedContainer extends CustomPainter {
-  
-  @override
-  void paint(Canvas canvas, Size size){
-    Paint paint = Paint()..color = Color(0xFF42A5F5);
-    Path path = Path()
-    ..relativeLineTo(0, 150)
-    ..quadraticBezierTo(size.width / 2, 225, size.width, 150)
-    ..relativeLineTo(0, -150)
-    ..close();
-    canvas.drawPath(path, paint);
+    // display donation ratio
+    // about team solidstate
+    // ROW ( save, cancel )
   }
-  @override
-  bool shouldRepaint(CustomPainter olddelegate) => false;
 }
-
-// Widget build(BuildContext context) {
-//     return Scaffold(
-//         body: Center(
-//             child: Column(
-//       children: [
-//         CircleAvatar(radius: 100, child: Image(image: NetworkImage(photoURL))),
-//         // input display name
-//         TextFormField(
-//           decoration: const InputDecoration(
-//             labelText: "Name",
-//             hintText: 'Enter your display name',
-//           ),
-//         ),
-//         DropdownSearch(
-//           items: [
-//             "Prefer to be reimbursed (No NPO)",
-//             "Amnesty International",
-//             "Green Peace",
-//             "Doctors Without Boarders"
-//           ],
-//           label: "NPO",
-//           onChanged: print,
-//           selectedItem: "Please Select",
-//           validator: (String item) {
-//             if (item == null)
-//               return "Required field";
-//             else if (item == "Brazil")
-//               return "Invalid item";
-//             else
-//               return null;
-//           },
-//         )
-//       ],
-//     )));
-
-//     // display donation ratio
-//     // about team solidstate
-//     // ROW ( save, cancel )
-//   }
