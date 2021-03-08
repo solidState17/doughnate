@@ -119,8 +119,8 @@ class FriendsInfo extends StatelessWidget {
   Future<void> addFriends() {
     return friendship
         .add({
-          "userA": email,
-          "userB": friendUserEmail,
+          "userA": friendUserEmail,
+          "userB": email,
           "debt": 0,
         })
         .then((value) => print("User Added"))

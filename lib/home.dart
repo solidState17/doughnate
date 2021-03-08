@@ -30,10 +30,10 @@ class _HomeState extends State<Home> {
         .where("email", isEqualTo: _email.text)
         .get()
         .then((value) {
-        if(value.docs.length > 0){
-          print("You have this friend already!");
-          return;
-          }
+      if(value.docs.length > 0){
+        print("You have this friend already!");
+        return;
+      }
       final userData = value.docs[0].data();
       db.collection("Friendship").add({
         "userA": userData['email'],
@@ -69,7 +69,7 @@ class _HomeState extends State<Home> {
       var user = friend['userA'] == email ? friend['userB'] : friend['userA'];
 
       final pulledUser =
-          await db.collection("users").where("email", isEqualTo: user).get();
+      await db.collection("users").where("email", isEqualTo: user).get();
 
       final listUser = pulledUser.docs[0].data();
       listUser['friendship'] = friend;
@@ -100,7 +100,7 @@ class _HomeState extends State<Home> {
           // this is the home page
           body: Container(
             child:
-                Center(child: _currentIndex == 2 ? AppSettings() : Friends()),
+            Center(child: _currentIndex == 2 ? AppSettings() : Friends()),
           ),
 
           bottomNavigationBar: BottomNavigationBar(
@@ -129,9 +129,9 @@ class _HomeState extends State<Home> {
               });
               if (_currentIndex == 1) {
                 Navigator.push(
-                  context, MaterialPageRoute(
-                    builder: (context) => Search(),
-                    fullscreenDialog: true,));
+                    context, MaterialPageRoute(
+                  builder: (context) => Search(),
+                  fullscreenDialog: true,));
               }
             },
             selectedItemColor: const Color(0xff4d4d4d),
