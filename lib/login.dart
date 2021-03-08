@@ -68,6 +68,9 @@ class _GoogleAuthState extends State<GoogleAuth> {
           "total_borrowed": 0,
           "total_returned": 0,
           "display_doughnated": true,
+        }).then((docRef) {
+          var newUser = fireStore.collection("users").doc(docRef.id);
+          newUser.update({"userid": docRef.id});
         });
       }
     });
