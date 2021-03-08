@@ -5,6 +5,7 @@ import './login.dart';
 
 var friendUserPic = "";
 var friendUserName = "";
+var friendUserEmail = "";
 
 class Search extends StatefulWidget {
   @override
@@ -14,21 +15,21 @@ class Search extends StatefulWidget {
 class _SearchTextFieldState extends State<Search> {
   final _controller = TextEditingController();
   final FirebaseFirestore fireStore = FirebaseFirestore.instance;
-  String name = "";
+  String frinedName = "";
   var index = 0;
-
   final pages = [DefaultPage(), FriendsInfo(), ErrorMassage(), MyEmailAdress()];
 
   searchFriends(userEmail) async {
     await fireStore
         .collection("users")
-        .where("email", isEqualTo: name)
+        .where("email", isEqualTo: frinedName)
         .get()
         .then((value) {
       setState(() {
         index = 1;
         friendUserPic = value.docs[0].data()["profilePic"];
         friendUserName = value.docs[0].data()["displayName"];
+        friendUserEmail = value.docs[0].data()["email"];
         FriendsInfo();
         print(friendUserPic);
       });
@@ -42,13 +43,13 @@ class _SearchTextFieldState extends State<Search> {
 
   Widget build(BuildContext context) {
     return Scaffold(
-        resizeToAvoidBottomInset: false,
-        appBar: AppBar(
-            title: Text("Search Friends",
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold))),
-        body: Column(children: <Widget>[
+      resizeToAvoidBottomInset: false,
+      appBar: AppBar(
+          title: Text("Search Friends",
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold))),
+      body: Column(children: <Widget>[
         Expanded(
-        child: Row(
+            child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Expanded(
@@ -57,7 +58,7 @@ class _SearchTextFieldState extends State<Search> {
                 padding: EdgeInsets.only(top: 30, left: 10),
                 child: TextField(
                     controller: _controller,
-                    onChanged: (x) => name = x,
+                    onChanged: (x) => frinedName = x,
                     decoration: InputDecoration(
                       enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.transparent),
@@ -79,17 +80,18 @@ class _SearchTextFieldState extends State<Search> {
                       onPressed: () {
                         name == email
                             ? setState(() {
-                          index = 3;
-                        })
+                                index = 3;
+                              })
                             : searchFriends(name);
                       },
                     )))
           ],
         )),
-    Container(
-    margin: EdgeInsets.only(bottom: 280),
-    child: Center(child: pages[index]),)
-    ]),
+        Container(
+          margin: EdgeInsets.only(bottom: 400),
+          child: Center(child: pages[index]),
+        )
+      ]),
     );
   }
 }
@@ -98,7 +100,7 @@ class ErrorMassage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.only(left: 20, right: 20),
-      margin: EdgeInsets.only(bottom: 200),
+      margin: EdgeInsets.only(bottom: 300),
       child: Center(
         child: Text(
           "Input email address is not registered",
@@ -111,21 +113,19 @@ class ErrorMassage extends StatelessWidget {
 }
 
 class FriendsInfo extends StatelessWidget {
-  //final add = _SearchTextFieldState();
+  CollectionReference friendship =
+      FirebaseFirestore.instance.collection('Friendship');
 
-  // CollectionReference friendship =
-  //     FirebaseFirestore.instance.collection('Friendship');
-
-  // Future<void> addFriends() {
-  //   return friendship
-  //       .add({
-  //         "userA": email,
-  //         "userB": name,
-  //         "debt": 0,
-  //       })
-  //       .then((value) => print("User Added"))
-  //       .catchError((error) => print("Failed to add user: $error"));
-  // }
+  Future<void> addFriends() {
+    return friendship
+        .add({
+          "userA": email,
+          "userB": friendUserEmail,
+          "debt": 0,
+        })
+        .then((value) => print("User Added"))
+        .catchError((error) => print("Failed to add user: $error"));
+  }
 
   Widget build(BuildContext context) {
     return Column(children: [
@@ -138,16 +138,16 @@ class FriendsInfo extends StatelessWidget {
       ),
       Container(
           child: Text(
-            friendUserName,
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-          )),
+        friendUserName,
+        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+      )),
       Container(
           margin: EdgeInsets.only(top: 20),
           width: 120,
           color: Colors.green,
           child: TextButton(
               onPressed: () {
-                print("pressed!");
+                print(addFriends());
               },
               child: Text(
                 "Add",
