@@ -11,7 +11,7 @@ import 'search.dart';
 var friends = [];
 
 class Home extends StatefulWidget {
-  String value;
+  final String value;
   Home({this.value});
 
   @override
@@ -41,6 +41,8 @@ class _HomeState extends State<Home> {
         "debt": 0,
       });
     });
+
+    await getAllFriends();
   }
 
   // this will refresh the friendship list

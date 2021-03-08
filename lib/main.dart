@@ -17,7 +17,6 @@ class MyApp extends StatelessWidget {
           primaryColor: const Color(0xfff5f5f5),
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
-        home: GoogleAuth()
-        );
+        home: GoogleAuth());
   }
 }
