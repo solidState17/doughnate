@@ -41,6 +41,8 @@ class _HomeState extends State<Home> {
         "debt": 0,
       });
     });
+
+    await getAllFriends();
   }
 
   // this will refresh the friendship list

@@ -57,14 +57,58 @@ class _GoogleAuthState extends State<GoogleAuth> {
       if (value.size == 0) {
         fireStore.collection("users").add({
           "authID": currentUser.uid,
+          "name": name,
           "displayName": name,
           "email": email,
           "npo": "",
-          "profilePic": photoURL
+          "profilePic": photoURL,
+          "total_lent": 0,
+          "total_reimbursed": 0,
+          "total_doughnated": 0,
+          "total_borrowed": 0,
+          "total_returned": 0,
+          "display_doughnated": true,
         });
       }
     });
+    await getAllFriends();
     return "success";
+  }
+
+  Future<void> getAllFriends() async {
+    var friendsArray = [];
+    friends = [];
+    final userA = await fireStore
+        .collection("Friendship")
+        .where("userA", isEqualTo: email)
+        .get();
+
+    final userB = await fireStore
+        .collection("Friendship")
+        .where("userB", isEqualTo: email)
+        .get();
+
+    userA.docs.forEach((document) {
+      friendsArray.add(document.data());
+    });
+
+    userB.docs.forEach((document) {
+      friendsArray.add(document.data());
+    });
+
+    friendsArray.forEach((friend) async {
+      var user = friend['userA'] == email ? friend['userB'] : friend['userA'];
+
+      final pulledUser = await fireStore
+          .collection("users")
+          .where("email", isEqualTo: user)
+          .get();
+
+      final listUser = pulledUser.docs[0].data();
+      listUser['friendship'] = friend;
+
+      friends.add(listUser);
+    });
   }
 
   @override
@@ -83,17 +127,18 @@ class _GoogleAuthState extends State<GoogleAuth> {
           body: Column(
             children: [
               Flexible(
-                  child: Center(
-                    child:Container(
-                      child: Text("Doughnate",
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 60,
-                              fontWeight: FontWeight.bold),
-                              ),
-                              ),
+                child: Center(
+                  child: Container(
+                    child: Text(
+                      "Doughnate",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 60,
+                          fontWeight: FontWeight.bold),
+                    ),
                   ),
-                              ),          
+                ),
+              ),
               Container(
                 height: 50,
                 child: Center(
@@ -103,8 +148,10 @@ class _GoogleAuthState extends State<GoogleAuth> {
                   onPressed: () {
                     signInWithGoogle().then((value) {
                       if (value == "success") {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) => Home(value : value)));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => Home(value: value)));
                       }
                     });
                   },
