@@ -113,11 +113,12 @@ class ErrorMassage extends StatelessWidget {
 }
 
 class FriendsInfo extends StatelessWidget {
+  final firestoreInstance = FirebaseFirestore.instance;
   CollectionReference friendship =
       FirebaseFirestore.instance.collection('Friendship');
 
-  Future<void> addFriends() {
-    return friendship
+  Future<void> addFriends() async{
+    await friendship
         .add({
           "userA": friendUserEmail,
           "userB": email,
@@ -125,6 +126,7 @@ class FriendsInfo extends StatelessWidget {
         })
         .then((value) => print("User Added"))
         .catchError((error) => print("Failed to add user: $error"));
+    await firestoreInstance.collection("users").doc(firebaseUser.uid).set({"shota":"shota"}).then((value) => print(firebaseUser.uid));
   }
 
   Widget build(BuildContext context) {
@@ -147,7 +149,7 @@ class FriendsInfo extends StatelessWidget {
           color: Colors.green,
           child: TextButton(
               onPressed: () {
-                print(addFriends());
+                addFriends();
               },
               child: Text(
                 "Add",

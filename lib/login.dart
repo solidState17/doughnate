@@ -1,11 +1,14 @@
+import 'package:doughnate/bloc/auth_bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
+import 'package:provider/provider.dart';
 import './home.dart';
 
 String name, email, photoURL;
+var firebaseUser;
 
 class GoogleAuth extends StatefulWidget {
   @override
@@ -44,6 +47,7 @@ class _GoogleAuthState extends State<GoogleAuth> {
       name = user.displayName;
       email = user.email;
       photoURL = user.photoURL;
+      firebaseUser = FirebaseAuth.instance.currentUser;
     });
 
     photoURL = user.photoURL.toString();
@@ -113,6 +117,7 @@ class _GoogleAuthState extends State<GoogleAuth> {
 
   @override
   Widget build(BuildContext context) {
+    final authBloc = Provider.of<AuthBloc>(context);
     return Stack(children: [
       Container(
         decoration: BoxDecoration(

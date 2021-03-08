@@ -71,7 +71,7 @@ class _HomeState extends State<Home> {
       var user = friend['userA'] == email ? friend['userB'] : friend['userA'];
 
       final pulledUser =
-          await db.collection("users").where("email", isEqualTo: user).get();
+      await db.collection("users").where("email", isEqualTo: user).get();
 
       final listUser = pulledUser.docs[0].data();
       listUser['friendship'] = friend;
@@ -102,7 +102,7 @@ class _HomeState extends State<Home> {
           // this is the home page
           body: Container(
             child:
-                Center(child: _currentIndex == 2 ? AppSettings() : Friends()),
+            Center(child: _currentIndex == 2 ? AppSettings() : Friends()),
           ),
 
           bottomNavigationBar: BottomNavigationBar(
