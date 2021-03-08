@@ -11,7 +11,7 @@ import 'search.dart';
 var friends = [];
 
 class Home extends StatefulWidget {
-  String value;
+  final String value;
   Home({this.value});
 
   @override
