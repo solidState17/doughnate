@@ -128,6 +128,7 @@ class _HomeState extends State<Home> {
               });
               if (_currentIndex == 1) {
                 TextEditingController email = TextEditingController();
+                print(context); // trying to figure out context
                 showDialog(
                     context: context,
                     builder: (context) => new AlertDialog(
