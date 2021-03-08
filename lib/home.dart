@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 // import './login.dart';
 // import 'package:firebase_auth/firebase_auth.dart';
@@ -5,10 +6,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'appsettings.dart';
 import 'friends.dart';
 import 'login.dart';
+import 'search.dart';
 
 var friends = [];
 
 class Home extends StatefulWidget {
+  String value;
+  Home({this.value});
+
   @override
   _HomeState createState() => _HomeState();
 }
@@ -25,6 +30,10 @@ class _HomeState extends State<Home> {
         .where("email", isEqualTo: _email.text)
         .get()
         .then((value) {
+      if (value.docs.length > 0) {
+        print("You have this friend already!");
+        return;
+      }
       final userData = value.docs[0].data();
       db.collection("Friendship").add({
         "userA": userData['email'],
@@ -38,15 +47,6 @@ class _HomeState extends State<Home> {
   Future<void> getAllFriends() async {
     var friendsArray = [];
     friends = [];
-
-    /*
-
-    userA
-    userB
-    debt
-
-    */
-
     final userA = await db
         .collection("Friendship")
         .where("userA", isEqualTo: email)
@@ -127,27 +127,12 @@ class _HomeState extends State<Home> {
                 _currentIndex = index;
               });
               if (_currentIndex == 1) {
-                TextEditingController email = TextEditingController();
-                print(context); // trying to figure out context
-                showDialog(
-                    context: context,
-                    builder: (context) => new AlertDialog(
-                            title: new Text("Enter an email address:"),
-                            content: new TextFormField(
-                              controller: _email,
-                              decoration: const InputDecoration(
-                                labelText: "email",
-                                hintText: 'Enter an email',
-                              ),
-                            ),
-                            actions: <Widget>[
-                              new TextButton(
-                                  onPressed: () {
-                                    // handleAddingFriend();
-                                    getAllFriends();
-                                  },
-                                  child: new Text("Add"))
-                            ]));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => Search(),
+                      fullscreenDialog: true,
+                    ));
               }
             },
             selectedItemColor: const Color(0xff4d4d4d),
