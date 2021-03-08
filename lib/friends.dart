@@ -1,6 +1,7 @@
 // import 'dart:math';
 import 'home.dart';
 import 'package:flutter/material.dart';
+import 'updateDebt.dart';
 
 class Friends extends StatefulWidget {
   Friends({Key key}) : super(key: key);
@@ -48,43 +49,7 @@ class _Friends extends State<Friends> {
         onTap: () {
           // WHAT IS THE ON TAP FOR? I THINK THE WIDGET CALL GOES HERE 🤔
           showDialog(
-              context: context,
-              builder: (context) => new AlertDialog(
-                    /*
-        Add an on-press to friend widget
-        display same content plus prefered NPO > as a link
-        donate and adjust debt > number input fields
-        */
-                    title: Row(
-                      children: [
-                        new Text("${friend['displayName']}"),
-                        Container(
-                            width: 120,
-                            height: 120,
-                            child: Image(
-                                image: NetworkImage(friend['profilePic']))),
-                      ],
-                    ),
-                    content: Container(
-                      height: 300,
-                      width: 300,
-                      child: Column(
-                        children: [
-                          new Text(
-                              "${friend['displayName']} supports Blah NPO"),
-                          Text(friend['friendship']['debt'].toString()),
-                          Row(
-                            children: [
-                              new TextButton(
-                                  onPressed: () {}, child: Text('Doughnate')),
-                              new TextButton(
-                                  onPressed: () {}, child: Text('Adjust Debt'))
-                            ],
-                          )
-                        ],
-                      ),
-                    ),
-                  ));
+              context: context, builder: (context) => UpdateDebt(friend: friend));
         },
         child: Row(
           children: [

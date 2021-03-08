@@ -86,6 +86,7 @@ class _HomeState extends State<Home> {
           return false;
         },
         child: Scaffold(
+          resizeToAvoidBottomInset: false,
           backgroundColor: const Color(0xfff5f5f5),
           appBar: AppBar(
             elevation: 0,
