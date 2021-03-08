@@ -11,6 +11,7 @@ class Friends extends StatefulWidget {
 class _Friends extends State<Friends> {
   @override
   Widget build(BuildContext context) {
+    print(friends);
     return Container(
       child: Column(
         children: [
