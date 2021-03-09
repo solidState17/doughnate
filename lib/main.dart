@@ -12,6 +12,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+        debugShowCheckedModeBanner: false,
         title: 'Doughnate',
         theme: ThemeData(
           primaryColor: const Color(0xfff5f5f5),
