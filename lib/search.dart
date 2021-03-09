@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/rendering.dart';
 import './login.dart';
+import 'home.dart';
 
 var friendUserPic = "";
 var friendUserName = "";
@@ -15,14 +16,14 @@ class Search extends StatefulWidget {
 class _SearchTextFieldState extends State<Search> {
   final _controller = TextEditingController();
   final FirebaseFirestore fireStore = FirebaseFirestore.instance;
-  String frinedName = "";
+  String friendName = "";
   var index = 0;
   final pages = [DefaultPage(), FriendsInfo(), ErrorMassage(), MyEmailAdress()];
 
   searchFriends(userEmail) async {
     await fireStore
         .collection("users")
-        .where("email", isEqualTo: frinedName)
+        .where("email", isEqualTo: friendName)
         .get()
         .then((value) {
       setState(() {
@@ -30,9 +31,6 @@ class _SearchTextFieldState extends State<Search> {
         friendUserPic = value.docs[0].data()["profilePic"];
         friendUserName = value.docs[0].data()["displayName"];
         friendUserEmail = value.docs[0].data()["email"];
-        fireStore.collection('users').doc(userid).update({
-          "friends": FieldValue.arrayUnion([value.docs[0].data()['userid']])
-        });
         FriendsInfo();
         print(friendUserPic);
       });
@@ -61,7 +59,7 @@ class _SearchTextFieldState extends State<Search> {
                 padding: EdgeInsets.only(top: 30, left: 10),
                 child: TextField(
                     controller: _controller,
-                    onChanged: (x) => frinedName = x,
+                    onChanged: (x) => friendName = x,
                     decoration: InputDecoration(
                       enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.transparent),
@@ -116,19 +114,40 @@ class ErrorMassage extends StatelessWidget {
 }
 
 class FriendsInfo extends StatelessWidget {
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
   CollectionReference friendship =
       FirebaseFirestore.instance.collection('Friendship');
 
-  Future<void> addFriends() {
+  Future<void> addFriends() async {
+    final userA = firestore.collection("users").doc(userid);
+    final userBData = await firestore
+        .collection('users')
+        .where("email", isEqualTo: friendUserEmail)
+        .get();
+    final userB =
+        firestore.collection("users").doc(userBData.docs[0].data()['userid']);
+
     return friendship
         .add({
           "userA": friendUserEmail,
           "userB": email,
           "debt": 0,
+          "owner": "",
+          "friendshipid": "",
         })
-        .then((value) => friendship.doc(value.id).update({
-              "friendshipid": value.id,
-            }))
+        .then((value) => {
+              friendship.doc(value.id).update({
+                "friendshipid": value.id,
+              }).then((_) {
+                userA.update({
+                  "friends": FieldValue.arrayUnion([value.id])
+                });
+                userB.update({
+                  "friends": FieldValue.arrayUnion([value.id])
+                });
+                getAllFriends();
+              })
+            })
         .catchError((error) => print("Failed to add user: $error"));
   }
 

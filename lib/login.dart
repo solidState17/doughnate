@@ -9,6 +9,49 @@ String npo = 'Prefer to be reimbursed (No NPO)';
 bool display_doughnated = true;
 String name, email, photoURL, userid;
 
+// Future<void> getAllFriends() async {
+//   friends = [];
+//   final thisUser =
+//       await FirebaseFirestore.instance.collection('users').doc(userid).get();
+
+//   var friendsArray = thisUser.data()['friends'];
+
+//   friends = friendsArray.map((userFriend) async {
+//     var user = userFriend['userA'] == email
+//         ? userFriend['userB']
+//         : userFriend['userA'];
+
+//     final friendData = await FirebaseFirestore.instance
+//         .collection('users')
+//         .where("email", isEqualTo: user)
+//         .get();
+
+//     return friendData.docs[0].data()['friendship'] = userFriend;
+//   });
+
+  // userA.docs.forEach((document) {
+  //   friendsArray.add(document.data());
+  // });
+
+  // userB.docs.forEach((document) {
+  //   friendsArray.add(document.data());
+  // });
+
+  // friendsArray.forEach((friend) async {
+  //   var user = friend['userA'] == email ? friend['userB'] : friend['userA'];
+
+  //   final pulledUser = await fireStore
+  //       .collection("users")
+  //       .where("email", isEqualTo: user)
+  //       .get();
+
+  //   final listUser = pulledUser.docs[0].data();
+  //   listUser['friendship'] = friend;
+
+  //   friends.add(listUser);
+  // });
+
+
 class GoogleAuth extends StatefulWidget {
   @override
   _GoogleAuthState createState() => _GoogleAuthState();
@@ -71,9 +114,11 @@ class _GoogleAuthState extends State<GoogleAuth> {
           "total_borrowed": 0,
           "total_returned": 0,
           "display_doughnated": display_doughnated,
+          "friends": [],
         }).then((docRef) {
           var newUser = fireStore.collection("users").doc(docRef.id);
           newUser.update({"userid": docRef.id});
+          userid = docRef.id;
         });
       }
     });
@@ -81,41 +126,47 @@ class _GoogleAuthState extends State<GoogleAuth> {
     return "success";
   }
 
-  Future<void> getAllFriends() async {
-    var friendsArray = [];
-    friends = [];
-    final userA = await fireStore
-        .collection("Friendship")
-        .where("userA", isEqualTo: email)
-        .get();
+  // Future<void> getAllFriends() async {
+  //   friends = [];
+  //   final thisUser = await fireStore.collection('users').doc(userid).get();
 
-    final userB = await fireStore
-        .collection("Friendship")
-        .where("userB", isEqualTo: email)
-        .get();
+  //   var friendsArray = thisUser.data()['friends'];
 
-    userA.docs.forEach((document) {
-      friendsArray.add(document.data());
-    });
+  //   friends = friendsArray.map((userFriend) {
+  //     var user = userFriend['userA'] == email
+  //         ? userFriend['userB']
+  //         : userFriend['userA'];
 
-    userB.docs.forEach((document) {
-      friendsArray.add(document.data());
-    });
+  //     final friendData = await fireStore
+  //         .collection('users')
+  //         .where("email", isEqualTo: user)
+  //         .get();
 
-    friendsArray.forEach((friend) async {
-      var user = friend['userA'] == email ? friend['userB'] : friend['userA'];
+  //     return friendData.docs[0].data()['friendship'] = userFriend;
+  //   });
 
-      final pulledUser = await fireStore
-          .collection("users")
-          .where("email", isEqualTo: user)
-          .get();
+  //   // userA.docs.forEach((document) {
+  //   //   friendsArray.add(document.data());
+  //   // });
 
-      final listUser = pulledUser.docs[0].data();
-      listUser['friendship'] = friend;
+  //   // userB.docs.forEach((document) {
+  //   //   friendsArray.add(document.data());
+  //   // });
 
-      friends.add(listUser);
-    });
-  }
+  //   // friendsArray.forEach((friend) async {
+  //   //   var user = friend['userA'] == email ? friend['userB'] : friend['userA'];
+
+  //   //   final pulledUser = await fireStore
+  //   //       .collection("users")
+  //   //       .where("email", isEqualTo: user)
+  //   //       .get();
+
+  //   //   final listUser = pulledUser.docs[0].data();
+  //   //   listUser['friendship'] = friend;
+
+  //   //   friends.add(listUser);
+  //   // });
+  // }
 
   @override
   Widget build(BuildContext context) {

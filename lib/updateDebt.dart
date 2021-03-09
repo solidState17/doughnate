@@ -139,69 +139,67 @@ class _UpdateDebt extends State<UpdateDebt> {
           ),
         ],
       ),
-      content: SingleChildScrollView(
-        child: Container(
-          height: 300,
-          width: 300,
-          child: Column(
-            children: [
-              new Text(
-                  "${widget.friend['displayName']} supports ${widget.friend['npo']}"),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(
-                    width: 200,
-                    height: 45,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.rectangle,
-                      color: const Color(0xffa9e19c),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Align(
-                        alignment: Alignment.center,
-                        child: Column(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(widget.friend['friendship']['debt']
-                                  .toString()),
-                            ),
-                          ],
-                        ))),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextField(
-                  controller: _enteredAmount,
-                  decoration: InputDecoration(labelText: 'Enter adjustment'),
-                  keyboardType: TextInputType.number,
-                  inputFormatters: <TextInputFormatter>[
-                    FilteringTextInputFormatter.digitsOnly
-                  ],
-                ),
-              ),
-              Spacer(),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  new TextButton(
-                      onPressed: () {
-                        print(widget.friend.friendship);
-                        adjustDebt(widget.friend.friendship['friendshipid'],
-                            _enteredAmount.text, "Doughnation");
-                      },
-                      child: Text('Doughnate')),
-                  Spacer(),
-                  new TextButton(
-                      onPressed: () {
-                        adjustDebt(widget.friend['friendship']['friendshipid'],
-                            int.parse(_enteredAmount.text), "Adjust");
-                      },
-                      child: Text('Adjust Debt'))
+      content: Container(
+        height: 300,
+        width: 300,
+        child: Column(
+          children: [
+            new Text(
+                "${widget.friend['displayName']} supports ${widget.friend['npo']}"),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                  width: 200,
+                  height: 45,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.rectangle,
+                    color: const Color(0xffa9e19c),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Align(
+                      alignment: Alignment.center,
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(widget.friend['friendship']['debt']
+                                .toString()),
+                          ),
+                        ],
+                      ))),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextField(
+                controller: _enteredAmount,
+                decoration: InputDecoration(labelText: 'Enter adjustment'),
+                keyboardType: TextInputType.number,
+                inputFormatters: <TextInputFormatter>[
+                  FilteringTextInputFormatter.digitsOnly
                 ],
-              )
-            ],
-          ),
+              ),
+            ),
+            Spacer(),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                new TextButton(
+                    onPressed: () {
+                      print(widget.friend.friendship);
+                      adjustDebt(widget.friend.friendship['friendshipid'],
+                          _enteredAmount.text, "Doughnation");
+                    },
+                    child: Text('Doughnate')),
+                Spacer(),
+                new TextButton(
+                    onPressed: () {
+                      adjustDebt(widget.friend['friendship']['friendshipid'],
+                          int.parse(_enteredAmount.text), "Adjust");
+                    },
+                    child: Text('Adjust Debt'))
+              ],
+            )
+          ],
         ),
       ),
     );
