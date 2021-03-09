@@ -6,6 +6,8 @@ import 'package:flutter_signin_button/flutter_signin_button.dart';
 import './home.dart';
 
 String name, email, photoURL;
+String npo = 'Prefer to be reimbursed (No NPO)';
+bool display_doughnated = true;
 
 class GoogleAuth extends StatefulWidget {
   @override
@@ -48,6 +50,7 @@ class _GoogleAuthState extends State<GoogleAuth> {
 
     photoURL = user.photoURL.toString();
 
+    // this is the first signup, creating user for firebase
     final User currentUser = _firebaseAuth.currentUser;
     fireStore
         .collection("users")
@@ -60,14 +63,14 @@ class _GoogleAuthState extends State<GoogleAuth> {
           "name": name,
           "displayName": name,
           "email": email,
-          "npo": "",
+          "npo": npo,
           "profilePic": photoURL,
           "total_lent": 0,
           "total_reimbursed": 0,
           "total_doughnated": 0,
           "total_borrowed": 0,
           "total_returned": 0,
-          "display_doughnated": true,
+          "display_doughnated": display_doughnated,
         });
       }
     });
