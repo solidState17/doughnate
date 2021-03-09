@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'login.dart';
+import 'home.dart';
 
 class UpdateDebt extends StatefulWidget {
   final friend;
@@ -23,6 +24,15 @@ class _UpdateDebt extends State<UpdateDebt> {
     var debtData = await debt.get();
     var debtTotal = debtData.data()['debt'];
     var debtOwner = debtData.data()['owner'];
+
+    if (debtOwner == "") {
+      if (amount < 0) {
+        debtOwner = debtData.data()['userA'] == email ? 'userA' : 'userB';
+      } else {
+        debtOwner = debtData.data()['userA'] == email ? 'userB' : 'userA';
+      }
+    }
+
     var lender = debtData.data()[debtOwner];
     var borrower = debtOwner == 'userA' ? 'userB' : 'userA';
 
@@ -46,6 +56,7 @@ class _UpdateDebt extends State<UpdateDebt> {
       "debt": debtTotal.abs(),
       "owner": debtOwner,
     });
+    await getAllFriends();
   }
 
   Future<void> handleIndividualUserUpdates(
@@ -70,51 +81,44 @@ class _UpdateDebt extends State<UpdateDebt> {
     //! Handle Doughnation cases
     if (type == "Doughnation") {
       total_doughnated =
-          lendingUser.docs[0].data()['total_doughnated'] + amount;
+          lendingUser.docs[0].data()['total_doughnated'] + amount.abs();
       total_reimbursed =
-          lendingUser.docs[0].data()['total_reimbursed'] + amount;
-      total_returned = borrowingUser.docs[0].data()['total_returned'] + amount;
+          lendingUser.docs[0].data()['total_reimbursed'] + amount.abs();
+      total_returned =
+          borrowingUser.docs[0].data()['total_reimbursed'] + amount.abs();
 
       lendUser.update({
         "total_doughnated": total_doughnated,
+        "total_reimbursed": total_reimbursed,
       });
       borrowUser.update({
         "total_returned": total_returned,
       });
-    } else {}
+    } else if (amount < 0) {
+      total_returned =
+          borrowingUser.docs[0].data()['total_returned'] + amount.abs();
+      total_reimbursed =
+          lendingUser.docs[0].data()['total_reimbursed'] + amount.abs();
 
-    // if (type == "Lend") {
-    //   total_lent = lendingData.docs[0].data()['total_lent'] + amount;
-    //   total_borrowed = borrowingData.docs[0].data()['total_borrowed'] + amount;
+      lendUser.update({
+        "total_reimbursed": total_reimbursed,
+      });
 
-    //   lendUser.update({"total_lent": total_lent});
+      borrowUser.update({
+        "total_returned": total_returned,
+      });
+    } else {
+      total_lent = lendingUser.docs[0].data()['total_lent'] + amount;
+      total_borrowed = borrowingUser.docs[0].data()['total_borrowed'] + amount;
 
-    //   borrowUser.update({"total_borrowed": total_borrowed});
-    // } else if (type == "Repay") {
-    //   total_reimbursed =
-    //       lendingData.docs[0].data()['total_reimbursed'] + amount;
-    //   total_returned = borrowingData.docs[0].data()['total_returned'] + amount;
+      lendUser.update({
+        "total_lent": total_lent,
+      });
 
-    //   lendUser.update({
-    //     "total_reimbursed": total_reimbursed,
-    //   });
-
-    //   borrowUser.update({
-    //     "total_returned": total_returned,
-    //   });
-    // } else if (type == "Doughnate") {
-    //   total_doughnated =
-    //       lendingData.docs[0].data()['total_doughnated'] + amount;
-    //   total_returned = borrowingData.docs[0].data()['total_returned'] + amount;
-
-    //   lendUser.update({
-    //     "total_doughnated": total_doughnated,
-    //   });
-
-    //   borrowUser.update({
-    //     "total_returned": total_returned,
-    //   });
-    // }
+      borrowUser.update({
+        "total_borrowed": total_borrowed,
+      });
+    }
   }
 
   Widget build(BuildContext context) {
@@ -162,8 +166,8 @@ class _UpdateDebt extends State<UpdateDebt> {
                         children: [
                           Padding(
                             padding: const EdgeInsets.all(8.0),
-                            child: Text(widget.friend['friendship']['debt']
-                                .toString()),
+                            child: Text(
+                                widget.friend['friendship']['debt'].toString()),
                           ),
                         ],
                       ))),
@@ -174,9 +178,6 @@ class _UpdateDebt extends State<UpdateDebt> {
                 controller: _enteredAmount,
                 decoration: InputDecoration(labelText: 'Enter adjustment'),
                 keyboardType: TextInputType.number,
-                inputFormatters: <TextInputFormatter>[
-                  FilteringTextInputFormatter.digitsOnly
-                ],
               ),
             ),
             Spacer(),
@@ -185,9 +186,9 @@ class _UpdateDebt extends State<UpdateDebt> {
               children: [
                 new TextButton(
                     onPressed: () {
-                      print(widget.friend.friendship);
-                      adjustDebt(widget.friend.friendship['friendshipid'],
-                          _enteredAmount.text, "Doughnation");
+                      // print(widget.friend.friendship);
+                      adjustDebt(widget.friend['friendship']['friendshipid'],
+                          int.parse(_enteredAmount.text), "Doughnation");
                     },
                     child: Text('Doughnate')),
                 Spacer(),

@@ -9,48 +9,6 @@ String npo = 'Prefer to be reimbursed (No NPO)';
 bool display_doughnated = true;
 String name, email, photoURL, userid;
 
-// Future<void> getAllFriends() async {
-//   friends = [];
-//   final thisUser =
-//       await FirebaseFirestore.instance.collection('users').doc(userid).get();
-
-//   var friendsArray = thisUser.data()['friends'];
-
-//   friends = friendsArray.map((userFriend) async {
-//     var user = userFriend['userA'] == email
-//         ? userFriend['userB']
-//         : userFriend['userA'];
-
-//     final friendData = await FirebaseFirestore.instance
-//         .collection('users')
-//         .where("email", isEqualTo: user)
-//         .get();
-
-//     return friendData.docs[0].data()['friendship'] = userFriend;
-//   });
-
-  // userA.docs.forEach((document) {
-  //   friendsArray.add(document.data());
-  // });
-
-  // userB.docs.forEach((document) {
-  //   friendsArray.add(document.data());
-  // });
-
-  // friendsArray.forEach((friend) async {
-  //   var user = friend['userA'] == email ? friend['userB'] : friend['userA'];
-
-  //   final pulledUser = await fireStore
-  //       .collection("users")
-  //       .where("email", isEqualTo: user)
-  //       .get();
-
-  //   final listUser = pulledUser.docs[0].data();
-  //   listUser['friendship'] = friend;
-
-  //   friends.add(listUser);
-  // });
-
 
 class GoogleAuth extends StatefulWidget {
   @override
@@ -125,48 +83,6 @@ class _GoogleAuthState extends State<GoogleAuth> {
     await getAllFriends();
     return "success";
   }
-
-  // Future<void> getAllFriends() async {
-  //   friends = [];
-  //   final thisUser = await fireStore.collection('users').doc(userid).get();
-
-  //   var friendsArray = thisUser.data()['friends'];
-
-  //   friends = friendsArray.map((userFriend) {
-  //     var user = userFriend['userA'] == email
-  //         ? userFriend['userB']
-  //         : userFriend['userA'];
-
-  //     final friendData = await fireStore
-  //         .collection('users')
-  //         .where("email", isEqualTo: user)
-  //         .get();
-
-  //     return friendData.docs[0].data()['friendship'] = userFriend;
-  //   });
-
-  //   // userA.docs.forEach((document) {
-  //   //   friendsArray.add(document.data());
-  //   // });
-
-  //   // userB.docs.forEach((document) {
-  //   //   friendsArray.add(document.data());
-  //   // });
-
-  //   // friendsArray.forEach((friend) async {
-  //   //   var user = friend['userA'] == email ? friend['userB'] : friend['userA'];
-
-  //   //   final pulledUser = await fireStore
-  //   //       .collection("users")
-  //   //       .where("email", isEqualTo: user)
-  //   //       .get();
-
-  //   //   final listUser = pulledUser.docs[0].data();
-  //   //   listUser['friendship'] = friend;
-
-  //   //   friends.add(listUser);
-  //   // });
-  // }
 
   @override
   Widget build(BuildContext context) {
