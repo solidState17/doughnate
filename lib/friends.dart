@@ -39,8 +39,18 @@ class _Friends extends State<Friends> {
         ),
         height: 80.0,
       ),
-      Column(children: friends.map((friend) => buildCard(friend)).toList()),
-      // ),
+      Expanded(
+            child: Column(
+                  children: [
+                    Expanded(
+                      child: ListView(
+                        shrinkWrap: true,
+                        children: friends.map((friend) => buildCard(friend)).toList(),
+                      ),
+                    ),
+            ]
+                ),
+       ),
     ],
         ),
       );
