@@ -9,7 +9,6 @@ String npo = 'Prefer to be reimbursed (No NPO)';
 bool display_doughnated = true;
 String name, email, photoURL, userid;
 
-
 class GoogleAuth extends StatefulWidget {
   @override
   _GoogleAuthState createState() => _GoogleAuthState();
@@ -58,6 +57,7 @@ class _GoogleAuthState extends State<GoogleAuth> {
         .where("authID", isEqualTo: currentUser.uid)
         .get()
         .then((value) {
+      print(value.toString());
       if (value.size == 0) {
         fireStore.collection("users").add({
           "authID": currentUser.uid,
@@ -73,14 +73,16 @@ class _GoogleAuthState extends State<GoogleAuth> {
           "total_returned": 0,
           "display_doughnated": display_doughnated,
           "friends": [],
-        }).then((docRef) {
+        }).then((docRef) async {
           var newUser = fireStore.collection("users").doc(docRef.id);
           newUser.update({"userid": docRef.id});
           userid = docRef.id;
         });
+      } else {
+        userid = value.docs[0].data()['userid'];
+        getAllFriends();
       }
     });
-    await getAllFriends();
     return "success";
   }
 

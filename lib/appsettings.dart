@@ -1,8 +1,11 @@
+import 'dart:io';
 import 'package:dropdown_search/dropdown_search.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'login.dart';
+import 'package:path/path.dart' as Path;
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:image_picker/image_picker.dart';
 
 class AppSettings extends StatefulWidget {
   AppSettings({Key key}) : super(key: key);
@@ -12,8 +15,24 @@ class AppSettings extends StatefulWidget {
 }
 
 class _AppSettings extends State<AppSettings> {
+  FirebaseStorage _store = FirebaseStorage.instance;
   // make this bool equal to current value in firebase
   TextEditingController display_name = TextEditingController(text: name);
+  File _image;
+
+  final ImagePicker picker = ImagePicker();
+
+  Future getImage() async {
+    final pickedFile = await picker.getImage(source: ImageSource.gallery);
+
+    setState(() {
+      if (pickedFile != null) {
+        _image = File(pickedFile.path);
+      } else {
+        print('No image selected.');
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,6 +71,12 @@ class _AppSettings extends State<AppSettings> {
                       image: NetworkImage(photoURL),
                     ),
                   ),
+                ),
+                OutlinedButton(
+                  onPressed: () async {
+                    await getImage();
+                  },
+                  child: Text('Upload Picture'),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
