@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
 import './home.dart';
 
-String name, email, photoURL;
 String npo = 'Prefer to be reimbursed (No NPO)';
 bool display_doughnated = true;
+String name, email, photoURL, userid;
 
 class GoogleAuth extends StatefulWidget {
   @override
@@ -71,6 +71,9 @@ class _GoogleAuthState extends State<GoogleAuth> {
           "total_borrowed": 0,
           "total_returned": 0,
           "display_doughnated": display_doughnated,
+        }).then((docRef) {
+          var newUser = fireStore.collection("users").doc(docRef.id);
+          newUser.update({"userid": docRef.id});
         });
       }
     });
