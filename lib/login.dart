@@ -5,7 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
 import './home.dart';
 
-String name, email, photoURL;
+String npo = 'Prefer to be reimbursed (No NPO)';
+bool display_doughnated = true;
+String name, email, photoURL, userid;
+
 
 class GoogleAuth extends StatefulWidget {
   @override
@@ -48,6 +51,7 @@ class _GoogleAuthState extends State<GoogleAuth> {
 
     photoURL = user.photoURL.toString();
 
+    // this is the first signup, creating user for firebase
     final User currentUser = _firebaseAuth.currentUser;
     fireStore
         .collection("users")
@@ -60,58 +64,24 @@ class _GoogleAuthState extends State<GoogleAuth> {
           "name": name,
           "displayName": name,
           "email": email,
-          "npo": "",
+          "npo": npo,
           "profilePic": photoURL,
           "total_lent": 0,
           "total_reimbursed": 0,
           "total_doughnated": 0,
           "total_borrowed": 0,
           "total_returned": 0,
-          "display_doughnated": true,
+          "display_doughnated": display_doughnated,
+          "friends": [],
         }).then((docRef) {
           var newUser = fireStore.collection("users").doc(docRef.id);
           newUser.update({"userid": docRef.id});
+          userid = docRef.id;
         });
       }
     });
     await getAllFriends();
     return "success";
-  }
-
-  Future<void> getAllFriends() async {
-    var friendsArray = [];
-    friends = [];
-    final userA = await fireStore
-        .collection("Friendship")
-        .where("userA", isEqualTo: email)
-        .get();
-
-    final userB = await fireStore
-        .collection("Friendship")
-        .where("userB", isEqualTo: email)
-        .get();
-
-    userA.docs.forEach((document) {
-      friendsArray.add(document.data());
-    });
-
-    userB.docs.forEach((document) {
-      friendsArray.add(document.data());
-    });
-
-    friendsArray.forEach((friend) async {
-      var user = friend['userA'] == email ? friend['userB'] : friend['userA'];
-
-      final pulledUser = await fireStore
-          .collection("users")
-          .where("email", isEqualTo: user)
-          .get();
-
-      final listUser = pulledUser.docs[0].data();
-      listUser['friendship'] = friend;
-
-      friends.add(listUser);
-    });
   }
 
   @override
