@@ -36,16 +36,14 @@ class _Friends extends State<Friends> {
             height: 80.0,
           ),
           Expanded(
-            child: Column(
-                  children: [
-                    Expanded(
-                      child: ListView(
-                        shrinkWrap: true,
-                        children: friends.map((friend) => buildCard(friend)).toList(),
-                      ),
-                    ),
-            ]
+            child: Column(children: [
+              Expanded(
+                child: ListView(
+                  shrinkWrap: true,
+                  children: friends.map((friend) => buildCard(friend)).toList(),
                 ),
+              ),
+            ]),
           ),
         ],
       ),
@@ -57,16 +55,16 @@ class _Friends extends State<Friends> {
       shadowColor: Colors.black,
       elevation: 15,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(15.0),
-          bottomLeft: Radius.circular(15.0),
-        )
-      ),
+          borderRadius: BorderRadius.only(
+        topLeft: Radius.circular(15.0),
+        bottomLeft: Radius.circular(15.0),
+      )),
       child: InkWell(
         onTap: () {
           // WHAT IS THE ON TAP FOR? I THINK THE WIDGET CALL GOES HERE 🤔
           showDialog(
-              context: context, builder: (context) => UpdateDebt(friend: friend));
+              context: context,
+              builder: (context) => UpdateDebt(friend: friend));
         },
         child: Container(
           padding: EdgeInsets.all(10.0),
@@ -75,8 +73,7 @@ class _Friends extends State<Friends> {
             children: [
               Expanded(
                 flex: 7,
-                child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                child: Column(crossAxisAlignment: CrossAxisAlignment.start,
                     // mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
@@ -99,29 +96,35 @@ class _Friends extends State<Friends> {
                         margin: EdgeInsets.only(top: 10),
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
-                            colors: [const Color(0xFF07dfaf),const Color(0xFF47e544) ],
-                            begin: Alignment.topRight,
-                            end:Alignment.bottomLeft
-                          ),
+                              colors: [
+                                const Color(0xFF07dfaf),
+                                const Color(0xFF47e544)
+                              ],
+                              begin: Alignment.topRight,
+                              end: Alignment.bottomLeft),
                           // color: const Color(0xffa9e19c),
                           shape: BoxShape.rectangle,
                           borderRadius: BorderRadius.all(Radius.circular(10.0)),
                         ),
-
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              "You Owe", style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold,
-                              color: Colors.white,
+                              "You Owe",
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
                             ),
+                            Text(
+                              "¥${friend['friendship']['debt'].toString()}",
+                              style: TextStyle(
+                                fontSize: 30,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
                             ),
-                            Text("¥${friend['friendship']['debt'].toString()}",
-                            style: TextStyle(
-                                fontSize: 30, fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),),
                           ],
                         ),
                       )

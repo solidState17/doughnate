@@ -74,6 +74,7 @@ class _GoogleAuthState extends State<GoogleAuth> {
         }).then((docRef) {
           var newUser = fireStore.collection("users").doc(docRef.id);
           newUser.update({"userid": docRef.id});
+          userid = docRef.id;
         });
       }
     });
