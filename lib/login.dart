@@ -112,7 +112,7 @@ class _GoogleAuthState extends State<GoogleAuth> {
                 )),
               ),
               SizedBox(
-                height: 200,
+                height: 210,
               )
             ],
           ))
