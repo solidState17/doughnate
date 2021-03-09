@@ -1,5 +1,3 @@
-import 'dart:html';
-
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'login.dart';
@@ -18,9 +16,9 @@ class _AppSettings extends State<AppSettings> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: const Color(0xfff5f5f5),
-        body: Center(
-            child: Padding(
+      backgroundColor: const Color(0xfff5f5f5),
+      body: Center(
+        child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(
             children: [
@@ -44,9 +42,13 @@ class _AppSettings extends State<AppSettings> {
                 height: 80.0,
               ),
               CircleAvatar(
-                  radius: 60,
-                  child: ClipOval(child: Image(image: NetworkImage(photoURL)))),
-              // input display name
+                radius: 60,
+                child: ClipOval(
+                  child: Image(
+                    image: NetworkImage(photoURL),
+                  ),
+                ),
+              ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextField(
@@ -58,7 +60,7 @@ class _AppSettings extends State<AppSettings> {
                   onSubmitted: (value) => {
                     setState(() {
                       name = value;
-                    })
+                    }),
                   },
                 ),
               ),
@@ -101,12 +103,14 @@ class _AppSettings extends State<AppSettings> {
                     Switch(
                         value: display_doughnated,
                         onChanged: (value) {
-                          setState(() {
-                            display_doughnated = value;
-                          });
+                          setState(
+                            () {
+                              display_doughnated = value;
+                            },
+                          );
                         },
                         activeTrackColor: Colors.red,
-                        activeColor: Colors.blue)
+                        activeColor: Colors.blue),
                   ],
                 ),
               ),
@@ -124,19 +128,21 @@ class _AppSettings extends State<AppSettings> {
                 child: TextButton(
                   onPressed: () {
                     showDialog(
-                        context: context,
-                        builder: (context) => AlertDialog(
-                                content: Container(
-                              width: 120,
-                              height: 120,
-                              child: Column(
-                                children: [
-                                  Text('About Solid State'),
-                                  Text(
-                                      "Solid State Kabushikigaishi is amazing. Founded by Shota, Nick, and Seth. Solid State exceeded 200 gajilion USD in reveneue in it's first year"),
-                                ],
-                              ),
-                            )));
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        content: Container(
+                          width: 120,
+                          height: 120,
+                          child: Column(
+                            children: [
+                              Text('About Solid State'),
+                              Text(
+                                  "Solid State Kabushikigaishi is amazing. Founded by Shota, Nick, and Seth. Solid State exceeded 200 gajilion USD in reveneue in it's first year"),
+                            ],
+                          ),
+                        ),
+                      ),
+                    );
                   },
                   child: Text("Learn about Solid State"),
                   autofocus: true,
@@ -144,6 +150,8 @@ class _AppSettings extends State<AppSettings> {
               ),
             ],
           ),
-        )));
+        ),
+      ),
+    );
   }
 }
