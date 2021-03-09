@@ -53,6 +53,27 @@ class _Friends extends State<Friends> {
   }
 
   Card buildCard(friend) {
+    toggleOwe (){
+      return Container(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              "You Owe", style: TextStyle(
+              fontSize: 18, fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+            ),
+            Text("¥${friend['friendship']['debt'].toString()}",
+              style: TextStyle(
+                fontSize: 30, fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),),
+          ],
+        ),
+      );
+    }
+
     return Card(
       shadowColor: Colors.black,
       elevation: 15,
@@ -70,7 +91,7 @@ class _Friends extends State<Friends> {
         },
         child: Container(
           padding: EdgeInsets.all(10.0),
-          height: 150,
+          height: 160,
           child: Row(
             children: [
               Expanded(
@@ -82,7 +103,7 @@ class _Friends extends State<Friends> {
                       Text(
                         friend['displayName'],
                         style: TextStyle(
-                          fontSize: 20,
+                          fontSize: 30,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -108,23 +129,8 @@ class _Friends extends State<Friends> {
                           borderRadius: BorderRadius.all(Radius.circular(10.0)),
                         ),
 
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              "You Owe", style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),
-                            ),
-                            Text("¥${friend['friendship']['debt'].toString()}",
-                            style: TextStyle(
-                                fontSize: 30, fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),),
-                          ],
-                        ),
-                      )
+                        child: toggleOwe(),
+                      ),
                     ]),
               ),
               Expanded(
@@ -143,3 +149,5 @@ class _Friends extends State<Friends> {
     );
   }
 }
+
+
