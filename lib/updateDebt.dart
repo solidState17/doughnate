@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'login.dart';
 import 'home.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class UpdateDebt extends StatefulWidget {
   final friend;
@@ -186,6 +187,8 @@ class _UpdateDebt extends State<UpdateDebt> {
               children: [
                 new TextButton(
                     onPressed: () {
+                      // this takes the user to the npo page.
+                      _launchURL(npo: widget.friend['npo']);
                       // print(widget.friend.friendship);
                       adjustDebt(widget.friend['friendship']['friendshipid'],
                           int.parse(_enteredAmount.text), "Doughnation");
@@ -206,3 +209,29 @@ class _UpdateDebt extends State<UpdateDebt> {
     );
   }
 }
+
+// NPO Link Launcher:
+
+String currentFriendsFavoriteNPO;
+
+_launchURL({String npo = "https://www.google.com/"}) async {
+  final url = npos[npo];
+  if (await canLaunch(url)) {
+    await launch(url);
+  } else {
+    throw 'Could not launch $url';
+  }
+}
+
+// Hard-coded NPO data:
+final npos = {
+  "Prefer to be reimbursed (No NPO)": "https://www.google.com/",
+  "Amnesty International": "https://www.google.com/",
+  "Green Peace": "https://www.greenpeace.org/global/",
+  "Doctors Without Boarders": "https://www.google.com/",
+  "Ashinaga": "https://www.google.com/",
+  "Scam NPO": "https://www.google.com/",
+  "No Hungry Kids": "https://www.google.com/",
+  "Your mom's NPO": "https://www.google.com/",
+  "Stop Crazy Politicians": "https://www.google.com/",
+};

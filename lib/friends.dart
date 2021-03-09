@@ -12,30 +12,28 @@ class Friends extends StatefulWidget {
 }
 
 class _Friends extends State<Friends> {
-    
-
   @override
   Widget build(BuildContext context) {
     print(friends);
     return Container(
-        child: Column(
-    children: [
-      Container(
-        child: Align(
-          alignment: Alignment.topLeft,
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Text(
-              "Friends List",
-              style: TextStyle(
-                fontFamily: 'Futura',
-                fontSize: 24,
-                color: const Color(0xff707070),
-                fontWeight: FontWeight.w700,
-              ),
-              textAlign: TextAlign.left,
-            ),
-          ))),
+      child: Column(
+        children: [
+          Container(
+              child: Align(
+                  alignment: Alignment.topLeft,
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Text(
+                      "Friends List",
+                      style: TextStyle(
+                        fontFamily: 'Futura',
+                        fontSize: 24,
+                        color: const Color(0xff707070),
+                        fontWeight: FontWeight.w700,
+                      ),
+                      textAlign: TextAlign.left,
+                    ),
+                  ))),
           Expanded(
             child: Column(children: [
               Expanded(
@@ -52,7 +50,6 @@ class _Friends extends State<Friends> {
   }
 
   Card buildCard(friend) {
-   
     return Card(
       shadowColor: Colors.black,
       elevation: 15,
