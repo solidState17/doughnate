@@ -30,6 +30,9 @@ class _SearchTextFieldState extends State<Search> {
         friendUserPic = value.docs[0].data()["profilePic"];
         friendUserName = value.docs[0].data()["displayName"];
         friendUserEmail = value.docs[0].data()["email"];
+        fireStore.collection('users').doc(userid).update({
+          "friends": FieldValue.arrayUnion([value.docs[0].data()['userid']])
+        });
         FriendsInfo();
         print(friendUserPic);
       });
@@ -123,7 +126,9 @@ class FriendsInfo extends StatelessWidget {
           "userB": email,
           "debt": 0,
         })
-        .then((value) => print("User Added"))
+        .then((value) => friendship.doc(value.id).update({
+              "friendshipid": value.id,
+            }))
         .catchError((error) => print("Failed to add user: $error"));
   }
 

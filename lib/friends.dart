@@ -62,7 +62,7 @@ class _Friends extends State<Friends> {
         },
         child: Container(
           padding: EdgeInsets.all(10.0),
-          height: 180,
+          height: 150,
           child: Row(
             children: [
               Expanded(
@@ -74,20 +74,20 @@ class _Friends extends State<Friends> {
                       Text(
                         friend['displayName'],
                         style: TextStyle(
-                          fontSize: 35,
+                          fontSize: 20,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       Text(
                         "Friends name has doughnated 100%",
                         style: TextStyle(
-                          fontSize: 19,
+                          fontSize: 14,
                         ),
                       ),
                       //If owner is user, show green card, otherwise show red card.
                       Container(
-                        height: 80.0,
-                        width: 300.0,
+                        height: 70.0,
+                        width: 220.0,
                         margin: EdgeInsets.only(top: 10),
                         decoration: BoxDecoration(
                           gradient: LinearGradient(

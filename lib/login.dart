@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
 import './home.dart';
 
-String name, email, photoURL;
+String name, email, photoURL, userid;
 
 class GoogleAuth extends StatefulWidget {
   @override
