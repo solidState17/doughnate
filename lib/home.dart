@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -6,20 +7,22 @@ import 'friends.dart';
 import 'login.dart';
 import 'search.dart';
 
-var friends = [];
+final friendsList = StreamController<List>.broadcast();
+
+Stream stream = friendsList.stream;
 
 Future<void> getAllFriends() async {
-  friends = [];
+  var friends = [];
   final thisUser =
       await FirebaseFirestore.instance.collection('users').doc(userid).get();
 
   var friendsArray = thisUser.data()['friends'];
 
-  // print(friendsArray.toString());
-
   friendsArray.forEach((userFriend) async {
-    final obj =
-        await FirebaseFirestore.instance.collection('Friendship').doc(userFriend).get();
+    final obj = await FirebaseFirestore.instance
+        .collection('Friendship')
+        .doc(userFriend)
+        .get();
     var user = obj.data()['userA'] == email
         ? obj.data()['userB']
         : obj.data()['userA'];
@@ -31,9 +34,12 @@ Future<void> getAllFriends() async {
 
     final allData = friendData.docs[0].data();
     allData['friendship'] = obj.data();
-    print(allData.toString());
     friends.add(allData);
   });
+
+  new Timer(const Duration(seconds: 4), () => friendsList.sink.add(friends));
+
+  // friendsList.sink.add(friends);
 }
 
 class Home extends StatefulWidget {
@@ -70,67 +76,6 @@ class _HomeState extends State<Home> {
 
     await getAllFriends();
   }
-
-  Future<void> getAllFriends() async {
-    friends = [];
-    final thisUser =
-        await FirebaseFirestore.instance.collection('users').doc(userid).get();
-
-    var friendsArray = thisUser.data()['friends'];
-
-    print(friendsArray.toString());
-
-    // friends = friendsArray.map((userFriend) async {
-    //   var user = userFriend['userA'] == email
-    //       ? userFriend['userB']
-    //       : userFriend['userA'];
-
-    //   final friendData = await FirebaseFirestore.instance
-    //       .collection('users')
-    //       .where("email", isEqualTo: user)
-    //       .get();
-
-    //   final allData = friendData.docs[0].data();
-    //   allData['friendship'] = userFriend;
-    //   print(allData.toString());
-    // });
-  }
-
-  // this will refresh the friendship list
-
-  // Future<void> getAllFriends() async {
-  //   var friendsArray = [];
-  //   friends = [];
-  //   final userA = await db
-  //       .collection("Friendship")
-  //       .where("userA", isEqualTo: email)
-  //       .get();
-
-  //   final userB = await db
-  //       .collection("Friendship")
-  //       .where("userB", isEqualTo: email)
-  //       .get();
-
-  //   userA.docs.forEach((document) {
-  //     friendsArray.add(document.data());
-  //   });
-
-  //   userB.docs.forEach((document) {
-  //     friendsArray.add(document.data());
-  //   });
-
-  //   friendsArray.forEach((friend) async {
-  //     var user = friend['userA'] == email ? friend['userB'] : friend['userA'];
-
-  //     final pulledUser =
-  //         await db.collection("users").where("email", isEqualTo: user).get();
-
-  //     final listUser = pulledUser.docs[0].data();
-  //     listUser['friendship'] = friend;
-
-  //     friends.add(listUser);
-  //   });
-  // }
 
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -188,6 +133,9 @@ class _HomeState extends State<Home> {
                       builder: (context) => Search(),
                       fullscreenDialog: true,
                     ));
+              }
+              if (_currentIndex == 0) {
+                getAllFriends();
               }
             },
             selectedItemColor: const Color(0xff4d4d4d),

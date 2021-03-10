@@ -1,8 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:async';
 import 'home.dart';
 import 'package:flutter/material.dart';
 import 'updateDebt.dart';
-import 'login.dart';
+import 'home.dart';
 
 class Friends extends StatefulWidget {
   Friends({Key key}) : super(key: key);
@@ -12,38 +12,52 @@ class Friends extends StatefulWidget {
 }
 
 class _Friends extends State<Friends> {
-    
+  // var friends = [];
+
+  // StreamSubscription<List> _friendController = stream.listen((value) {
+  //   friends = value;
+  // });
 
   @override
   Widget build(BuildContext context) {
-    print(friends);
     return Container(
-        child: Column(
-    children: [
-      Container(
-        child: Align(
-          alignment: Alignment.topLeft,
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Text(
-              "Friends List",
-              style: TextStyle(
-                fontFamily: 'Futura',
-                fontSize: 24,
-                color: const Color(0xff707070),
-                fontWeight: FontWeight.w700,
-              ),
-              textAlign: TextAlign.left,
-            ),
-          ))),
+      child: Column(
+        children: [
+          Container(
+              child: Align(
+                  alignment: Alignment.topLeft,
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Text(
+                      "Friends List",
+                      style: TextStyle(
+                        fontFamily: 'Futura',
+                        fontSize: 24,
+                        color: const Color(0xff707070),
+                        fontWeight: FontWeight.w700,
+                      ),
+                      textAlign: TextAlign.left,
+                    ),
+                  ))),
           Expanded(
             child: Column(children: [
               Expanded(
-                child: ListView(
-                  shrinkWrap: true,
-                  children: friends.map((friend) => buildCard(friend)).toList(),
-                ),
-              ),
+                  child: StreamBuilder<List>(
+                stream: stream,
+                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                  if (!snapshot.hasData)
+                    return Center(child: CircularProgressIndicator());
+
+                  print(snapshot.data.toString());
+                  return ListView(
+                    children: snapshot.data
+                        .map<Widget>((friend) => buildCard(friend))
+                        .toList(),
+                  );
+                },
+              )
+                  //friends.map((friend) => buildCard(friend)).toList(),
+                  ),
             ]),
           ),
         ],
@@ -52,7 +66,6 @@ class _Friends extends State<Friends> {
   }
 
   Card buildCard(friend) {
-   
     return Card(
       shadowColor: Colors.black,
       elevation: 15,

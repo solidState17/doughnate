@@ -32,7 +32,6 @@ class _SearchTextFieldState extends State<Search> {
         friendUserName = value.docs[0].data()["displayName"];
         friendUserEmail = value.docs[0].data()["email"];
         FriendsInfo();
-        print(friendUserPic);
       });
     }).catchError((err) {
       setState(() {
@@ -171,7 +170,8 @@ class FriendsInfo extends StatelessWidget {
           color: Colors.green,
           child: TextButton(
               onPressed: () {
-                print(addFriends());
+                addFriends();
+                Navigator.of(context, rootNavigator: true).pop();
               },
               child: Text(
                 "Add",
