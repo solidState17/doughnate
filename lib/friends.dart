@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'updateDebt.dart';
 import 'home.dart';
 import 'login.dart';
+import 'Debtlist.dart';
 
 class Friends extends StatefulWidget {
   Friends({Key key}) : super(key: key);
@@ -24,22 +25,28 @@ class _Friends extends State<Friends> {
     return Container(
       child: Column(
         children: [
-          Container(
-              child: Align(
-                  alignment: Alignment.topLeft,
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Text(
-                      "Friends List",
-                      style: TextStyle(
-                        fontFamily: 'Futura',
-                        fontSize: 24,
-                        color: const Color(0xff707070),
-                        fontWeight: FontWeight.w700,
+          Row(
+            children: [
+              Container(
+                  child: Align(
+                      alignment: Alignment.topLeft,
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Text(
+                          "Friends List",
+                          style: TextStyle(
+                            fontFamily: 'Futura',
+                            fontSize: 24,
+                            color: const Color(0xff707070),
+                            fontWeight: FontWeight.w700,
+                          ),
+                          textAlign: TextAlign.left,
+                        ),
                       ),
-                      textAlign: TextAlign.left,
-                    ),
-                  ))),
+                  ),
+              )
+            ],
+          ),
           Expanded(
             child: Column(children: [
               Expanded(
