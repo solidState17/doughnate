@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'updateDebt.dart';
 import 'home.dart';
 import 'login.dart';
+import 'search.dart';
 
 class Friends extends StatefulWidget {
   Friends({Key key}) : super(key: key);
@@ -29,15 +30,31 @@ class _Friends extends State<Friends> {
                   alignment: Alignment.topLeft,
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
-                    child: Text(
-                      "Friends List",
-                      style: TextStyle(
-                        fontFamily: 'Futura',
-                        fontSize: 24,
-                        color: const Color(0xff707070),
-                        fontWeight: FontWeight.w700,
-                      ),
-                      textAlign: TextAlign.left,
+                    child: Row(
+                      children: [
+                        Text(
+                          "Friends List",
+                          style: TextStyle(
+                            fontFamily: 'Futura',
+                            fontSize: 24,
+                            color: const Color(0xff707070),
+                            fontWeight: FontWeight.w700,
+                          ),
+                          textAlign: TextAlign.left,
+                        ),
+                        Spacer(),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => Search(),
+                                  fullscreenDialog: true,
+                                ));
+                          },
+                          child: Text('Add Friend'),
+                        ),
+                      ],
                     ),
                   ))),
           Expanded(
@@ -69,7 +86,6 @@ class _Friends extends State<Friends> {
   }
 
   Card buildCard(friend) {
-
     return Card(
       shadowColor: Colors.black,
       elevation: 15,
@@ -115,9 +131,15 @@ class _Friends extends State<Friends> {
                         margin: EdgeInsets.only(top: 10),
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
-                              colors: friend['friendship'][friend['friendship']['owner']] == email ?
-                                [Color(0xFF07dfaf), const Color(0xFF47e544)] : [Colors.redAccent, Colors.red]//[const Color(0xFF02b5e0), const Color(0xFF02cabd)] 
-                                ,
+                              colors: friend['friendship']
+                                          [friend['friendship']['owner']] ==
+                                      email
+                                  ? [Color(0xFF07dfaf), const Color(0xFF47e544)]
+                                  : [
+                                      Colors.redAccent,
+                                      Colors.red
+                                    ] //[const Color(0xFF02b5e0), const Color(0xFF02cabd)]
+                              ,
                               begin: Alignment.topRight,
                               end: Alignment.bottomLeft),
                           // color: const Color(0xffa9e19c),
@@ -127,20 +149,25 @@ class _Friends extends State<Friends> {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            friend['friendship'][friend['friendship']['owner']] == email ?
-                                Text("You're Owed", style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),) : Text(
-                              "You Owe",
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
-                            ),
-                            
+                            friend['friendship']
+                                        [friend['friendship']['owner']] ==
+                                    email
+                                ? Text(
+                                    "You're Owed",
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    ),
+                                  )
+                                : Text(
+                                    "You Owe",
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    ),
+                                  ),
                             Text(
                               "¥${friend['friendship']['debt'].toString()}",
                               style: TextStyle(

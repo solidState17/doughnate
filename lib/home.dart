@@ -6,6 +6,8 @@ import 'appsettings.dart';
 import 'friends.dart';
 import 'login.dart';
 import 'search.dart';
+import 'NpoList.dart';
+import 'UserProfile.dart';
 
 final friendsList = StreamController<List>.broadcast();
 
@@ -80,6 +82,9 @@ class _HomeState extends State<Home> {
   }
 
   Widget build(BuildContext context) {
+
+    final navPages = [UserProfile(), Friends(), NpoList(), AppSettings()];
+
     return WillPopScope(
         onWillPop: () async {
           return false;
@@ -102,11 +107,12 @@ class _HomeState extends State<Home> {
           // this is the home page
           body: Container(
             child:
-                Center(child: _currentIndex == 2 ? AppSettings() : Friends()),
+                Center(child: navPages[_currentIndex]),
           ),
 
           bottomNavigationBar: BottomNavigationBar(
             // showUnselectedLabels: true,
+            type: BottomNavigationBarType.fixed,
             backgroundColor: const Color(0xfff5f5f5),
             elevation: 0,
             currentIndex: _currentIndex,
@@ -116,8 +122,12 @@ class _HomeState extends State<Home> {
                 label: "Home",
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.add_outlined),
-                label: "Add",
+                icon: Icon(Icons.people_alt_rounded),
+                label: "Friends",
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.view_list_outlined),
+                label: "NPOs",
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.settings),
@@ -129,14 +139,6 @@ class _HomeState extends State<Home> {
                 _currentIndex = index;
               });
               if (_currentIndex == 1) {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => Search(),
-                      fullscreenDialog: true,
-                    ));
-              }
-              if (_currentIndex == 0) {
                 getAllFriends();
               }
             },
