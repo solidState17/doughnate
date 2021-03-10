@@ -159,11 +159,17 @@ class _UpdateDebt extends State<UpdateDebt> {
                   decoration: BoxDecoration(
                     shape: BoxShape.rectangle,
                     gradient: LinearGradient(
-                              colors: widget.friend['friendship'][widget.friend['friendship']['owner']] == email ?
-                                [Color(0xFF07dfaf), const Color(0xFF47e544)] : [Colors.redAccent, Colors.red]//[const Color(0xFF02b5e0), const Color(0xFF02cabd)] 
-                                ,
-                              begin: Alignment.topRight,
-                              end: Alignment.bottomLeft),
+                        colors: widget.friend['friendship']
+                                    [widget.friend['friendship']['owner']] ==
+                                email
+                            ? [Color(0xFF07dfaf), const Color(0xFF47e544)]
+                            : [
+                                Colors.redAccent,
+                                Colors.red
+                              ] //[const Color(0xFF02b5e0), const Color(0xFF02cabd)]
+                        ,
+                        begin: Alignment.topRight,
+                        end: Alignment.bottomLeft),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Align(
@@ -237,8 +243,6 @@ final npos = {
   "Green Peace": "https://www.greenpeace.org/global/",
   "Doctors Without Boarders": "https://www.google.com/",
   "Ashinaga": "https://www.google.com/",
-  "Scam NPO": "https://www.google.com/",
   "No Hungry Kids": "https://www.google.com/",
-  "Your mom's NPO": "https://www.google.com/",
   "Stop Crazy Politicians": "https://www.google.com/",
 };
