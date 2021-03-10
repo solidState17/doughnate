@@ -54,10 +54,11 @@ class _Friends extends State<Friends> {
       shadowColor: Colors.black,
       elevation: 15,
       shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-        topLeft: Radius.circular(15.0),
-        bottomLeft: Radius.circular(15.0),
-      )),
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(15.0),
+          bottomLeft: Radius.circular(15.0),
+        ),
+      ),
       child: InkWell(
         onTap: () {
           // WHAT IS THE ON TAP FOR? I THINK THE WIDGET CALL GOES HERE 🤔
@@ -97,13 +98,15 @@ class _Friends extends State<Friends> {
                           gradient: LinearGradient(
                               colors: [
                                 const Color(0xFF07dfaf),
-                                const Color(0xFF47e544)
+                                const Color(0xFF47e544),
                               ],
                               begin: Alignment.topRight,
                               end: Alignment.bottomLeft),
                           // color: const Color(0xffa9e19c),
                           shape: BoxShape.rectangle,
-                          borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(10.0),
+                          ),
                         ),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -134,7 +137,9 @@ class _Friends extends State<Friends> {
                 child: Container(
                   child: CircleAvatar(
                     radius: 60,
-                    backgroundImage: NetworkImage(friend['profilePic']),
+                    backgroundImage: NetworkImage(
+                      friend['profilePic'],
+                    ),
                   ),
                 ),
               ),
