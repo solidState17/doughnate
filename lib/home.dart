@@ -27,14 +27,16 @@ Future<void> getAllFriends() async {
         ? obj.data()['userB']
         : obj.data()['userA'];
 
-    final friendData = await FirebaseFirestore.instance
+    FirebaseFirestore.instance
         .collection('users')
         .where("email", isEqualTo: user)
-        .get();
-
-    final allData = friendData.docs[0].data();
-    allData['friendship'] = obj.data();
-    friends.add(allData);
+        .get()
+        .then((document) {
+      final allData = document.docs[0].data();
+      print(allData.toString());
+      allData['friendship'] = obj.data();
+      friends.add(allData);
+    });
   });
 
   new Timer(const Duration(seconds: 4), () => friendsList.sink.add(friends));

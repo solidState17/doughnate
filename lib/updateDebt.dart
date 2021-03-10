@@ -158,7 +158,12 @@ class _UpdateDebt extends State<UpdateDebt> {
                   height: 45,
                   decoration: BoxDecoration(
                     shape: BoxShape.rectangle,
-                    color: const Color(0xffa9e19c),
+                    gradient: LinearGradient(
+                              colors: widget.friend['friendship'][widget.friend['friendship']['owner']] == email ?
+                                [Color(0xFF07dfaf), const Color(0xFF47e544)] : [Colors.redAccent, Colors.red]//[const Color(0xFF02b5e0), const Color(0xFF02cabd)] 
+                                ,
+                              begin: Alignment.topRight,
+                              end: Alignment.bottomLeft),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Align(

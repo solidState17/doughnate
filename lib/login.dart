@@ -42,11 +42,13 @@ class _GoogleAuthState extends State<GoogleAuth> {
     assert(user.email != null);
     assert(user.photoURL != null);
 
-    setState(() {
-      name = user.displayName;
-      email = user.email;
-      photoURL = user.photoURL;
-    });
+    setState(
+      () {
+        name = user.displayName;
+        email = user.email;
+        photoURL = user.photoURL;
+      },
+    );
 
     photoURL = user.photoURL.toString();
 
@@ -88,16 +90,18 @@ class _GoogleAuthState extends State<GoogleAuth> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(children: [
-      Container(
-        decoration: BoxDecoration(
+    return Stack(
+      children: [
+        Container(
+          decoration: BoxDecoration(
             image: DecorationImage(
-                image: AssetImage("assets/Doughnut.jpg"),
-                fit: BoxFit.cover,
-                colorFilter:
-                    ColorFilter.mode(Colors.black26, BlendMode.darken))),
-      ),
-      Scaffold(
+              image: AssetImage("assets/Doughnut.jpg"),
+              fit: BoxFit.cover,
+              colorFilter: ColorFilter.mode(Colors.black26, BlendMode.darken),
+            ),
+          ),
+        ),
+        Scaffold(
           backgroundColor: Colors.transparent,
           body: Column(
             children: [
@@ -117,26 +121,33 @@ class _GoogleAuthState extends State<GoogleAuth> {
               Container(
                 height: 50,
                 child: Center(
-                    child: SignInButton(
-                  Buttons.Google,
-                  text: "Sign up with Google",
-                  onPressed: () {
-                    signInWithGoogle().then((value) {
-                      if (value == "success") {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => Home(value: value)));
-                      }
-                    });
-                  },
-                )),
+                  child: SignInButton(
+                    Buttons.Google,
+                    text: "Sign up with Google",
+                    onPressed: () {
+                      signInWithGoogle().then(
+                        (value) {
+                          if (value == "success") {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => Home(value: value),
+                              ),
+                            );
+                          }
+                        },
+                      );
+                    },
+                  ),
+                ),
               ),
               SizedBox(
                 height: 160,
-              )
+              ),
             ],
-          ))
-    ]);
+          ),
+        ),
+      ],
+    );
   }
 }
