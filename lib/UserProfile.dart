@@ -17,8 +17,7 @@ class UserProfile extends StatefulWidget {
 }
 
 class _UserProfile extends State<UserProfile> {
-  DocumentReference users =
-      FirebaseFirestore.instance.collection("users").doc(userid);
+  DocumentReference users = FirebaseFirestore.instance.collection("users").doc(userid);
 
   @override
   Widget build(BuildContext context) {
@@ -96,7 +95,22 @@ class _UserProfile extends State<UserProfile> {
                         return ListView.builder(
                             itemCount: snapshot.data.length,
                             itemBuilder: (context, int index) {
-                              return historyCard(snapshot.data[index]);
+                              return Dismissible(
+                                key: Key('${snapshot.data[index]}'),
+                                  background: Container(
+                                    color:Colors.red,
+                                    child: Icon(Icons.delete, color: Colors.white, size: 30,)
+                                  ),
+                                  onDismissed: (_direction){
+                                  if(_direction == DismissDirection.startToEnd){
+                                    snapshot.data.removeAt(index);
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(content: Text("TransAction was Deleted"))
+                                    );
+                                  }
+                                  },
+                                  child: historyCard(snapshot.data[index])
+                              );
                             });
                       },
                     )

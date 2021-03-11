@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
 import './home.dart';
+import 'UserProfile.dart';
 
 String npo = 'Prefer to be reimbursed (No NPO)';
 bool display_doughnated = true;
@@ -17,6 +18,7 @@ class GoogleAuth extends StatefulWidget {
 class _GoogleAuthState extends State<GoogleAuth> {
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+
   String value;
 
   final FirebaseFirestore fireStore = FirebaseFirestore.instance;
