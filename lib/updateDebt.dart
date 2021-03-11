@@ -17,6 +17,8 @@ class _UpdateDebt extends State<UpdateDebt> {
   final FirebaseFirestore db = FirebaseFirestore.instance;
   TextEditingController _enteredAmount = TextEditingController();
 
+  var friendToDelete;
+
   Future<void> adjustDebt(id, amount, type) async {
     //! Getting Document from database
     final debt = db.collection("Friendship").doc(id);
@@ -25,12 +27,42 @@ class _UpdateDebt extends State<UpdateDebt> {
     var debtData = await debt.get();
     var debtTotal = debtData.data()['debt'];
     var debtOwner = debtData.data()['owner'];
+    var friendUser = debtData.data()['userA'] == email ? debtData.data()['userB'] : debtData.data()['userA'];
 
-    if (debtOwner == "") {
-      if (amount < 0) {
+
+    if (debtOwner != 'userA' || debtOwner != 'userB') {
+      if (amount > 0) {
         debtOwner = debtData.data()['userA'] == email ? 'userA' : 'userB';
+        }
       } else {
         debtOwner = debtData.data()['userA'] == email ? 'userB' : 'userA';
+      }
+
+    if(debtData.data()[debtOwner] == email) {
+      if (amount > 0) {
+        //? lending more money
+        handleAddingTransactions(friendUser, amount, "lent");
+      } else {
+        if(type == 'doughnation') {
+          //? doughnated on your behalf
+          handleAddingTransactions(friendUser, amount, "doughnated");
+        } else {
+          //? reduced debt
+          handleAddingTransactions(friendUser, amount, "reduced");
+        }
+      }
+    } else {
+      if (amount > 0) {
+        //? borrowed money
+        handleAddingTransactions(friendUser, amount, "borrowed");
+      } else {
+        //? doughnation
+        if(type == "doughnation") {
+          handleAddingTransactions(friendUser, amount, "doughnated");
+        } else {
+          //? Payback
+          handleAddingTransactions(friendUser, amount, "returned");
+        }
       }
     }
 
@@ -58,6 +90,24 @@ class _UpdateDebt extends State<UpdateDebt> {
       "owner": debtOwner,
     });
     getAllFriends();
+  }
+
+  Future<void> handleAddingTransactions(updateEmail, amount, type) async {
+    var friendData = await db.collection('users').where("email", isEqualTo: updateEmail).get();
+    var friendEdit = db.collection('users').doc(friendData.docs[0].data()['userid']);
+
+    final timestamp = DateTime.now();
+
+      friendEdit.update({
+          "transactions": FieldValue.arrayUnion([
+            {
+              "timestamp": timestamp,
+              "amount": amount,
+              "name": name,
+              "type": type,
+            }
+          ])
+      });
   }
 
   Future<void> handleIndividualUserUpdates(
@@ -122,6 +172,57 @@ class _UpdateDebt extends State<UpdateDebt> {
     }
   }
 
+  Future<void> deleteFriend(friendId) async {
+    final friendshipId = friendId['friendship']['friendshipid'];
+    final userCollection = db.collection('users').doc(userid);
+    final friendCollection = db.collection('users').doc(friendId['userid']);
+    final friendshipCollection = db.collection('Friendship').doc(friendshipId);
+
+    final userData = await userCollection.get();
+    final friendsData = await friendCollection.get();
+
+    friendshipCollection.delete().then((value) => print('Deleted Friendship document'));
+
+    var userFriendsArray = [];
+    var friendsUserArray = [];
+
+    userData.data()['friends'].forEach((val) {
+      if(friendshipId != val) {
+        userFriendsArray.add(val);
+      }
+    });
+
+    friendsData.data()['friends'].forEach((val) {
+      if(friendshipId != val) {
+        friendsUserArray.add(val);
+      }
+    });
+
+
+    userCollection.update({
+      "friends": userFriendsArray,
+    });
+
+    friendCollection.update({
+      "friends": friendsUserArray,
+    });
+
+    getAllFriends();
+
+  }
+
+  AlertDialog confirmDelete(friendDetails) {
+    return AlertDialog(
+      title: Text('Are you sure?'),
+      content: ElevatedButton(
+        onPressed: () {
+          return deleteFriend(friendDetails);
+        },
+        child: Text('Remove Friend'),
+      )
+    );
+  }
+
   Widget build(BuildContext context) {
     return AlertDialog(
       /*
@@ -129,10 +230,13 @@ class _UpdateDebt extends State<UpdateDebt> {
         display same content plus prefered NPO > as a link
         donate and adjust debt > number input fields
         */
-      title: Column(
+      title: Stack(
         children: [
-          new Text("${widget.friend['displayName']}"),
-          Container(
+          Center(child: Container(
+            child: Column (
+              children: [
+          Text("${widget.friend['displayName']}"),
+                Container(
             width: 120,
             height: 120,
             decoration: BoxDecoration(
@@ -141,9 +245,31 @@ class _UpdateDebt extends State<UpdateDebt> {
                   fit: BoxFit.fill,
                   image: NetworkImage(widget.friend['profilePic'])),
             ),
-          ),
-        ],
-      ),
+                )
+              ]
+            )
+          )),
+          Positioned(
+            top: 0,
+            right: 0,
+            child: PopupMenuButton(
+                onSelected: (value) {
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return confirmDelete(value);
+                    });
+                  },
+                itemBuilder: (context) => [
+                  PopupMenuItem(
+                    value: widget.friend,
+                    child: Text('Remove Friend')
+                  ),
+                ],
+              ),
+              ),
+                ],
+              ),
       content: Container(
         height: 300,
         width: 300,

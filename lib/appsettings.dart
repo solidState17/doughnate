@@ -6,6 +6,7 @@ import 'login.dart';
 import 'package:path/path.dart' as Path;
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class AppSettings extends StatefulWidget {
   AppSettings({Key key}) : super(key: key);
@@ -34,6 +35,18 @@ class _AppSettings extends State<AppSettings> {
     });
   }
 
+    AlertDialog confirmDeleteAccount(userInfo) {
+    return AlertDialog(
+      title: Text('Are you sure?'),
+      content: ElevatedButton(
+        onPressed: () {
+          return print('Happy times!');
+        },
+        child: Text('Delete Account'),
+      )
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,7 +65,9 @@ class _AppSettings extends State<AppSettings> {
                       alignment: Alignment.topLeft,
                       child: Padding(
                         padding: const EdgeInsets.all(18.0),
-                        child: Text(
+                        child: Row(
+                          children: [
+                            Text(
                           "Settings",
                           style: TextStyle(
                             fontFamily: 'Futura',
@@ -62,6 +77,22 @@ class _AppSettings extends State<AppSettings> {
                           ),
                           textAlign: TextAlign.left,
                         ),
+                          PopupMenuButton(
+                onSelected: (value) {
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return confirmDeleteAccount(value);
+                    });
+                  },
+                itemBuilder: (context) => [
+                  PopupMenuItem(
+                    value: userid,
+                    child: Text('Delete Account')
+                  ),
+                ],
+              ),
+                        ]),
                       ),
                     ),
                     height: 80.0,
@@ -196,6 +227,8 @@ class _AppSettings extends State<AppSettings> {
   }
 }
 
+
+
 // maybe we should make one single class / for updating firebase after MVP that includes users, debts, etc ? 🤔
 
 Future<void> UpdateUser() async {
@@ -211,6 +244,7 @@ Future<void> UpdateUser() async {
       .then((value) => print('Save to Firebase suceeded'))
       .catchError((onError) => {print(onError)});
 }
+
 
 // Another exception was thrown: Incorrect use of
 // ParentDataWidget.
