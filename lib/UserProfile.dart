@@ -67,7 +67,8 @@ class _UserProfile extends State<UserProfile> {
                             Text("Owed",
                                 style: TextStyle(
                                     fontSize: 25, fontWeight: FontWeight.bold)),
-                            Text('¥${snapshot.data["total_lent"]}',
+                            Text(
+                                '¥${snapshot.data["total_lent"]}',
                                 style: TextStyle(
                                     fontSize: 20, fontWeight: FontWeight.bold)),
                           ],
@@ -76,6 +77,33 @@ class _UserProfile extends State<UserProfile> {
                     ),
                   );
                 }),
+            Container(
+              width: MediaQuery. of(context). size. width,
+              margin: EdgeInsets.only(top:20, bottom:10),
+              child: Text("Recent TransActions", style: TextStyle(
+                fontWeight: FontWeight.bold, fontSize: 20,
+              ),),
+            ),
+            Expanded(
+              child: Column(children: [
+                Expanded(
+                    child: StreamBuilder<List>(
+                      stream: stream,
+                      builder: (BuildContext context, AsyncSnapshot snapshot) {
+                        if (!snapshot.hasData)
+                          return Center(child: CircularProgressIndicator());
+
+                        return ListView.builder(
+                            itemCount: snapshot.data.length,
+                            itemBuilder: (context, int index) {
+                              return historyCard(snapshot.data[index]);
+                            });
+                      },
+                    )
+                  //friends.map((friend) => buildCard(friend)).toList(),
+                ),
+              ]),
+            ),
           ],
         ),
       ),
@@ -104,7 +132,7 @@ Card historyCard(friend) {
                 child: Row(
                   children: [
                     Expanded(
-                      flex: 3,
+                      flex: 4,
                       child: Container(
                         child: CircleAvatar(
                           radius: 30,
@@ -112,27 +140,31 @@ Card historyCard(friend) {
                         ),
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 8.0),
-                      child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          // mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              "2021-1-15 at 7pm",
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold,
+                    Expanded(
+                      flex:7,
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 8.0),
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            // mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                "2021-1-15 at 7pm",
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
-                            ),
-                            Text(
-                              "${friend['displayName']} lent you money!",
-                              style: TextStyle(
-                                fontSize: 18,
+                              Text(
+                                "${friend['displayName']}",
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold
+                                ),
                               ),
-                            ),
-                          ]),
+                            ]),
+                      ),
                     ),
                   ],
                 ),
