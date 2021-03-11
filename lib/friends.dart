@@ -1,10 +1,13 @@
+
 import 'dart:async';
+import 'package:doughnate/debtHistory/Debtlist.dart';
+
 import 'home.dart';
 import 'package:flutter/material.dart';
 import 'updateDebt.dart';
 import 'home.dart';
 import 'login.dart';
-import 'Debtlist.dart';
+import 'search.dart';
 
 class Friends extends StatefulWidget {
   Friends({Key key}) : super(key: key);
@@ -25,14 +28,14 @@ class _Friends extends State<Friends> {
     return Container(
       child: Column(
         children: [
-          Row(
-            children: [
-              Container(
-                  child: Align(
-                      alignment: Alignment.topLeft,
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Text(
+          Container(
+              child: Align(
+                  alignment: Alignment.topLeft,
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Row(
+                      children: [
+                        Text(
                           "Friends List",
                           style: TextStyle(
                             fontFamily: 'Futura',
@@ -42,32 +45,42 @@ class _Friends extends State<Friends> {
                           ),
                           textAlign: TextAlign.left,
                         ),
-                      ),
-                  ),
-              )
-            ],
-          ),
+                        Spacer(),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => Search(),
+                                  fullscreenDialog: true,
+                                ));
+                          },
+                          child: Text('Add Friend'),
+                        ),
+                      ],
+                    ),
+                  ))),
           Expanded(
             child: Column(children: [
               Expanded(
                   child: StreamBuilder<List>(
-                stream: stream,
-                builder: (BuildContext context, AsyncSnapshot snapshot) {
-                  if (!snapshot.hasData)
-                    return Center(child: CircularProgressIndicator());
+                    stream: stream,
+                    builder: (BuildContext context, AsyncSnapshot snapshot) {
+                      if (!snapshot.hasData)
+                        return Center(child: CircularProgressIndicator());
 
-                  return ListView.builder(
-                      itemCount: snapshot.data.length,
-                      itemBuilder: (context, int index) {
-                        return buildCard(snapshot.data[index]);
-                        // snapshot.data
-                        //   .map<Widget>((friend) => buildCard(friend))
-                        //   .toList()
-                      });
-                },
-              )
-                  //friends.map((friend) => buildCard(friend)).toList(),
-                  ),
+                      return ListView.builder(
+                          itemCount: snapshot.data.length,
+                          itemBuilder: (context, int index) {
+                            return buildCard(snapshot.data[index]);
+                            // snapshot.data
+                            //   .map<Widget>((friend) => buildCard(friend))
+                            //   .toList()
+                          });
+                    },
+                  )
+                //friends.map((friend) => buildCard(friend)).toList(),
+              ),
             ]),
           ),
         ],
@@ -76,15 +89,14 @@ class _Friends extends State<Friends> {
   }
 
   Card buildCard(friend) {
-
     return Card(
       shadowColor: Colors.black,
       elevation: 15,
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
-        topLeft: Radius.circular(15.0),
-        bottomLeft: Radius.circular(15.0),
-      )),
+            topLeft: Radius.circular(15.0),
+            bottomLeft: Radius.circular(15.0),
+          )),
       child: InkWell(
         onTap: () {
           // WHAT IS THE ON TAP FOR? I THINK THE WIDGET CALL GOES HERE 🤔
@@ -122,9 +134,15 @@ class _Friends extends State<Friends> {
                         margin: EdgeInsets.only(top: 10),
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
-                              colors: friend['friendship'][friend['friendship']['owner']] == email ?
-                                [Color(0xFF07dfaf), const Color(0xFF47e544)] : [Colors.redAccent, Colors.red]//[const Color(0xFF02b5e0), const Color(0xFF02cabd)] 
-                                ,
+                              colors: friend['friendship']
+                              [friend['friendship']['owner']] ==
+                                  email
+                                  ? [Color(0xFF07dfaf), const Color(0xFF47e544)]
+                                  : [
+                                Colors.redAccent,
+                                Colors.red
+                              ] //[const Color(0xFF02b5e0), const Color(0xFF02cabd)]
+                              ,
                               begin: Alignment.topRight,
                               end: Alignment.bottomLeft),
                           // color: const Color(0xffa9e19c),
@@ -134,12 +152,18 @@ class _Friends extends State<Friends> {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            friend['friendship'][friend['friendship']['owner']] == email ?
-                                Text("You're Owed", style: TextStyle(
+                            friend['friendship']
+                            [friend['friendship']['owner']] ==
+                                email
+                                ? Text(
+                              "You're Owed",
+                              style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
                                 color: Colors.white,
-                              ),) : Text(
+                              ),
+                            )
+                                : Text(
                               "You Owe",
                               style: TextStyle(
                                 fontSize: 18,
@@ -147,7 +171,6 @@ class _Friends extends State<Friends> {
                                 color: Colors.white,
                               ),
                             ),
-                            
                             Text(
                               "¥${friend['friendship']['debt'].toString()}",
                               style: TextStyle(

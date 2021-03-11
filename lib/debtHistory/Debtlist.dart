@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../pie_chart_view.dart';
 
 class DebtList extends StatefulWidget{
   @override
@@ -16,13 +17,15 @@ class _DebtList extends State<DebtList> {
         title: Text("shota", style: TextStyle(
           fontSize: 25,
             fontFamily: 'Futura',
-
-        ),),
+        ),
+        ),
       ),
-      body: Container(
-        height: 250,
-        color: Colors.white,
-      ),
+      body: Expanded(
+        child: Row(
+          children: <Widget>[
+          ],
+        ),
+      )
     );
   }
 
