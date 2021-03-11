@@ -77,6 +77,7 @@ class _AppSettings extends State<AppSettings> {
                           ),
                           textAlign: TextAlign.left,
                         ),
+                        Spacer(),
                           PopupMenuButton(
                 onSelected: (value) {
                   showDialog(
@@ -162,29 +163,6 @@ class _AppSettings extends State<AppSettings> {
                       ),
                     ),
                   ),
-                  // Padding(
-                  //   padding: const EdgeInsets.all(8.0),
-                  //   child: DropdownSearch(
-                  //     items: <List>() {
-                  //       return ['🔥', '🍩'];
-                  //     }(),
-                  //     label: "NPO",
-                  //     onChanged: (value) {
-                  //       setState(() {
-                  //         npo = value;
-                  //       });
-                  //     },
-                  //     selectedItem: npo,
-                  //     validator: (String item) {
-                  //       if (item == null)
-                  //         return "Required field";
-                  //       else if (item == "Brazil")
-                  //         return "Invalid item";
-                  //       else
-                  //         return null;
-                  //     },
-                  //   ),
-                  // ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Row(
