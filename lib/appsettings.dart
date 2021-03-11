@@ -6,6 +6,7 @@ import 'login.dart';
 import 'package:path/path.dart' as Path;
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
+import 'NpoList.dart';
 
 class AppSettings extends StatefulWidget {
   AppSettings({Key key}) : super(key: key);
@@ -97,33 +98,63 @@ class _AppSettings extends State<AppSettings> {
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: DropdownSearch(
-                      items: [
-                        "Prefer to be reimbursed (No NPO)",
-                        "Amnesty International",
-                        "Green Peace",
-                        "Doctors Without Boarders",
-                        "Ashinaga",
-                        "No Hungry Kids",
-                        "Stop Crazy Politicians"
-                      ],
-                      label: "NPO",
-                      onChanged: (value) {
-                        setState(() {
-                          npo = value;
-                        });
-                      },
-                      selectedItem: npo,
-                      validator: (String item) {
-                        if (item == null)
-                          return "Required field";
-                        else if (item == "Brazil")
-                          return "Invalid item";
-                        else
-                          return null;
-                      },
+                    child: Expanded(
+                      child: StreamBuilder<QuerySnapshot>(
+                        stream: FirebaseFirestore.instance
+                            .collection('npos')
+                            .snapshots(),
+                        builder: (BuildContext content,
+                            AsyncSnapshot<QuerySnapshot> snapshot) {
+                          if (!snapshot.hasData) return Text('No NPOs');
+                          return DropdownSearch(
+                            label: "NPO",
+                            onChanged: (value) {
+                              setState(() {
+                                npo = value;
+                              });
+                            },
+                            selectedItem: npo,
+                            validator: (item) {
+                              if (item == null)
+                                return "Required field";
+                              else if (item == "Brazil")
+                                return "Invalid item";
+                              else
+                                return null;
+                            },
+                            items: snapshot.data.docs.map(
+                              (doc) {
+                                return doc['name'];
+                              },
+                            ).toList(),
+                          );
+                        },
+                      ),
                     ),
                   ),
+                  // Padding(
+                  //   padding: const EdgeInsets.all(8.0),
+                  //   child: DropdownSearch(
+                  //     items: <List>() {
+                  //       return ['🔥', '🍩'];
+                  //     }(),
+                  //     label: "NPO",
+                  //     onChanged: (value) {
+                  //       setState(() {
+                  //         npo = value;
+                  //       });
+                  //     },
+                  //     selectedItem: npo,
+                  //     validator: (String item) {
+                  //       if (item == null)
+                  //         return "Required field";
+                  //       else if (item == "Brazil")
+                  //         return "Invalid item";
+                  //       else
+                  //         return null;
+                  //     },
+                  //   ),
+                  // ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Row(
