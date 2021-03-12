@@ -7,6 +7,10 @@ import 'login.dart';
 import 'pie_chart_view.dart';
 import 'package:intl/intl.dart';
 
+var total_borrowed = 0;
+var total_lent = 0;
+var totalAmount = 0;
+
 class UserProfile extends StatefulWidget {
   UserProfile({Key key}) : super(key: key);
 
@@ -23,7 +27,7 @@ class _UserProfile extends State<UserProfile> {
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
     final timestamp = DateTime.now();
-    print(userid);
+
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 15),
@@ -35,6 +39,10 @@ class _UserProfile extends State<UserProfile> {
                   if (!snapshot.hasData || !snapshot.data.exists) {
                     return Center(child: Text("No Transactions"));
                   }
+                  total_borrowed = snapshot.data["total_borrowed"];
+                  total_lent = snapshot.data["total_lent"];
+                  totalAmount = -total_borrowed + total_lent;
+
                   return Container(
                     height: height * 0.3,
                     child: Row(
@@ -48,7 +56,7 @@ class _UserProfile extends State<UserProfile> {
                                   fontSize: 25, fontWeight: FontWeight.bold),
                             ),
                             Text(
-                              '¥${snapshot.data["total_borrowed"]}',
+                              '¥${total_borrowed}',
                               style: TextStyle(
                                   fontSize: 20, fontWeight: FontWeight.bold),
                             ),
@@ -56,10 +64,10 @@ class _UserProfile extends State<UserProfile> {
                         ),
                         PieChartView(
                           categories: [
+                            Category("Owed",
+                                amount: snapshot.data["total_lent"]),
                             Category("Owe",
                                 amount: snapshot.data["total_borrowed"]),
-                            Category("Owed",
-                                amount: snapshot.data["total_lent"])
                           ],
                         ),
                         Column(
@@ -69,7 +77,7 @@ class _UserProfile extends State<UserProfile> {
                             Text("Owed",
                                 style: TextStyle(
                                     fontSize: 25, fontWeight: FontWeight.bold)),
-                            Text("¥${snapshot.data['total_lent']}",
+                            Text("¥${total_lent}",
                                 style: TextStyle(
                                     fontSize: 20, fontWeight: FontWeight.bold)),
                           ],
@@ -89,6 +97,7 @@ class _UserProfile extends State<UserProfile> {
                 ),
               ),
             ),
+            // For test container you can delete this whenever.
             // Container(
             //     width: MediaQuery.of(context).size.width,
             //     margin: EdgeInsets.only(top: 20, bottom: 10),
@@ -118,10 +127,8 @@ class _UserProfile extends State<UserProfile> {
                   builder: (BuildContext context,
                       AsyncSnapshot<DocumentSnapshot> snapshot) {
                     if (!snapshot.hasData || !snapshot.data.exists){
-                      print(snapshot.data.exists);
                       return Center(child: CircularProgressIndicator());
                     }
-                    print(snapshot.data.exists);
                     return ListView.builder(
                         itemCount: snapshot.data['transactions'].length,
                         itemBuilder: (context, int index) {
