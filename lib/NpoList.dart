@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'package:firebase_auth/firebase_auth.dart';
+
 import 'home.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -6,6 +8,7 @@ import 'updateDebt.dart';
 import 'home.dart';
 import 'login.dart';
 import 'search.dart';
+import 'appsettings.dart';
 
 class NpoList extends StatefulWidget {
   NpoList({Key key}) : super(key: key);
@@ -77,10 +80,10 @@ class _NpoList extends State<NpoList> {
     );
   }
 
-  Card npoCard(npo) {
+  Card npoCard(currentNPO) {
     return Card(
       margin: EdgeInsets.all(10),
-      shadowColor: Colors.black,
+      shadowColor: currentNPO['name'] == npo ? Colors.pink : Colors.black,
       elevation: 15,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
@@ -90,10 +93,10 @@ class _NpoList extends State<NpoList> {
       ),
       child: InkWell(
         onTap: () {
-          /* showDialog(
+          showDialog(
             context: context,
-            builder: (context) => UpdateDebt(friend: friend),
-          ); */
+            builder: (context) => NPOProfile(currentNPO: currentNPO),
+          );
         },
         child: Container(
           height: 150,
@@ -106,14 +109,14 @@ class _NpoList extends State<NpoList> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      npo['name'],
+                      currentNPO['name'],
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     Text(
-                      npo['summary'],
+                      currentNPO['summary'],
                     ),
                   ],
                 ),
@@ -124,7 +127,7 @@ class _NpoList extends State<NpoList> {
                   child: CircleAvatar(
                     radius: 60,
                     child: Text(
-                      'logo renders here',
+                      'LOGO RENDER',
                       style: TextStyle(
                         fontSize: 12,
                       ),
@@ -140,3 +143,115 @@ class _NpoList extends State<NpoList> {
     );
   }
 }
+
+class NPOProfile extends StatefulWidget {
+  final currentNPO;
+  const NPOProfile({Key key, @required this.currentNPO}) : super(key: key);
+
+  @override
+  _NPOProfile createState() => _NPOProfile();
+}
+
+class _NPOProfile extends State<NPOProfile> {
+  // THIS IS A REDRAW FUNC FOR UPDATING THE HIGHLIGHTED CARD
+  // final redraw = () {
+  //   setState(() {});
+  // };
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      content: Container(
+        width: 300,
+        height: 400,
+        child: Column(
+          children: [
+            Container(
+              child: CircleAvatar(
+                radius: 60,
+                child: Text(
+                  'LOGO RENDER',
+                  style: TextStyle(
+                    fontSize: 12,
+                  ),
+                ),
+                // backgroundImage: NetworkImage(npo['logo']),
+              ),
+            ),
+            Text(
+              widget.currentNPO['name'],
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            Text(widget.currentNPO['summary']),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                TextButton(
+                  onPressed: () {
+                    print(widget.currentNPO);
+                    npo = widget.currentNPO['name'];
+                    print('🔥');
+                    UpdateUser();
+                    setState(() {});
+                    Navigator.of(context, rootNavigator: true).pop();
+                  },
+                  child: Text('Set To Prefered'),
+                ),
+                Spacer(),
+                TextButton(
+                  onPressed: () {
+                    visitNPO(npo: widget.currentNPO['name']);
+                    Navigator.of(context, rootNavigator: true).pop();
+                  },
+                  child: Text('Visit Site'),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/*
+ALT LOGO RENDER:
+decoration: BoxDecoration(
+  shape: BoxShape.circle,
+  image: DecorationImage(
+    fit: BoxFit.fill,
+    image: NetworkImage(
+      widget.friend['profilePic'],
+    ),
+  ),
+),
+
+
+Row(
+  mainAxisAlignment: MainAxisAlignment.center,
+  children: [
+    TextButton(
+      onPressed: () {
+        _launchURL(
+          npo: widget.friend['npo'],
+        );
+        adjustDebt(widget.friend['friendship']['friendshipid'],
+            int.parse(_enteredAmount.text), "Doughnation");
+        Navigator.of(context, rootNavigator: true).pop();
+      },
+      child: Text('Doughnate'),
+    ),
+    Spacer(),
+    new TextButton(
+      onPressed: () {
+        adjustDebt(widget.friend['friendship']['friendshipid'],
+            int.parse(_enteredAmount.text), "Adjust");
+        Navigator.of(context, rootNavigator: true).pop();
+      },
+      child: Text('Adjust Debt'),
+    ),
+  ],
+),
+
+ */
