@@ -51,8 +51,8 @@ class Category {
 }
 
 final kNeumorphicColors = [
-  const Color(0xFF47e544),
   Color.fromRGBO(255, 93, 91, 1),
+  const Color(0xFF47e544),
 ];
 
 // const turqoiseGradient = [

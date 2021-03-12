@@ -1,3 +1,4 @@
+import 'package:doughnate/UserProfile.dart';
 import 'package:doughnate/pie_chart.dart';
 import 'package:flutter/material.dart';
 import 'pie_chart.dart';
@@ -80,8 +81,7 @@ class PieChartView extends StatelessWidget {
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
-                                Text(
-                                  '',
+                                Text( totalAmount > 0 ? "+${totalAmount}" : "${totalAmount}",
                                   style: TextStyle(
                                     fontSize: 20,
                                     fontWeight: FontWeight.bold,

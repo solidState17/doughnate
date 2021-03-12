@@ -1,14 +1,15 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:doughnate/pie_chart.dart';
-import 'home.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'updateDebt.dart';
-import 'home.dart';
 import 'login.dart';
-import 'search.dart';
 import 'pie_chart_view.dart';
 import 'package:intl/intl.dart';
+
+var total_borrowed = 0;
+var total_lent = 0;
+var totalAmount = 0;
 
 class UserProfile extends StatefulWidget {
   UserProfile({Key key}) : super(key: key);
@@ -18,12 +19,15 @@ class UserProfile extends StatefulWidget {
 }
 
 class _UserProfile extends State<UserProfile> {
-  DocumentReference users =
+
+  final DocumentReference users =
       FirebaseFirestore.instance.collection("users").doc(userid);
 
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
+    final timestamp = DateTime.now();
+
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 15),
@@ -33,9 +37,12 @@ class _UserProfile extends State<UserProfile> {
                 stream: users.snapshots(),
                 builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
                   if (!snapshot.hasData || !snapshot.data.exists) {
-                    print(snapshot.data);
                     return Center(child: Text("No Transactions"));
                   }
+                  total_borrowed = snapshot.data["total_borrowed"];
+                  total_lent = snapshot.data["total_lent"];
+                  totalAmount = -total_borrowed + total_lent;
+
                   return Container(
                     height: height * 0.3,
                     child: Row(
@@ -49,7 +56,7 @@ class _UserProfile extends State<UserProfile> {
                                   fontSize: 25, fontWeight: FontWeight.bold),
                             ),
                             Text(
-                              '¥${snapshot.data["total_borrowed"]}',
+                              '¥${total_borrowed}',
                               style: TextStyle(
                                   fontSize: 20, fontWeight: FontWeight.bold),
                             ),
@@ -57,10 +64,10 @@ class _UserProfile extends State<UserProfile> {
                         ),
                         PieChartView(
                           categories: [
+                            Category("Owed",
+                                amount: snapshot.data["total_lent"]),
                             Category("Owe",
                                 amount: snapshot.data["total_borrowed"]),
-                            Category("Owed",
-                                amount: snapshot.data["total_lent"])
                           ],
                         ),
                         Column(
@@ -70,7 +77,7 @@ class _UserProfile extends State<UserProfile> {
                             Text("Owed",
                                 style: TextStyle(
                                     fontSize: 25, fontWeight: FontWeight.bold)),
-                            Text("¥${snapshot.data['total_lent']}",
+                            Text("¥${total_lent}",
                                 style: TextStyle(
                                     fontSize: 20, fontWeight: FontWeight.bold)),
                           ],
@@ -90,6 +97,28 @@ class _UserProfile extends State<UserProfile> {
                 ),
               ),
             ),
+            // For test container you can delete this whenever.
+            // Container(
+            //     width: MediaQuery.of(context).size.width,
+            //     margin: EdgeInsets.only(top: 20, bottom: 10),
+            //     color: Colors.red,
+            //     child: TextButton(
+            //       child: Text("Click!"),
+            //       onPressed: (){
+            //         print("clicked!");
+            //          users.update({
+            //            "transactions": FieldValue.arrayUnion([
+            //             {
+            //               "timestamp": timestamp,
+            //                 "amount": 500,
+            //                 "name": "shota",
+            //                   "type": "borrowed",
+            //              }
+            //             ])
+            //            });
+            //         }
+            //     ),
+            // ),
             Expanded(
               child: Column(children: [
                 Expanded(
@@ -97,9 +126,9 @@ class _UserProfile extends State<UserProfile> {
                   stream: users.snapshots(),
                   builder: (BuildContext context,
                       AsyncSnapshot<DocumentSnapshot> snapshot) {
-                    if (!snapshot.hasData || !snapshot.data.exists)
+                    if (!snapshot.hasData || !snapshot.data.exists){
                       return Center(child: CircularProgressIndicator());
-
+                    }
                     return ListView.builder(
                         itemCount: snapshot.data['transactions'].length,
                         itemBuilder: (context, int index) {
@@ -113,17 +142,27 @@ class _UserProfile extends State<UserProfile> {
                                     color: Colors.white,
                                     size: 30,
                                   )),
-                              onDismissed: (_direction) {
+                              onDismissed: (_direction){
                                 if (_direction == DismissDirection.startToEnd) {
-                                  snapshot.data['transactions'].removeAt(index);
-                                  ScaffoldMessenger.of(context).showSnackBar(
+                                  var specificTimestamp = snapshot.data['transactions'][index]["timestamp"];
+                                  var newTransaction = [];
+                                  snapshot.data['transactions'].forEach((val) {
+                                    if(val["timestamp"] != specificTimestamp) {
+                                      newTransaction.add(val);
+                                    }
+                                  });
+                                  users.update({
+                                    "transactions": newTransaction
+                                  });
+                                  }
+                                ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(
                                           content:
-                                              Text("Transaction deleted")));
-                                }
+                                              Text("TransAction was Deleted")));
+
                               },
                               child: historyCard(
-                                  snapshot.data['transactions'][index]));
+                                  snapshot.data["transactions"][index]));
                         });
                   },
                 )
@@ -202,7 +241,9 @@ Card historyCard(transaction) {
               child: Container(
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
-                      colors: [Color(0xFF07dfaf), const Color(0xFF47e544)],
+                      colors: transaction["type"] == "borrowed"
+                          ? [Color(0xFF07dfaf), const Color(0xFF47e544)]
+                          : [Colors.redAccent, Colors.red],
                       begin: Alignment.topRight,
                       end: Alignment.bottomLeft),
                   shape: BoxShape.rectangle,
@@ -228,13 +269,3 @@ Card historyCard(transaction) {
     ),
   );
 }
-
-//
-// transaction: [
-// {
-//   timestamp
-//   amount
-//   name: username
-//   ID(for transactions)
-// }
-// ]
