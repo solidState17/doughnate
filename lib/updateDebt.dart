@@ -29,23 +29,24 @@ class _UpdateDebt extends State<UpdateDebt> {
     var debtData = await debt.get();
     var debtTotal = debtData.data()['debt'];
     var debtOwner = debtData.data()['owner'];
-    var friendUser = debtData.data()['userA'] == email ? debtData.data()['userB'] : debtData.data()['userA'];
-
+    var friendUser = debtData.data()['userA'] == email
+        ? debtData.data()['userB']
+        : debtData.data()['userA'];
 
     if (debtOwner != 'userA' || debtOwner != 'userB') {
       if (amount > 0) {
         debtOwner = debtData.data()['userA'] == email ? 'userA' : 'userB';
-        }
-      } else {
-        debtOwner = debtData.data()['userA'] == email ? 'userB' : 'userA';
       }
+    } else {
+      debtOwner = debtData.data()['userA'] == email ? 'userB' : 'userA';
+    }
 
-    if(debtData.data()[debtOwner] == email) {
+    if (debtData.data()[debtOwner] == email) {
       if (amount > 0) {
         //? lending more money
         handleAddingTransactions(friendUser, amount, "lent");
       } else {
-        if(type == 'doughnation') {
+        if (type == 'doughnation') {
           //? doughnated on your behalf
           handleAddingTransactions(friendUser, amount, "doughnated");
         } else {
@@ -59,7 +60,7 @@ class _UpdateDebt extends State<UpdateDebt> {
         handleAddingTransactions(friendUser, amount, "borrowed");
       } else {
         //? doughnation
-        if(type == "doughnation") {
+        if (type == "doughnation") {
           handleAddingTransactions(friendUser, amount, "doughnated");
         } else {
           //? Payback
@@ -95,21 +96,25 @@ class _UpdateDebt extends State<UpdateDebt> {
   }
 
   Future<void> handleAddingTransactions(updateEmail, amount, type) async {
-    var friendData = await db.collection('users').where("email", isEqualTo: updateEmail).get();
-    var friendEdit = db.collection('users').doc(friendData.docs[0].data()['userid']);
+    var friendData = await db
+        .collection('users')
+        .where("email", isEqualTo: updateEmail)
+        .get();
+    var friendEdit =
+        db.collection('users').doc(friendData.docs[0].data()['userid']);
 
     final timestamp = DateTime.now();
 
-      friendEdit.update({
-          "transactions": FieldValue.arrayUnion([
-            {
-              "timestamp": timestamp,
-              "amount": amount,
-              "name": name,
-              "type": type,
-            }
-          ])
-      });
+    friendEdit.update({
+      "transactions": FieldValue.arrayUnion([
+        {
+          "timestamp": timestamp,
+          "amount": amount,
+          "name": name,
+          "type": type,
+        }
+      ])
+    });
   }
 
   Future<void> handleIndividualUserUpdates(
@@ -183,34 +188,42 @@ class _UpdateDebt extends State<UpdateDebt> {
     final userData = await userCollection.get();
     final friendsData = await friendCollection.get();
 
-    friendshipCollection.delete().then((value) => print('Deleted Friendship document'));
+    friendshipCollection
+        .delete()
+        .then((value) => print('Deleted Friendship document'));
 
     var userFriendsArray = [];
     var friendsUserArray = [];
 
-    userData.data()['friends'].forEach((val) {
-      if(friendshipId != val) {
-        userFriendsArray.add(val);
-      }
-    });
+    userData.data()['friends'].forEach(
+      (val) {
+        if (friendshipId != val) {
+          userFriendsArray.add(val);
+        }
+      },
+    );
 
-    friendsData.data()['friends'].forEach((val) {
-      if(friendshipId != val) {
-        friendsUserArray.add(val);
-      }
-    });
+    friendsData.data()['friends'].forEach(
+      (val) {
+        if (friendshipId != val) {
+          friendsUserArray.add(val);
+        }
+      },
+    );
 
+    userCollection.update(
+      {
+        "friends": userFriendsArray,
+      },
+    );
 
-    userCollection.update({
-      "friends": userFriendsArray,
-    });
-
-    friendCollection.update({
-      "friends": friendsUserArray,
-    });
+    friendCollection.update(
+      {
+        "friends": friendsUserArray,
+      },
+    );
 
     getAllFriends();
-
   }
 
   AlertDialog confirmDelete(friendDetails) {
@@ -221,99 +234,103 @@ class _UpdateDebt extends State<UpdateDebt> {
           return deleteFriend(friendDetails);
         },
         child: Text('Remove Friend'),
-      )
+      ),
     );
   }
 
   Widget build(BuildContext context) {
     return AlertDialog(
-      /*
-        Add an on-press to friend widget
-        display same content plus prefered NPO > as a link
-        donate and adjust debt > number input fields
-        */
       title: Stack(
         children: [
-          Center(child: Container(
-            child: Column (
-              children: [
-          Text("${widget.friend['displayName']}"),
-                Container(
-            width: 120,
-            height: 120,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              image: DecorationImage(
-                  fit: BoxFit.fill,
-                  image: NetworkImage(widget.friend['profilePic'])),
+          Center(
+            child: Container(
+              child: Column(
+                children: [
+                  Text("${widget.friend['displayName']}"),
+                  Container(
+                    width: 120,
+                    height: 120,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      image: DecorationImage(
+                        fit: BoxFit.fill,
+                        image: NetworkImage(
+                          widget.friend['profilePic'],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
-                )
-              ]
-            )
-          )),
+          ),
           Positioned(
             top: 0,
             right: 0,
             child: PopupMenuButton(
-                onSelected: (value) {
-                  showDialog(
-                    context: context,
-                    builder: (context) {
-                      return confirmDelete(value);
-                    });
+              onSelected: (value) {
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return confirmDelete(value);
                   },
-                itemBuilder: (context) => [
-                  PopupMenuItem(
-                    value: widget.friend,
-                    child: Text('Remove Friend')
-                  ),
-                ],
-              ),
-              ),
-                ],
-              ),
+                );
+              },
+              itemBuilder: (context) => [
+                PopupMenuItem(
+                  value: widget.friend,
+                  child: Text('Remove Friend'),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
       content: Container(
         height: 300,
         width: 300,
         child: Column(
           children: [
-            new Text(
+            Text(
                 "${widget.friend['displayName']} supports ${widget.friend['npo']}"),
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: EdgeInsets.all(8.0),
               child: Container(
-                  width: 200,
-                  height: 45,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.rectangle,
-                    gradient: LinearGradient(
-                        colors: widget.friend['friendship']
-                                    [widget.friend['friendship']['owner']] ==
-                                email
-                            ? [Color(0xFF07dfaf), const Color(0xFF47e544)]
-                            : [
-                                Colors.redAccent,
-                                Colors.red
-                              ] //[const Color(0xFF02b5e0), const Color(0xFF02cabd)]
-                        ,
-                        begin: Alignment.topRight,
-                        end: Alignment.bottomLeft),
-                    borderRadius: BorderRadius.circular(8),
+                width: 200,
+                height: 45,
+                decoration: BoxDecoration(
+                  shape: BoxShape.rectangle,
+                  gradient: LinearGradient(
+                      colors: widget.friend['friendship']
+                                  [widget.friend['friendship']['owner']] ==
+                              email
+                          ? [Color(0xFF07dfaf), Color(0xFF47e544)]
+                          : [
+                              Colors.redAccent,
+                              Colors.red
+                            ] //[const Color(0xFF02b5e0), const Color(0xFF02cabd)]
+                      ,
+                      begin: Alignment.topRight,
+                      end: Alignment.bottomLeft),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Align(
+                  alignment: Alignment.center,
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: Text(
+                          widget.friend['friendship']['debt'].toString(),
+                        ),
+                      ),
+                    ],
                   ),
-                  child: Align(
-                      alignment: Alignment.center,
-                      child: Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                                widget.friend['friendship']['debt'].toString()),
-                          ),
-                        ],
-                      ))),
+                ),
+              ),
             ),
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: EdgeInsets.all(8.0),
               child: TextField(
                 controller: _enteredAmount,
                 decoration: InputDecoration(labelText: 'Enter adjustment'),
@@ -324,13 +341,11 @@ class _UpdateDebt extends State<UpdateDebt> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                new TextButton(
+                TextButton(
                   onPressed: () {
-                    // this takes the user to the npo page.
-                    _launchURL(
+                    visitNPO(
                       npo: widget.friend['npo'],
                     );
-                    // print(widget.friend.friendship);
                     adjustDebt(widget.friend['friendship']['friendshipid'],
                         int.parse(_enteredAmount.text), "Doughnation");
                     Navigator.of(context, rootNavigator: true).pop();
@@ -338,7 +353,7 @@ class _UpdateDebt extends State<UpdateDebt> {
                   child: Text('Doughnate'),
                 ),
                 Spacer(),
-                new TextButton(
+                TextButton(
                   onPressed: () {
                     adjustDebt(widget.friend['friendship']['friendshipid'],
                         int.parse(_enteredAmount.text), "Adjust");
@@ -347,7 +362,7 @@ class _UpdateDebt extends State<UpdateDebt> {
                   child: Text('Adjust Debt'),
                 ),
               ],
-            )
+            ),
           ],
         ),
       ),
@@ -358,16 +373,13 @@ class _UpdateDebt extends State<UpdateDebt> {
 // NPO Link Launcher:
 String currentFriendsFavoriteNPO;
 
-_launchURL({String npo}) async {
+visitNPO({String npo}) async {
   final npoData = await FirebaseFirestore.instance
       .collection('npos')
       .where('name', isEqualTo: npo)
       .get();
 
   final url = npoData.docs[0].data()['url'];
-
-  print('🔥');
-  print(url);
 
   if (await canLaunch(url)) {
     await launch(url);
