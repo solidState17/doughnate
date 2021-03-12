@@ -22,6 +22,7 @@ class _UserProfile extends State<UserProfile> {
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
+    final timestamp = DateTime.now();
     print(userid);
     return SafeArea(
       child: Padding(
@@ -88,6 +89,27 @@ class _UserProfile extends State<UserProfile> {
                 ),
               ),
             ),
+            // Container(
+            //     width: MediaQuery.of(context).size.width,
+            //     margin: EdgeInsets.only(top: 20, bottom: 10),
+            //     color: Colors.red,
+            //     child: TextButton(
+            //       child: Text("Click!"),
+            //       onPressed: (){
+            //         print("clicked!");
+            //          users.update({
+            //            "transactions": FieldValue.arrayUnion([
+            //             {
+            //               "timestamp": timestamp,
+            //                 "amount": 500,
+            //                 "name": "shota",
+            //                   "type": "borrowed",
+            //              }
+            //             ])
+            //            });
+            //         }
+            //     ),
+            // ),
             Expanded(
               child: Column(children: [
                 Expanded(
@@ -95,9 +117,11 @@ class _UserProfile extends State<UserProfile> {
                   stream: users.snapshots(),
                   builder: (BuildContext context,
                       AsyncSnapshot<DocumentSnapshot> snapshot) {
-                    if (!snapshot.hasData || !snapshot.data.exists)
+                    if (!snapshot.hasData || !snapshot.data.exists){
+                      print(snapshot.data.exists);
                       return Center(child: CircularProgressIndicator());
-
+                    }
+                    print(snapshot.data.exists);
                     return ListView.builder(
                         itemCount: snapshot.data['transactions'].length,
                         itemBuilder: (context, int index) {
@@ -111,18 +135,24 @@ class _UserProfile extends State<UserProfile> {
                                     color: Colors.white,
                                     size: 30,
                                   )),
-                              onDismissed: (_direction) async{
+                              onDismissed: (_direction){
                                 if (_direction == DismissDirection.startToEnd) {
-                                  final snapShot = await FirebaseFirestore.instance.collection("users").doc(userid).get();
-                                  final transactions = snapShot.data()["transactions"][index];
-                                  transactions.add({
-                                    "test": "test"
+                                  var specificTimestamp = snapshot.data['transactions'][index]["timestamp"];
+                                  var newTransaction = [];
+                                  snapshot.data['transactions'].forEach((val) {
+                                    if(val["timestamp"] != specificTimestamp) {
+                                      newTransaction.add(val);
+                                    }
                                   });
-                                  ScaffoldMessenger.of(context).showSnackBar(
+                                  users.update({
+                                    "transactions": newTransaction
+                                  });
+                                  }
+                                ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(
                                           content:
                                               Text("TransAction was Deleted")));
-                                }
+
                               },
                               child: historyCard(
                                   snapshot.data["transactions"][index]));
