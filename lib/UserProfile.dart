@@ -32,11 +32,10 @@ class _UserProfile extends State<UserProfile> {
             StreamBuilder(
                 stream: users.snapshots(),
                 builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-                  if (!snapshot.hasData || !snapshot.data.exists)
+                  if (!snapshot.hasData || !snapshot.data.exists) {
+                    print(snapshot.data);
                     return Center(child: Text("No Transactions"));
-                  print('-----------------!!!!!!!!!!!!!!!!!!!!!!!');
-                  print(snapshot.data['userid']);
-                  print('-----------------!!!!!!!!!!!!!!!!!!!!!!!');
+                  }
                   return Container(
                     height: height * 0.3,
                     child: Row(
@@ -98,7 +97,7 @@ class _UserProfile extends State<UserProfile> {
                   stream: users.snapshots(),
                   builder: (BuildContext context,
                       AsyncSnapshot<DocumentSnapshot> snapshot) {
-                    if (!snapshot.hasData)
+                    if (!snapshot.hasData || !snapshot.data.exists)
                       return Center(child: CircularProgressIndicator());
 
                     return ListView.builder(

@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'login.dart';
 import 'package:path/path.dart' as Path;
@@ -17,6 +18,7 @@ class AppSettings extends StatefulWidget {
 
 class _AppSettings extends State<AppSettings> {
   FirebaseStorage _store = FirebaseStorage.instance;
+  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   // make this bool equal to current value in firebase
   TextEditingController display_name = TextEditingController(text: name);
   File _image;
@@ -35,16 +37,63 @@ class _AppSettings extends State<AppSettings> {
     });
   }
 
-    AlertDialog confirmDeleteAccount(userInfo) {
+  void deleteOthers() async {
+
+  }
+
+  void deleteSelf() async {
+    final deletedUser =
+        await FirebaseFirestore.instance.collection('users').doc(userid).get();
+
+
+    Future.forEach(deletedUser.data()['friends'], (val) async {
+      final friendDoc =
+          FirebaseFirestore.instance.collection('friendship').doc(val);
+      final searchDoc = await friendDoc.get();
+      print(searchDoc.data());
+
+      final friendEmail = searchDoc.data()['userA'] == email
+          ? searchDoc.data()['userB']
+          : searchDoc.data()['userA'];
+
+      final friendUser = await FirebaseFirestore.instance
+          .collection('users')
+          .where("email", isEqualTo: friendEmail)
+          .get();
+
+      final friendId = friendUser.docs[0].data()['userid'];
+
+      final friendEditable =
+          FirebaseFirestore.instance.collection('users').doc(friendId);
+
+      var newArrayofFriends = [];
+
+      friendUser.docs[0].data()['friends'].forEach((value) {
+        if (value != val) {
+          newArrayofFriends.add(value);
+        }
+      });
+
+      friendEditable.update({
+        'friends': newArrayofFriends,
+      });
+
+      friendDoc.delete().catchError((error) {
+        print(error);
+      });
+    });
+     _firebaseAuth.currentUser.delete();
+  }
+
+  AlertDialog confirmDeleteAccount(userInfo) {
     return AlertDialog(
-      title: Text('Are you sure?'),
-      content: ElevatedButton(
-        onPressed: () {
-          return print('Happy times!');
-        },
-        child: Text('Delete Account'),
-      )
-    );
+        title: Text('Are you sure?'),
+        content: ElevatedButton(
+          onPressed: () {
+            return deleteSelf();
+          },
+          child: Text('Delete Account'),
+        ));
   }
 
   @override
@@ -65,34 +114,31 @@ class _AppSettings extends State<AppSettings> {
                       alignment: Alignment.topLeft,
                       child: Padding(
                         padding: const EdgeInsets.all(18.0),
-                        child: Row(
-                          children: [
-                            Text(
-                          "Settings",
-                          style: TextStyle(
-                            fontFamily: 'Futura',
-                            fontSize: 24,
-                            color: const Color(0xff707070),
-                            fontWeight: FontWeight.w700,
+                        child: Row(children: [
+                          Text(
+                            "Settings",
+                            style: TextStyle(
+                              fontFamily: 'Futura',
+                              fontSize: 24,
+                              color: const Color(0xff707070),
+                              fontWeight: FontWeight.w700,
+                            ),
+                            textAlign: TextAlign.left,
                           ),
-                          textAlign: TextAlign.left,
-                        ),
-                        Spacer(),
+                          Spacer(),
                           PopupMenuButton(
-                onSelected: (value) {
-                  showDialog(
-                    context: context,
-                    builder: (context) {
-                      return confirmDeleteAccount(value);
-                    });
-                  },
-                itemBuilder: (context) => [
-                  PopupMenuItem(
-                    value: userid,
-                    child: Text('Delete Account')
-                  ),
-                ],
-              ),
+                            onSelected: (value) {
+                              showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return confirmDeleteAccount(value);
+                                  });
+                            },
+                            itemBuilder: (context) => [
+                              PopupMenuItem(
+                                  value: userid, child: Text('Delete Account')),
+                            ],
+                          ),
                         ]),
                       ),
                     ),
@@ -233,8 +279,6 @@ class _AppSettings extends State<AppSettings> {
   }
 }
 
-
-
 // maybe we should make one single class / for updating firebase after MVP that includes users, debts, etc ? 🤔
 
 Future<void> UpdateUser() async {
@@ -250,7 +294,6 @@ Future<void> UpdateUser() async {
       .then((value) => print('Save to Firebase suceeded'))
       .catchError((onError) => {print(onError)});
 }
-
 
 // Another exception was thrown: Incorrect use of
 // ParentDataWidget.

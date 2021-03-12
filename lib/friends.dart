@@ -1,4 +1,3 @@
-
 import 'dart:async';
 import 'package:doughnate/debtHistory/Debtlist.dart';
 import 'home.dart';
@@ -7,6 +6,7 @@ import 'updateDebt.dart';
 import 'home.dart';
 import 'login.dart';
 import 'search.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Friends extends StatefulWidget {
   Friends({Key key}) : super(key: key);
@@ -16,11 +16,6 @@ class Friends extends StatefulWidget {
 }
 
 class _Friends extends State<Friends> {
-  // var friends = [];
-
-  // StreamSubscription<List> _friendController = stream.listen((value) {
-  //   friends = value;
-  // });
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +61,7 @@ class _Friends extends State<Friends> {
             child: Column(
               children: [
                 Expanded(
-                  child: StreamBuilder<List>(
+                  child: StreamBuilder(
                     stream: stream, // this is the friend data !
                     builder: (BuildContext context, AsyncSnapshot snapshot) {
                       if (!snapshot.hasData)
@@ -93,6 +88,9 @@ class _Friends extends State<Friends> {
   }
 
   Card buildCard(friend) {
+
+    // FirebaseFirestore.instance.collection('users').where("email", isEqualTo: friend['userA']).get()
+
     return Card(
       shadowColor: Colors.black,
       elevation: 15,
@@ -140,8 +138,8 @@ class _Friends extends State<Friends> {
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
                               colors: friend['friendship']
-                              [friend['friendship']['owner']] ==
-                                  email
+                                          [friend['friendship']['owner']] ==
+                                      email
                                   ? [Color(0xFF07dfaf), const Color(0xFF47e544)]
                                   : [
                                       Colors.redAccent,
@@ -157,24 +155,24 @@ class _Friends extends State<Friends> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             friend['friendship']
-                            [friend['friendship']['owner']] ==
-                                email
+                                        [friend['friendship']['owner']] ==
+                                    email
                                 ? Text(
-                              "You're Owed",
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
-                            )
+                                    "You're Owed",
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    ),
+                                  )
                                 : Text(
-                              "You Owe",
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
-                            ),
+                                    "You Owe",
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    ),
+                                  ),
                             Text(
                               "¥${friend['friendship']['debt'].toString()}",
                               style: TextStyle(

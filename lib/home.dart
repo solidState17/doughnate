@@ -21,10 +21,12 @@ Future<void> getAllFriends() async {
   var friendsArray = thisUser.data()['friends'];
 
   friendsArray.forEach((userFriend) async {
+
     final obj = await FirebaseFirestore.instance
         .collection('Friendship')
         .doc(userFriend)
         .get();
+
     var user = obj.data()['userA'] == email
         ? obj.data()['userB']
         : obj.data()['userA'];
@@ -40,7 +42,7 @@ Future<void> getAllFriends() async {
     });
   });
 
-  new Timer(const Duration(seconds: 4), () => friendsList.sink.add(friends));
+  new Timer(const Duration(seconds: 1), () => friendsList.sink.add(friends));
 
   // friendsList.sink.add(friends);
 }
@@ -77,11 +79,10 @@ class _HomeState extends State<Home> {
       });
     });
 
-    await getAllFriends();
+    getAllFriends();
   }
 
   Widget build(BuildContext context) {
-
     final navPages = [UserProfile(), Friends(), NpoList(), AppSettings()];
 
     return WillPopScope(
@@ -105,8 +106,7 @@ class _HomeState extends State<Home> {
           ),
           // this is the home page
           body: Container(
-            child:
-                Center(child: navPages[_currentIndex]),
+            child: Center(child: navPages[_currentIndex]),
           ),
 
           bottomNavigationBar: BottomNavigationBar(

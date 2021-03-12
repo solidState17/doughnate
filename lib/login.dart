@@ -43,6 +43,7 @@ class _GoogleAuthState extends State<GoogleAuth> {
     assert(user.displayName != null);
     assert(user.email != null);
     assert(user.photoURL != null);
+    assert(user.uid != null);
 
     setState(
       () {
