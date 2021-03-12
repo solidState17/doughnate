@@ -233,7 +233,7 @@ final FirebaseFirestore firestore = FirebaseFirestore.instance;
         .where("email", isEqualTo: friendUserEmail)
         .get();
     final userB =
-        firestore.collection("users").doc(userBData.docs[0].data()['userid']);
+        firestore.collection("users").doc(userBData.docs[0].data()['authId']);
 
     return friendship
         .add({
