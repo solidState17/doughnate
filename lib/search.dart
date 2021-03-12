@@ -159,7 +159,7 @@ class FriendsInfo extends StatelessWidget {
         .where("email", isEqualTo: friendUserEmail)
         .get();
     final userB =
-        firestore.collection("users").doc(userBData.docs[0].data()['userid']);
+        firestore.collection("users").doc(userBData.docs[0].data()['authID']);
 
     userB.update({
       "friend_requests": FieldValue.arrayUnion([{
@@ -233,31 +233,32 @@ final FirebaseFirestore firestore = FirebaseFirestore.instance;
         .where("email", isEqualTo: friendUserEmail)
         .get();
     final userB =
-        firestore.collection("users").doc(userBData.docs[0].data()['authId']);
+        firestore.collection("users").doc(userBData.docs[0].data()['authID']);
 
-    return friendship
+     friendship
         .add({
           "userA": friendUserEmail,
           "userB": email,
           "debt": 0,
           "owner": "",
           "friendshipid": "",
-        })
-        .then((value) => {
-              friendship.doc(value.id).update({
-                "friendshipid": value.id,
-              }).then((_) {
-                userA.update({
-                  "friends": FieldValue.arrayUnion([value.id])
-                });
-                userB.update({
-                  "friends": FieldValue.arrayUnion([value.id])
-                });
+        }).then((newFriend) {
+          friendship.doc(newFriend.id).update({
+            "friendshipid": newFriend.id,
+          });
+          userA.update({
+            "friends": FieldValue.arrayUnion([newFriend.id])
+          });
+          userB.update({
+            "friends": FieldValue.arrayUnion([newFriend.id])
+          });
+        });
+
+
                 removeFriendFromInvitations(friendUserEmail);
                 getAllFriends();
-              })
-            })
-        .catchError((error) => print("Failed to add user: $error"));
+
+        // .catchError((error) => print("Failed to add user: $error"));
   }
 
   Future<void> removeFriendFromInvitations(invite) async {
