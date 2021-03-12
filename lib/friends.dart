@@ -1,4 +1,6 @@
+
 import 'dart:async';
+import 'package:doughnate/debtHistory/Debtlist.dart';
 import 'home.dart';
 import 'package:flutter/material.dart';
 import 'updateDebt.dart';
@@ -138,14 +140,13 @@ class _Friends extends State<Friends> {
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
                               colors: friend['friendship']
-                                          [friend['friendship']['owner']] ==
-                                      email
+                              [friend['friendship']['owner']] ==
+                                  email
                                   ? [Color(0xFF07dfaf), const Color(0xFF47e544)]
                                   : [
                                       Colors.redAccent,
                                       Colors.red
                                     ], //[const Color(0xFF02b5e0), const Color(0xFF02cabd)]
-
                               begin: Alignment.topRight,
                               end: Alignment.bottomLeft),
                           // color: const Color(0xffa9e19c),
@@ -156,24 +157,24 @@ class _Friends extends State<Friends> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             friend['friendship']
-                                        [friend['friendship']['owner']] ==
-                                    email
+                            [friend['friendship']['owner']] ==
+                                email
                                 ? Text(
-                                    "You're Owed",
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white,
-                                    ),
-                                  )
+                              "You're Owed",
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            )
                                 : Text(
-                                    "You Owe",
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white,
-                                    ),
-                                  ),
+                              "You Owe",
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
                             Text(
                               "¥${friend['friendship']['debt'].toString()}",
                               style: TextStyle(

@@ -4,11 +4,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
 import './home.dart';
+import 'UserProfile.dart';
 
 String npo = 'Prefer to be reimbursed (No NPO)';
 bool display_doughnated = true;
 String name, email, photoURL, userid;
-
 
 class GoogleAuth extends StatefulWidget {
   @override
@@ -18,6 +18,7 @@ class GoogleAuth extends StatefulWidget {
 class _GoogleAuthState extends State<GoogleAuth> {
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+
   String value;
 
   final FirebaseFirestore fireStore = FirebaseFirestore.instance;
@@ -48,6 +49,7 @@ class _GoogleAuthState extends State<GoogleAuth> {
         name = user.displayName;
         email = user.email;
         photoURL = user.photoURL;
+        userid = user.uid;
       },
     );
 
@@ -60,7 +62,6 @@ class _GoogleAuthState extends State<GoogleAuth> {
         .where("authID", isEqualTo: currentUser.uid)
         .get()
         .then((value) {
-      print(value.toString());
       if (value.size == 0) {
         fireStore.collection("users").add({
           "authID": currentUser.uid,
@@ -77,6 +78,7 @@ class _GoogleAuthState extends State<GoogleAuth> {
           "display_doughnated": display_doughnated,
           "friends": [],
           "friend_requests": [],
+          "transactions": []
         }).then((docRef) async {
           var newUser = fireStore.collection("users").doc(docRef.id);
           newUser.update({"userid": docRef.id});

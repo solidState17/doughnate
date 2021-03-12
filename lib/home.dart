@@ -35,7 +35,6 @@ Future<void> getAllFriends() async {
         .get()
         .then((document) {
       final allData = document.docs[0].data();
-      print(allData.toString());
       allData['friendship'] = obj.data();
       friends.add(allData);
     });
