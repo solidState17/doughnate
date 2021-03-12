@@ -117,8 +117,41 @@ class FriendsInfo extends StatelessWidget {
   CollectionReference friendship =
       FirebaseFirestore.instance.collection('Friendship');
 
-  Future<void> addFriends() async {
-    final userA = firestore.collection("users").doc(userid);
+  // Future<void> approveFriends() async {
+  //   final userA = firestore.collection("users").doc(userid);
+  //   final userBData = await firestore
+  //       .collection('users')
+  //       .where("email", isEqualTo: friendUserEmail)
+  //       .get();
+  //   final userB =
+  //       firestore.collection("users").doc(userBData.docs[0].data()['userid']);
+
+  //   return friendship
+  //       .add({
+  //         "userA": friendUserEmail,
+  //         "userB": email,
+  //         "debt": 0,
+  //         "owner": "",
+  //         "friendshipid": "",
+  //       })
+  //       .then((value) => {
+  //             friendship.doc(value.id).update({
+  //               "friendshipid": value.id,
+  //             }).then((_) {
+  //               userA.update({
+  //                 "friends": FieldValue.arrayUnion([value.id])
+  //               });
+  //               userB.update({
+  //                 "friends": FieldValue.arrayUnion([value.id])
+  //               });
+  //               getAllFriends();
+  //             })
+  //           })
+  //       .catchError((error) => print("Failed to add user: $error"));
+  // }
+
+  Future<void> sendFriendInvite() async {
+    // final userA = await firestore.collection("users").doc(userid).get();
     final userBData = await firestore
         .collection('users')
         .where("email", isEqualTo: friendUserEmail)
@@ -126,28 +159,13 @@ class FriendsInfo extends StatelessWidget {
     final userB =
         firestore.collection("users").doc(userBData.docs[0].data()['userid']);
 
-    return friendship
-        .add({
-          "userA": friendUserEmail,
-          "userB": email,
-          "debt": 0,
-          "owner": "",
-          "friendshipid": "",
-        })
-        .then((value) => {
-              friendship.doc(value.id).update({
-                "friendshipid": value.id,
-              }).then((_) {
-                userA.update({
-                  "friends": FieldValue.arrayUnion([value.id])
-                });
-                userB.update({
-                  "friends": FieldValue.arrayUnion([value.id])
-                });
-                getAllFriends();
-              })
-            })
-        .catchError((error) => print("Failed to add user: $error"));
+    userB.update({
+      "friend_requests": FieldValue.arrayUnion([{
+        "email": email,
+        "profilePic": photoURL,
+        "displayName": name,
+      }]),
+    });
   }
 
   Widget build(BuildContext context) {
@@ -170,7 +188,7 @@ class FriendsInfo extends StatelessWidget {
           color: Colors.green,
           child: TextButton(
               onPressed: () {
-                addFriends();
+                sendFriendInvite();
                 Navigator.of(context, rootNavigator: true).pop();
               },
               child: Text(
@@ -200,7 +218,137 @@ class MyEmailAdress extends StatelessWidget {
 }
 
 class DefaultPage extends StatelessWidget {
-  Widget build(BuildContext context) {
-    return Container();
+final FirebaseFirestore firestore = FirebaseFirestore.instance;
+  CollectionReference friendship =
+      FirebaseFirestore.instance.collection('Friendship');
+  Future<void> approveFriends() async {
+    final userA = firestore.collection("users").doc(userid);
+    final userBData = await firestore
+        .collection('users')
+        .where("email", isEqualTo: friendUserEmail)
+        .get();
+    final userB =
+        firestore.collection("users").doc(userBData.docs[0].data()['userid']);
+
+    return friendship
+        .add({
+          "userA": friendUserEmail,
+          "userB": email,
+          "debt": 0,
+          "owner": "",
+          "friendshipid": "",
+        })
+        .then((value) => {
+              friendship.doc(value.id).update({
+                "friendshipid": value.id,
+              }).then((_) {
+                userA.update({
+                  "friends": FieldValue.arrayUnion([value.id])
+                });
+                userB.update({
+                  "friends": FieldValue.arrayUnion([value.id])
+                });
+                removeFriendFromInvitations(friendUserEmail);
+                getAllFriends();
+              })
+            })
+        .catchError((error) => print("Failed to add user: $error"));
   }
+
+  Future<void> removeFriendFromInvitations(invite) async {
+    final userRef = firestore.collection('users').doc(userid);
+    final userData = await userRef.get();
+    var newArray = [];
+
+    userData['friend_requests'].forEach((item) {
+      if (item['email'] != invite) {
+        newArray.add(item);
+      }
+    });
+
+    userRef.update({
+      "friend_requests": newArray,
+    });
+  }
+
+  Widget build(BuildContext context) {
+      
+      return SingleChildScrollView(
+       child: Container(
+      child: StreamBuilder(
+        stream: firestore.collection('users').doc(userid).snapshots(),
+        builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+          if (!snapshot.hasData) return Text('No new friend requests');
+          var data = snapshot.data;
+          var invitation = data['friend_requests'];
+          return ListView.builder(
+            itemCount: invitation.length,
+            scrollDirection: Axis.vertical,
+            shrinkWrap: true,
+            itemBuilder: (context, index) {
+              return Card(
+                child: ListTile(
+                  leading: CircleAvatar( backgroundImage: NetworkImage(invitation[index]['profilePic'])),
+                  title: Text("${invitation[index]['displayName']} wants to add you as a friend!"),
+                  trailing: IconButton(
+                    icon: Icon(Icons.more_vert),
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            title: Center(child: Text('What to do?')),
+                            content: Container(
+                              height: 200,
+                              width: 600,
+                              child: Column(
+                               children: [
+                                  SizedBox(
+                                  height: 70.0,
+                                  width: 100.0,
+                                  child: IconButton(
+                                  padding: EdgeInsets.all(0.0),
+                                  icon: Icon(Icons.group_add_rounded, size: 60),
+                                  tooltip: 'Add friend',
+                                  onPressed: () {
+                                    friendUserEmail = invitation[index]['email'];
+                                    approveFriends();
+                                  },
+                                )),
+                                Text('Add friend'),
+                                Spacer(),
+                                SizedBox(
+                                  height: 70.0,
+                                  width: 100.0,
+                                  child: IconButton(
+                                  padding: EdgeInsets.all(0.0),
+                                  icon: Icon(Icons.remove_circle_rounded, size: 60),
+                                  tooltip: 'No thanks!',
+                                  onPressed: () {
+                                    removeFriendFromInvitations(invitation[index]);
+                                  }
+                                )),
+                                Text('Decline'),
+                              ],
+                            )
+                          ));
+                        }
+                      );
+                    }
+                  )
+                ),
+              );
+            }
+          );
+        },
+      )));
+  }
+}
+
+class Invitation{
+  final String display_name;
+  final String email;
+  final String profilePic;
+
+  Invitation({this.display_name, this.email, this.profilePic});
 }

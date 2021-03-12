@@ -2,12 +2,8 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:doughnate/pie_chart.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'home.dart';
 import 'package:flutter/material.dart';
-import 'updateDebt.dart';
-import 'home.dart';
 import 'login.dart';
-import 'search.dart';
 import 'pie_chart_view.dart';
 import 'package:intl/intl.dart';
 
@@ -19,12 +15,14 @@ class UserProfile extends StatefulWidget {
 }
 
 class _UserProfile extends State<UserProfile> {
-  DocumentReference users =
+
+  final DocumentReference users =
       FirebaseFirestore.instance.collection("users").doc(userid);
 
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
+    print(userid);
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 15),
@@ -33,10 +31,9 @@ class _UserProfile extends State<UserProfile> {
             StreamBuilder(
                 stream: users.snapshots(),
                 builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-                  if (!snapshot.hasData)
+                  if (!snapshot.hasData || !snapshot.data.exists) {
                     return Center(child: Text("No Transactions"));
-                  print("=================!!!!!!!!!!!!!!!!!!!");
-                  print(snapshot.data.toString());
+                  }
                   return Container(
                     height: height * 0.3,
                     child: Row(
@@ -71,7 +68,7 @@ class _UserProfile extends State<UserProfile> {
                             Text("Owed",
                                 style: TextStyle(
                                     fontSize: 25, fontWeight: FontWeight.bold)),
-                            Text('¥${snapshot.data["total_lent"]}',
+                            Text("¥${snapshot.data['total_lent']}",
                                 style: TextStyle(
                                     fontSize: 20, fontWeight: FontWeight.bold)),
                           ],
@@ -84,7 +81,7 @@ class _UserProfile extends State<UserProfile> {
               width: MediaQuery.of(context).size.width,
               margin: EdgeInsets.only(top: 20, bottom: 10),
               child: Text(
-                "Recent TransActions",
+                "Recent Transactions",
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 20,
@@ -96,16 +93,17 @@ class _UserProfile extends State<UserProfile> {
                 Expanded(
                     child: StreamBuilder(
                   stream: users.snapshots(),
-                  builder: (BuildContext context, AsyncSnapshot snapshot) {
-                    if (!snapshot.hasData)
+                  builder: (BuildContext context,
+                      AsyncSnapshot<DocumentSnapshot> snapshot) {
+                    if (!snapshot.hasData || !snapshot.data.exists)
                       return Center(child: CircularProgressIndicator());
-                    print(snapshot.data);
+
                     return ListView.builder(
-                        itemCount: snapshot.data["transactions"].length,
+                        itemCount: snapshot.data['transactions'].length,
                         itemBuilder: (context, int index) {
                           return Dismissible(
                               key: Key(
-                                  '${snapshot.data["transactions"][index]}'),
+                                  "${snapshot.data['transactions'][index]}"),
                               background: Container(
                                   color: Colors.red,
                                   child: Icon(
@@ -142,8 +140,8 @@ class _UserProfile extends State<UserProfile> {
   }
 }
 
-Card historyCard(friend) {
-  DateTime now = DateTime.now();
+Card historyCard(transaction) {
+  DateTime myDateTime = (transaction['timestamp']).toDate();
 
   return Card(
     shadowColor: Colors.black,
@@ -183,15 +181,14 @@ Card historyCard(friend) {
                             // mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                "${DateFormat("yyyy/MM/dd(E) HH:mm:ss").format(now)}",
-                                //"${friend["timestamp"].toDate()}",
+                                DateFormat.yMMMd().format(myDateTime),
                                 style: TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
                               Text(
-                                "${friend['name']}",
+                                "${transaction['name']}",
                                 style: TextStyle(
                                     fontSize: 20, fontWeight: FontWeight.bold),
                               ),
@@ -207,7 +204,7 @@ Card historyCard(friend) {
               child: Container(
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
-                      colors: friend["type"] == "borrowed"
+                      colors: transaction["type"] == "borrowed"
                           ? [Color(0xFF07dfaf), const Color(0xFF47e544)]
                           : [Colors.redAccent, Colors.red],
                       begin: Alignment.topRight,
@@ -218,7 +215,7 @@ Card historyCard(friend) {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      "¥${friend["amount"].toString()}",
+                      "¥${transaction['amount'].toString()}",
                       style: TextStyle(
                         fontSize: 30,
                         fontWeight: FontWeight.bold,

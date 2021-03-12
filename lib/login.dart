@@ -39,7 +39,6 @@ class _GoogleAuthState extends State<GoogleAuth> {
     final UserCredential userCredential =
         await FirebaseAuth.instance.signInWithCredential(credential);
     final User user = userCredential.user;
-
     assert(user.displayName != null);
     assert(user.email != null);
     assert(user.photoURL != null);
@@ -49,6 +48,7 @@ class _GoogleAuthState extends State<GoogleAuth> {
         name = user.displayName;
         email = user.email;
         photoURL = user.photoURL;
+        userid = user.uid;
       },
     );
 
@@ -61,9 +61,8 @@ class _GoogleAuthState extends State<GoogleAuth> {
         .where("authID", isEqualTo: currentUser.uid)
         .get()
         .then((value) {
-      print(value.toString());
       if (value.size == 0) {
-        fireStore.collection("users").add({
+        fireStore.collection("users").doc(currentUser.uid).set({
           "authID": currentUser.uid,
           "name": name,
           "displayName": name,
@@ -77,14 +76,12 @@ class _GoogleAuthState extends State<GoogleAuth> {
           "total_returned": 0,
           "display_doughnated": display_doughnated,
           "friends": [],
-        }).then((docRef) async {
-          var newUser = fireStore.collection("users").doc(docRef.id);
-          newUser.update({"userid": docRef.id});
-          userid = docRef.id;
+          "friend_requests": [],
+          "transactions": []
         });
       } else {
-        userid = value.docs[0].data()['userid'];
-        getAllFriends();
+        userid = currentUser.uid;
+        print(value.docs[0].data()['userid']);
       }
     });
     return "success";
@@ -133,7 +130,7 @@ class _GoogleAuthState extends State<GoogleAuth> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => Home(value: value),
+                                builder: (context) => Home(),
                               ),
                             );
                           }

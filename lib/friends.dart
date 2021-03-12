@@ -28,59 +28,64 @@ class _Friends extends State<Friends> {
       child: Column(
         children: [
           Container(
-              child: Align(
-                  alignment: Alignment.topLeft,
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Row(
-                      children: [
-                        Text(
-                          "Friends List",
-                          style: TextStyle(
-                            fontFamily: 'Futura',
-                            fontSize: 24,
-                            color: const Color(0xff707070),
-                            fontWeight: FontWeight.w700,
-                          ),
-                          textAlign: TextAlign.left,
-                        ),
-                        Spacer(),
-                        TextButton(
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => Search(),
-                                  fullscreenDialog: true,
-                                ));
-                          },
-                          child: Text('Add Friend'),
-                        ),
-                      ],
+            child: Align(
+              alignment: Alignment.topLeft,
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Row(
+                  children: [
+                    Text(
+                      "Friends List",
+                      style: TextStyle(
+                        fontFamily: 'Futura',
+                        fontSize: 24,
+                        color: const Color(0xff707070),
+                        fontWeight: FontWeight.w700,
+                      ),
+                      textAlign: TextAlign.left,
                     ),
-                  ))),
+                    Spacer(),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => Search(),
+                            fullscreenDialog: true,
+                          ),
+                        );
+                      },
+                      child: Text('Add Friend'),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
           Expanded(
-            child: Column(children: [
-              Expanded(
+            child: Column(
+              children: [
+                Expanded(
                   child: StreamBuilder<List>(
-                    stream: stream,
+                    stream: stream, // this is the friend data !
                     builder: (BuildContext context, AsyncSnapshot snapshot) {
                       if (!snapshot.hasData)
-                        return Center(child: CircularProgressIndicator());
+                        return Center(
+                          child: CircularProgressIndicator(),
+                        );
 
                       return ListView.builder(
-                          itemCount: snapshot.data.length,
-                          itemBuilder: (context, int index) {
-                            return buildCard(snapshot.data[index]);
-                            // snapshot.data
-                            //   .map<Widget>((friend) => buildCard(friend))
-                            //   .toList()
-                          });
+                        itemCount: snapshot.data.length,
+                        itemBuilder: (context, int index) {
+                          return buildCard(snapshot.data[index]);
+                          // snapshot.data.map<Widget>((friend) => buildCard(friend)).toList()
+                        },
+                      );
                     },
-                  )
-                //friends.map((friend) => buildCard(friend)).toList(),
-              ),
-            ]),
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
       ),
@@ -92,16 +97,17 @@ class _Friends extends State<Friends> {
       shadowColor: Colors.black,
       elevation: 15,
       shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(15.0),
-            bottomLeft: Radius.circular(15.0),
-          )),
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(15.0),
+          bottomLeft: Radius.circular(15.0),
+        ),
+      ),
       child: InkWell(
         onTap: () {
-          // WHAT IS THE ON TAP FOR? I THINK THE WIDGET CALL GOES HERE 🤔
           showDialog(
-              context: context,
-              builder: (context) => UpdateDebt(friend: friend));
+            context: context,
+            builder: (context) => UpdateDebt(friend: friend),
+          );
         },
         child: Container(
           padding: EdgeInsets.all(10.0),
@@ -121,7 +127,7 @@ class _Friends extends State<Friends> {
                         ),
                       ),
                       Text(
-                        "Friends name has doughnated 100%",
+                        "90% reimbursed via D🍩ughnations",
                         style: TextStyle(
                           fontSize: 14,
                         ),
@@ -138,10 +144,9 @@ class _Friends extends State<Friends> {
                                   email
                                   ? [Color(0xFF07dfaf), const Color(0xFF47e544)]
                                   : [
-                                Colors.redAccent,
-                                Colors.red
-                              ] //[const Color(0xFF02b5e0), const Color(0xFF02cabd)]
-                              ,
+                                      Colors.redAccent,
+                                      Colors.red
+                                    ], //[const Color(0xFF02b5e0), const Color(0xFF02cabd)]
                               begin: Alignment.topRight,
                               end: Alignment.bottomLeft),
                           // color: const Color(0xffa9e19c),
