@@ -35,10 +35,10 @@ class _UpdateDebt extends State<UpdateDebt> {
     if (debtOwner != 'userA' || debtOwner != 'userB') {
       if (amount > 0) {
         debtOwner = debtData.data()['userA'] == email ? 'userA' : 'userB';
-        }
-      } else {
-        debtOwner = debtData.data()['userA'] == email ? 'userB' : 'userA';
       }
+    } else {
+      debtOwner = debtData.data()['userA'] == email ? 'userB' : 'userA';
+    }
 
     if(debtData.data()[debtOwner] == email) {
       if (amount > 0) {
@@ -100,16 +100,16 @@ class _UpdateDebt extends State<UpdateDebt> {
 
     final timestamp = DateTime.now();
 
-      friendEdit.update({
-          "transactions": FieldValue.arrayUnion([
-            {
-              "timestamp": timestamp,
-              "amount": amount,
-              "name": name,
-              "type": type,
-            }
-          ])
-      });
+    friendEdit.update({
+      "transactions": FieldValue.arrayUnion([
+        {
+          "timestamp": timestamp,
+          "amount": amount,
+          "name": name,
+          "type": type,
+        }
+      ])
+    });
   }
 
   Future<void> handleIndividualUserUpdates(
@@ -123,13 +123,13 @@ class _UpdateDebt extends State<UpdateDebt> {
     //! Get both users Id from the database
 
     final lendingUser =
-        await db.collection("users").where("email", isEqualTo: lender).get();
+    await db.collection("users").where("email", isEqualTo: lender).get();
     final borrowingUser =
-        await db.collection("users").where("email", isEqualTo: borrower).get();
+    await db.collection("users").where("email", isEqualTo: borrower).get();
     final lendUser =
-        db.collection("users").doc(lendingUser.docs[0].data()['userid']);
+    db.collection("users").doc(lendingUser.docs[0].data()['userid']);
     final borrowUser =
-        db.collection("users").doc(borrowingUser.docs[0].data()['userid']);
+    db.collection("users").doc(borrowingUser.docs[0].data()['userid']);
 
     //! Handle Doughnation cases
     if (type == "Doughnation") {
@@ -215,13 +215,13 @@ class _UpdateDebt extends State<UpdateDebt> {
 
   AlertDialog confirmDelete(friendDetails) {
     return AlertDialog(
-      title: Text('Are you sure?'),
-      content: ElevatedButton(
-        onPressed: () {
-          return deleteFriend(friendDetails);
-        },
-        child: Text('Remove Friend'),
-      )
+        title: Text('Are you sure?'),
+        content: ElevatedButton(
+          onPressed: () {
+            return deleteFriend(friendDetails);
+          },
+          child: Text('Remove Friend'),
+        )
     );
   }
 
@@ -235,43 +235,43 @@ class _UpdateDebt extends State<UpdateDebt> {
       title: Stack(
         children: [
           Center(child: Container(
-            child: Column (
-              children: [
-          Text("${widget.friend['displayName']}"),
-                Container(
-            width: 120,
-            height: 120,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              image: DecorationImage(
-                  fit: BoxFit.fill,
-                  image: NetworkImage(widget.friend['profilePic'])),
-            ),
-                )
-              ]
-            )
+              child: Column (
+                  children: [
+                    Text("${widget.friend['displayName']}"),
+                    Container(
+                      width: 120,
+                      height: 120,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        image: DecorationImage(
+                            fit: BoxFit.fill,
+                            image: NetworkImage(widget.friend['profilePic'])),
+                      ),
+                    )
+                  ]
+              )
           )),
           Positioned(
             top: 0,
             right: 0,
             child: PopupMenuButton(
-                onSelected: (value) {
-                  showDialog(
+              onSelected: (value) {
+                showDialog(
                     context: context,
                     builder: (context) {
                       return confirmDelete(value);
                     });
-                  },
-                itemBuilder: (context) => [
-                  PopupMenuItem(
+              },
+              itemBuilder: (context) => [
+                PopupMenuItem(
                     value: widget.friend,
                     child: Text('Remove Friend')
-                  ),
-                ],
-              ),
-              ),
-                ],
-              ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
       content: Container(
         height: 300,
         width: 300,
@@ -288,13 +288,13 @@ class _UpdateDebt extends State<UpdateDebt> {
                     shape: BoxShape.rectangle,
                     gradient: LinearGradient(
                         colors: widget.friend['friendship']
-                                    [widget.friend['friendship']['owner']] ==
-                                email
+                        [widget.friend['friendship']['owner']] ==
+                            email
                             ? [Color(0xFF07dfaf), const Color(0xFF47e544)]
                             : [
-                                Colors.redAccent,
-                                Colors.red
-                              ] //[const Color(0xFF02b5e0), const Color(0xFF02cabd)]
+                          Colors.redAccent,
+                          Colors.red
+                        ] //[const Color(0xFF02b5e0), const Color(0xFF02cabd)]
                         ,
                         begin: Alignment.topRight,
                         end: Alignment.bottomLeft),
