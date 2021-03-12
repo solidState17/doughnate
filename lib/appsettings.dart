@@ -44,23 +44,23 @@ class _AppSettings extends State<AppSettings> {
     final deletedUser =
         FirebaseFirestore.instance.collection('users').doc(userid);
 
-    final deletedData = await deletedUser.get();
+    // final deletedData = await deletedUser.get();
 
-    deletedData.data()['friends'].forEach((person) {
-      FirebaseFirestore.instance
-          .collection('friendship')
-          .doc(person)
-          .delete()
-          .then((doc) {
-        print('Friendship deleted');
-      });
-    });
+    // deletedData.data()['friends'].forEach((person) {
+    //   FirebaseFirestore.instance
+    //       .collection('friendship')
+    //       .doc(person)
+    //       .delete()
+    //       .then((doc) {
+    //     print('Friendship deleted');
+    //   });
+    // });
 
     deletedUser.delete();
+    _firebaseAuth.currentUser.delete();
 
     _firebaseAuth.signOut();
     _googleSignIn.signOut();
-    _firebaseAuth.currentUser.delete();
     return Navigator.popUntil(context, ModalRoute.withName("/"));
   }
 
