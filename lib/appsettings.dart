@@ -74,12 +74,12 @@ class _AppSettings extends State<AppSettings> {
                       ),
                     ),
                   ),
-                OutlinedButton(
-                  onPressed: () async {
-                    await getImage();
-                  },
-                  child: Text('Upload Picture'),
-                ),
+                  OutlinedButton(
+                    onPressed: () async {
+                      await getImage();
+                    },
+                    child: Text('Upload Picture'),
+                  ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: TextField(
