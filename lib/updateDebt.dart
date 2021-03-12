@@ -96,17 +96,8 @@ class _UpdateDebt extends State<UpdateDebt> {
   }
 
   Future<void> handleAddingTransactions(updateEmail, amount, type) async {
-<<<<<<< HEAD
     var friendData = await db.collection('users').where("email", isEqualTo: updateEmail).get();
     var friendEdit = db.collection('users').doc(friendData.docs[0].data()['authId']);
-=======
-    var friendData = await db
-        .collection('users')
-        .where("email", isEqualTo: updateEmail)
-        .get();
-    var friendEdit =
-        db.collection('users').doc(friendData.docs[0].data()['userid']);
->>>>>>> b8388f9909b9efbd0605d20af735d28733e84a48
 
     final timestamp = DateTime.now();
 

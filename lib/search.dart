@@ -48,47 +48,47 @@ class _SearchTextFieldState extends State<Search> {
           title: Text("Search Friends",
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold))),
       body: Column(children: <Widget>[
-        Expanded(
-            child: Row(
+        Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Expanded(
-              flex: 12,
-              child: Container(
-                padding: EdgeInsets.only(top: 30, left: 10),
-                child: TextField(
-                    controller: _controller,
-                    onChanged: (x) => friendName = x,
-                    decoration: InputDecoration(
-                      enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.transparent),
-                          borderRadius: BorderRadius.all(Radius.circular(10))),
-                      focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.transparent),
-                          borderRadius: BorderRadius.all(Radius.circular(10))),
-                      hintText: "Email",
-                      filled: true,
-                    )),
-              ),
-            ),
-            Expanded(
-                flex: 2,
-                child: Container(
-                    padding: EdgeInsets.only(top: 35),
-                    child: IconButton(
-                      icon: Icon(Icons.search),
-                      onPressed: () {
-                        name == email
-                            ? setState(() {
-                                index = 3;
-                              })
-                            : searchFriends(name);
-                      },
-                    )))
+        Expanded(
+          flex: 12,
+          child: Container(
+            padding: EdgeInsets.only(top: 30, left: 10),
+            child: TextField(
+                controller: _controller,
+                onChanged: (x) => friendName = x,
+                decoration: InputDecoration(
+                  enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.transparent),
+                      borderRadius: BorderRadius.all(Radius.circular(10))),
+                  focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.transparent),
+                      borderRadius: BorderRadius.all(Radius.circular(10))),
+                  hintText: "Email",
+                  filled: true,
+                )),
+          ),
+        ),
+        Expanded(
+            flex: 2,
+            child: Container(
+                padding: EdgeInsets.only(top: 35),
+                child: IconButton(
+                  icon: Icon(Icons.search),
+                  onPressed: () {
+                    print(email);
+                    print(index);
+                    name == email
+                        ? setState(() {
+                            index = 3;
+                          })
+                        : searchFriends(name);
+                  },
+                )))
           ],
-        )),
+        ),
         Container(
-          margin: EdgeInsets.only(bottom: 400),
           child: Center(child: pages[index]),
         )
       ]),
@@ -98,14 +98,16 @@ class _SearchTextFieldState extends State<Search> {
 
 class ErrorMassage extends StatelessWidget {
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.only(left: 20, right: 20),
-      margin: EdgeInsets.only(bottom: 300),
-      child: Center(
-        child: Text(
-          "Input email address is not registered",
-          style: TextStyle(
-              fontSize: 18, fontWeight: FontWeight.bold, color: Colors.grey),
+    return SizedBox(
+      height: 300,
+      child: Container(
+        padding: EdgeInsets.only(left: 20, right: 20),
+        child: Center(
+          child: Text(
+            "Input email address is not registered",
+            style: TextStyle(
+                fontSize: 18, fontWeight: FontWeight.bold, color: Colors.grey),
+          ),
         ),
       ),
     );
@@ -203,17 +205,20 @@ class FriendsInfo extends StatelessWidget {
 
 class MyEmailAdress extends StatelessWidget {
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.only(left: 20, right: 20),
-      margin: EdgeInsets.only(bottom: 200),
-      child: Center(
-        child: Text(
-          "Input email address is yours",
-          style: TextStyle(
-              fontSize: 18, fontWeight: FontWeight.bold, color: Colors.grey),
-        ),
-      ),
-    );
+    return
+        SizedBox(
+          height:300,
+          child: Container(
+            padding: EdgeInsets.only(left: 20, right: 20),
+            child: Center(
+              child: Text(
+                "Input email address is yours",
+                style: TextStyle(
+                    fontSize: 18, fontWeight: FontWeight.bold, color: Colors.grey),
+              ),
+            ),
+          ),
+        );
   }
 }
 
