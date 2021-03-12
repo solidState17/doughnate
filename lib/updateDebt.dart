@@ -96,7 +96,7 @@ class _UpdateDebt extends State<UpdateDebt> {
 
   Future<void> handleAddingTransactions(updateEmail, amount, type) async {
     var friendData = await db.collection('users').where("email", isEqualTo: updateEmail).get();
-    var friendEdit = db.collection('users').doc(friendData.docs[0].data()['userid']);
+    var friendEdit = db.collection('users').doc(friendData.docs[0].data()['authId']);
 
     final timestamp = DateTime.now();
 
@@ -127,9 +127,9 @@ class _UpdateDebt extends State<UpdateDebt> {
     final borrowingUser =
         await db.collection("users").where("email", isEqualTo: borrower).get();
     final lendUser =
-        db.collection("users").doc(lendingUser.docs[0].data()['userid']);
+        db.collection("users").doc(lendingUser.docs[0].data()['authId']);
     final borrowUser =
-        db.collection("users").doc(borrowingUser.docs[0].data()['userid']);
+        db.collection("users").doc(borrowingUser.docs[0].data()['authId']);
 
     //! Handle Doughnation cases
     if (type == "Doughnation") {
@@ -177,7 +177,7 @@ class _UpdateDebt extends State<UpdateDebt> {
   Future<void> deleteFriend(friendId) async {
     final friendshipId = friendId['friendship']['friendshipid'];
     final userCollection = db.collection('users').doc(userid);
-    final friendCollection = db.collection('users').doc(friendId['userid']);
+    final friendCollection = db.collection('users').doc(friendId['authId']);
     final friendshipCollection = db.collection('Friendship').doc(friendshipId);
 
     final userData = await userCollection.get();

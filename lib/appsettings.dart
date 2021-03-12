@@ -7,7 +7,7 @@ import 'login.dart';
 import 'package:path/path.dart' as Path;
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
-import 'NpoList.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class AppSettings extends StatefulWidget {
   AppSettings({Key key}) : super(key: key);
@@ -37,52 +37,31 @@ class _AppSettings extends State<AppSettings> {
     });
   }
 
-  void deleteOthers() async {
-
-  }
+  void deleteOthers(doc) async {}
 
   void deleteSelf() async {
+    final GoogleSignIn _googleSignIn = GoogleSignIn();
     final deletedUser =
-        await FirebaseFirestore.instance.collection('users').doc(userid).get();
+        FirebaseFirestore.instance.collection('users').doc(userid);
 
+    final deletedData = await deletedUser.get();
 
-    Future.forEach(deletedUser.data()['friends'], (val) async {
-      final friendDoc =
-          FirebaseFirestore.instance.collection('friendship').doc(val);
-      final searchDoc = await friendDoc.get();
-      print(searchDoc.data());
-
-      final friendEmail = searchDoc.data()['userA'] == email
-          ? searchDoc.data()['userB']
-          : searchDoc.data()['userA'];
-
-      final friendUser = await FirebaseFirestore.instance
-          .collection('users')
-          .where("email", isEqualTo: friendEmail)
-          .get();
-
-      final friendId = friendUser.docs[0].data()['userid'];
-
-      final friendEditable =
-          FirebaseFirestore.instance.collection('users').doc(friendId);
-
-      var newArrayofFriends = [];
-
-      friendUser.docs[0].data()['friends'].forEach((value) {
-        if (value != val) {
-          newArrayofFriends.add(value);
-        }
-      });
-
-      friendEditable.update({
-        'friends': newArrayofFriends,
-      });
-
-      friendDoc.delete().catchError((error) {
-        print(error);
+    deletedData.data()['friends'].forEach((person) {
+      FirebaseFirestore.instance
+          .collection('friendship')
+          .doc(person)
+          .delete()
+          .then((doc) {
+        print('Friendship deleted');
       });
     });
-     _firebaseAuth.currentUser.delete();
+
+    deletedUser.delete();
+
+    _firebaseAuth.signOut();
+    _googleSignIn.signOut();
+    _firebaseAuth.currentUser.delete();
+    return Navigator.popUntil(context, ModalRoute.withName("/"));
   }
 
   AlertDialog confirmDeleteAccount(userInfo) {
