@@ -40,11 +40,15 @@ class ProgressRings extends CustomPainter {
         ..shader = gradient.createShader(boundingSquare);
     }
 
+    double total = 0;
+    // Calculate total amount from each category
+    categories.forEach((expense) => total += expense.amount);
+
     double startRadian = -pi / 2;
 
     for (var index = 0; index < categories.length; index++) {
       final currentCategory = categories.elementAt(index);
-      final sweepRadian = currentCategory.amount / totalAmount * 2 * pi;
+      final sweepRadian = currentCategory.amount / total * 2 * pi;
       final gradient = currentCategory.gradientColors;
       canvas.drawArc(
         Rect.fromCircle(center: center, radius: radius),
@@ -74,8 +78,9 @@ class ProgressRings extends CustomPainter {
   }
 
 final kCategories = [
-  Category('groceries', amount: total_borrowed, gradientColors: [Color(0xFF07dfaf), const Color(0xFF47e544)]),
-  Category('online Shopping', amount: total_lent, gradientColors: [Colors.redAccent, Colors.pink]),
+  Category('total_rent', amount: total_borrowed, gradientColors: [Colors.redAccent, Colors.pink]),
+  Category('total_rent', amount: total_lent, gradientColors: [Color(0xFF07dfaf),const Color(0xFF47e544)]),
+
 ];
 
 //

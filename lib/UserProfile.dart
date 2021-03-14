@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:doughnate/pie_chart.dart';
+import 'package:doughnate/search.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'login.dart';
@@ -64,13 +65,9 @@ class UserProfile extends StatelessWidget {
                   child: Column(
                     children: [
                       Container(
-                        //height: MediaQuery.of(context).size.height * .4,
                         height: 360,
                         decoration: BoxDecoration(
-                          //borderRadius: BorderRadius.circular(20),
                           gradient: LinearGradient(
-                            //colors: [Color(0XFF00B686), Color(hexColor('#233329'))],
-                            // colors: [Color(0XFF00B686), Color(0XFF00838F)],
                             colors: [
                               Color(hexColor("#00B4DB")),
                               Color(hexColor("#0083B0")),
@@ -140,7 +137,7 @@ class UserProfile extends StatelessWidget {
                                             MainAxisAlignment.center,
                                         children: [
                                           Text(
-                                            "9",
+                                            "${snapshot.data["friends"].length}",
                                             style: TextStyle(
                                               fontSize: 25,
                                               fontWeight: FontWeight.w600,
@@ -166,7 +163,7 @@ class UserProfile extends StatelessWidget {
                                             MainAxisAlignment.center,
                                         children: [
                                           Text(
-                                            "¥5000",
+                                            "¥${snapshot.data["total_doughnated"]}",
                                             style: TextStyle(
                                               fontSize: 25,
                                               color: Colors.white,
@@ -247,12 +244,28 @@ class UserProfile extends StatelessWidget {
                                 Container(
                                   child: Column(
                                     children: [
-                                      Text("You're Owed",
-                                          style: TextStyle(
-                                            fontSize: 20,
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.w800,
-                                          )),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Container(
+                                            height: 9,
+                                            width: 9,
+                                            decoration: BoxDecoration(
+                                                color: Color(0xFF07dfaf),
+                                                borderRadius: BorderRadius.circular(10)
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            width:5,
+                                          ),
+                                          Text("You're Owed",
+                                              style: TextStyle(
+                                                fontSize: 20,
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.w800,
+                                              )),
+                                        ],
+                                      ),
                                       SizedBox(
                                         height: 5,
                                       ),
@@ -270,12 +283,28 @@ class UserProfile extends StatelessWidget {
                                 Container(
                                   child: Column(
                                     children: [
-                                      Text("You Owe",
-                                          style: TextStyle(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.w800,
-                                            color: Colors.white,
-                                          )),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Container(
+                                            height: 9,
+                                            width: 9,
+                                            decoration: BoxDecoration(
+                                                color: Colors.redAccent,
+                                                borderRadius: BorderRadius.circular(10)
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            width:5,
+                                          ),
+                                          Text("You Owe",
+                                              style: TextStyle(
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.w800,
+                                                color: Colors.white,
+                                              )),
+                                        ],
+                                      ),
                                       SizedBox(
                                         height: 5,
                                       ),
