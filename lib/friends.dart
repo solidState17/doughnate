@@ -30,11 +30,12 @@ class _Friends extends State<Friends> {
                 child: Row(
                   children: [
                     Text(
-                      "Friends List",
+                      "Friends",
                       style: TextStyle(
                         fontFamily: 'Futura',
                         fontSize: 24,
-                        color: const Color(0xff707070),
+                        color: Colors.black,
+                        //color: const Color(0xff707070),
                         fontWeight: FontWeight.w700,
                       ),
                       textAlign: TextAlign.left,
@@ -143,7 +144,7 @@ class _Friends extends State<Friends> {
                                   ? [Color(0xFF07dfaf), const Color(0xFF47e544)]
                                   : [
                                       Colors.redAccent,
-                                      Colors.red
+                                      Colors.pink
                                     ], //[const Color(0xFF02b5e0), const Color(0xFF02cabd)]
                               begin: Alignment.topRight,
                               end: Alignment.bottomLeft),

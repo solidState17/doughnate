@@ -91,20 +91,22 @@ class _HomeState extends State<Home> {
         },
         child: Scaffold(
           resizeToAvoidBottomInset: false,
-          backgroundColor: const Color(0xfff5f5f5),
+          backgroundColor: Colors.white,
+          //backgroundColor: const Color(0xfff5f5f5),
           appBar: AppBar(
             elevation: 0,
             centerTitle: true,
-            title: const Text('Doughnate',
+            title: Text('Doughnate',
                 style: TextStyle(
                   fontFamily: 'Futura',
                   fontSize: 30,
-                  color: const Color(0xff707070),
+                  color: Colors.black,
+                  //color: const Color(0xff707070),
                   fontWeight: FontWeight.w700,
                 )),
             automaticallyImplyLeading: false,
           ),
-          // this is the home page
+          //this is the home page
           body: Container(
             child: Center(child: navPages[_currentIndex]),
           ),
@@ -112,7 +114,8 @@ class _HomeState extends State<Home> {
           bottomNavigationBar: BottomNavigationBar(
             // showUnselectedLabels: true,
             type: BottomNavigationBarType.fixed,
-            backgroundColor: const Color(0xfff5f5f5),
+            backgroundColor: Colors.white,
+            //backgroundColor: const Color(0xfff5f5f5),
             elevation: 0,
             currentIndex: _currentIndex,
             items: <BottomNavigationBarItem>[

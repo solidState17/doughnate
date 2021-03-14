@@ -6,173 +6,357 @@ import 'package:flutter/material.dart';
 import 'login.dart';
 import 'pie_chart_view.dart';
 import 'package:intl/intl.dart';
+import 'package:charts_flutter/flutter.dart' as charts;
+import 'pie_chart/categories.dart';
+import 'pie_chart/debt_chart.dart';
+import 'neumorphic_pie/neumorphic_pie.dart';
 
 var total_borrowed = 0;
 var total_lent = 0;
 var totalAmount = 0;
 
-class UserProfile extends StatefulWidget {
-  UserProfile({Key key}) : super(key: key);
-
-  @override
-  _UserProfile createState() => _UserProfile();
+hexColor(String colorhexcode) {
+  String colornew = "0xff" + colorhexcode;
+  colornew = colornew.replaceAll("#", "");
+  int colorint = int.parse(colornew);
+  return colorint;
 }
 
-class _UserProfile extends State<UserProfile> {
-
+class UserProfile extends StatelessWidget {
+  UserProfile({Key key}) : super(key: key);
+  static List<charts.Series<Expense, String>> _series = [
+    charts.Series<Expense, String>(
+        id: 'Expense',
+        domainFn: (Expense expense, _) => expense.category,
+        measureFn: (Expense expense, _) => expense.value,
+        labelAccessorFn: (Expense expense, _) => '\¥${expense.value}',
+        colorFn: (Expense expense, _) =>
+            charts.ColorUtil.fromDartColor(expense.color),
+        data: [
+          Expense('Owe', total_borrowed, Color(hexColor('#93f9b9'))),
+          Expense('Owed', total_lent, Color(hexColor('#10ac84'))),
+        ])
+  ];
   final DocumentReference users =
       FirebaseFirestore.instance.collection("users").doc(userid);
 
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
+    final width = MediaQuery.of(context).size.width;
     final timestamp = DateTime.now();
 
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 15),
-        child: Column(
-          children: <Widget>[
-            StreamBuilder(
-                stream: users.snapshots(),
-                builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-                  if (!snapshot.hasData || !snapshot.data.exists) {
-                    return Center(child: Text("No Transactions"));
-                  }
-                  total_borrowed = snapshot.data["total_borrowed"];
-                  total_lent = snapshot.data["total_lent"];
-                  totalAmount = -total_borrowed + total_lent;
+    return Column(
+      children: <Widget>[
+        StreamBuilder(
+            stream: users.snapshots(),
+            builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+              if (!snapshot.hasData || !snapshot.data.exists) {
+                return Center(child: Text("No Transactions"));
+              }
+              total_borrowed = snapshot.data["total_borrowed"];
+              total_lent = snapshot.data["total_lent"];
+              totalAmount = -total_borrowed + total_lent;
 
-                  return Container(
-                    height: height * 0.3,
+              return Stack(children: [
+                Container(
+                  height: height * 0.45,
+                  child: Column(
+                    children: [
+                      Container(
+                        //height: MediaQuery.of(context).size.height * .4,
+                        height: 360,
+                        decoration: BoxDecoration(
+                          //borderRadius: BorderRadius.circular(20),
+                          gradient: LinearGradient(
+                            //colors: [Color(0XFF00B686), Color(hexColor('#233329'))],
+                            // colors: [Color(0XFF00B686), Color(0XFF00838F)],
+                            colors: [
+                              Color(hexColor("#00B4DB")),
+                              Color(hexColor("#0083B0")),
+                            ],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey,
+                              blurRadius: 5,
+                              offset: Offset(0, 6),
+                            ),
+                          ],
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Padding(
+                          padding: EdgeInsets.all(5),
+                          child: Column(
+                            children: [
+                              SizedBox(
+                                height: 20,
+                              ),
+                              Container(
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      flex: 3,
+                                      child: Column(
+                                        children: [
+                                          Container(
+                                            height: 90,
+                                            width: 90,
+                                            decoration: BoxDecoration(
+                                              color: Color(hexColor("#00B4DB")),
+                                              border: Border.all(
+                                                width: 1.5,
+                                                color: Colors.white,
+                                              ),
+                                              borderRadius:
+                                                  BorderRadius.circular(50),
+                                            ),
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(3.0),
+                                              child: CircleAvatar(
+                                                backgroundImage:
+                                                    NetworkImage(photoURL),
+                                              ),
+                                            ),
+                                          ),
+                                          Text(
+                                            name,
+                                            style: TextStyle(
+                                              fontSize: 17,
+                                              fontWeight: FontWeight.w600,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Expanded(
+                                      flex: 2,
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            "9",
+                                            style: TextStyle(
+                                              fontSize: 25,
+                                              fontWeight: FontWeight.w600,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            height: 10,
+                                          ),
+                                          Text("Friends",
+                                              style: TextStyle(
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.w600,
+                                                color: Colors.white,
+                                              )),
+                                        ],
+                                      ),
+                                    ),
+                                    Expanded(
+                                      flex: 3,
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            "¥5000",
+                                            style: TextStyle(
+                                              fontSize: 25,
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            height: 10,
+                                          ),
+                                          Text(
+                                            "Donation",
+                                            style: TextStyle(
+                                              fontSize: 15,
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Positioned(
+                  top: 150,
+                  right: 30,
+                  child: Container(
+                    padding: EdgeInsets.symmetric(vertical: 10),
+                    width: width * 0.85,
+                    height: 200,
                     child: Row(
                       children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Text(
-                              "Owe",
-                              style: TextStyle(
-                                  fontSize: 25, fontWeight: FontWeight.bold),
+                        Expanded(
+                          flex: 4,
+                          child: Stack(children: [
+                            Container(
+                              child: Center(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      "Total",
+                                      style: TextStyle(
+                                        fontSize: 23,
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    Text(
+                                      "¥${totalAmount}",
+                                      style: TextStyle(
+                                        fontSize: 23,
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
                             ),
-                            Text(
-                              '¥${total_borrowed}',
-                              style: TextStyle(
-                                  fontSize: 20, fontWeight: FontWeight.bold),
+                            NeumorphicPie(),
+                          ]),
+                        ),
+                        Expanded(
+                          flex: 3,
+                          child: Container(
+                            padding: EdgeInsets.symmetric(vertical: 10),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Container(
+                                  child: Column(
+                                    children: [
+                                      Text("You're Owed",
+                                          style: TextStyle(
+                                            fontSize: 20,
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w800,
+                                          )),
+                                      SizedBox(
+                                        height: 5,
+                                      ),
+                                      Text('¥${total_lent}',
+                                          style: TextStyle(
+                                            fontSize: 25,
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w800,
+                                          ))
+                                    ],
+                                  ),
+                                ),
+                                Container(
+                                    width: 100, height: 1, color: Colors.grey),
+                                Container(
+                                  child: Column(
+                                    children: [
+                                      Text("You Owe",
+                                          style: TextStyle(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.w800,
+                                            color: Colors.white,
+                                          )),
+                                      SizedBox(
+                                        height: 5,
+                                      ),
+                                      Text('¥${total_borrowed}',
+                                          style: TextStyle(
+                                            fontSize: 25,
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w800,
+                                          ))
+                                    ],
+                                  ),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
-                        PieChartView(
-                          categories: [
-                            Category("Owed",
-                                amount: snapshot.data["total_lent"]),
-                            Category("Owe",
-                                amount: snapshot.data["total_borrowed"]),
-                          ],
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Text("Owed",
-                                style: TextStyle(
-                                    fontSize: 25, fontWeight: FontWeight.bold)),
-                            Text("¥${total_lent}",
-                                style: TextStyle(
-                                    fontSize: 20, fontWeight: FontWeight.bold)),
-                          ],
-                        ),
+                          ),
+                        )
                       ],
                     ),
-                  );
-                }),
-            Container(
-              width: MediaQuery.of(context).size.width,
-              margin: EdgeInsets.only(top: 20, bottom: 10),
-              child: Text(
-                "Recent Transactions",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20,
-                ),
-              ),
-            ),
-            // For test container you can delete this whenever.
-            // Container(
-            //     width: MediaQuery.of(context).size.width,
-            //     margin: EdgeInsets.only(top: 20, bottom: 10),
-            //     color: Colors.red,
-            //     child: TextButton(
-            //       child: Text("Click!"),
-            //       onPressed: (){
-            //         print("clicked!");
-            //          users.update({
-            //            "transactions": FieldValue.arrayUnion([
-            //             {
-            //               "timestamp": timestamp,
-            //                 "amount": 500,
-            //                 "name": "shota",
-            //                   "type": "borrowed",
-            //              }
-            //             ])
-            //            });
-            //         }
-            //     ),
-            // ),
-            Expanded(
-              child: Column(children: [
-                Expanded(
-                    child: StreamBuilder(
-                  stream: users.snapshots(),
-                  builder: (BuildContext context,
-                      AsyncSnapshot<DocumentSnapshot> snapshot) {
-                    if (!snapshot.hasData || !snapshot.data.exists){
-                      return Center(child: CircularProgressIndicator());
-                    }
-                    return ListView.builder(
-                        itemCount: snapshot.data['transactions'].length,
-                        itemBuilder: (context, int index) {
-                          return Dismissible(
-                              key: Key(
-                                  "${snapshot.data['transactions'][index]}"),
-                              background: Container(
-                                  color: Colors.red,
-                                  child: Icon(
-                                    Icons.delete,
-                                    color: Colors.white,
-                                    size: 30,
-                                  )),
-                              onDismissed: (_direction){
-                                if (_direction == DismissDirection.startToEnd) {
-                                  var specificTimestamp = snapshot.data['transactions'][index]["timestamp"];
-                                  var newTransaction = [];
-                                  snapshot.data['transactions'].forEach((val) {
-                                    if(val["timestamp"] != specificTimestamp) {
-                                      newTransaction.add(val);
-                                    }
-                                  });
-                                  users.update({
-                                    "transactions": newTransaction
-                                  });
-                                  }
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                          content:
-                                              Text("TransAction was Deleted")));
-
-                              },
-                              child: historyCard(
-                                  snapshot.data["transactions"][index]));
-                        });
-                  },
+                    //child: DebtChart(_series, animate: true),
+                  ),
                 )
-                    //friends.map((friend) => buildCard(friend)).toList(),
-                    ),
-              ]),
+              ]);
+            }),
+        Container(
+          width: MediaQuery.of(context).size.width,
+          margin: EdgeInsets.only(top: 20, bottom: 10, left: 20),
+          child: Text(
+            "Recent Transactions",
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 20,
             ),
-          ],
+          ),
         ),
-      ),
+        Expanded(
+          child: Column(children: [
+            Expanded(
+                child: StreamBuilder(
+              stream: users.snapshots(),
+              builder: (BuildContext context,
+                  AsyncSnapshot<DocumentSnapshot> snapshot) {
+                if (!snapshot.hasData || !snapshot.data.exists) {
+                  return Center(child: CircularProgressIndicator());
+                }
+                return ListView.builder(
+                    itemCount: snapshot.data['transactions'].length,
+                    itemBuilder: (context, int index) {
+                      return Dismissible(
+                          key: Key("${snapshot.data['transactions'][index]}"),
+                          background: Container(
+                              color: Colors.red,
+                              child: Icon(
+                                Icons.delete,
+                                color: Colors.white,
+                                size: 30,
+                              )),
+                          onDismissed: (_direction) {
+                            if (_direction == DismissDirection.startToEnd) {
+                              var specificTimestamp = snapshot
+                                  .data['transactions'][index]["timestamp"];
+                              var newTransaction = [];
+                              snapshot.data['transactions'].forEach((val) {
+                                if (val["timestamp"] != specificTimestamp) {
+                                  newTransaction.add(val);
+                                }
+                              });
+                              users.update({"transactions": newTransaction});
+                            }
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                content: Text("TransAction was Deleted")));
+                          },
+                          child: historyCard(
+                              snapshot.data["transactions"][index]));
+                    });
+              },
+            )
+                //friends.map((friend) => buildCard(friend)).toList(),
+                ),
+          ]),
+        ),
+      ],
     );
   }
 }
@@ -184,13 +368,12 @@ Card historyCard(transaction) {
     shadowColor: Colors.black,
     elevation: 15,
     shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.only(
-      topLeft: Radius.circular(15.0),
-      bottomLeft: Radius.circular(15.0),
+        borderRadius: BorderRadius.all(
+      Radius.circular(20.0),
     )),
     child: InkWell(
       child: Container(
-        height: 100,
+        height: 85,
         child: Row(
           children: [
             Expanded(
@@ -199,15 +382,6 @@ Card historyCard(transaction) {
                 padding: const EdgeInsets.all(20.0),
                 child: Row(
                   children: [
-                    // Expanded(
-                    //   flex: 4,
-                    //   child: Container(
-                    //     child: CircleAvatar(
-                    //       radius: 30,
-                    //       backgroundImage: NetworkImage(friend['profilePic']),
-                    //     ),
-                    //   ),
-                    // ),
                     Expanded(
                       flex: 7,
                       child: Padding(
@@ -218,16 +392,17 @@ Card historyCard(transaction) {
                             // mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                DateFormat.yMMMd().format(myDateTime),
+                                DateFormat('yyyy/MM/dd(E) HH:mm')
+                                    .format(myDateTime),
                                 style: TextStyle(
-                                  fontSize: 14,
+                                  fontSize: 16,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
                               Text(
                                 "${transaction['name']}",
                                 style: TextStyle(
-                                    fontSize: 20, fontWeight: FontWeight.bold),
+                                    fontSize: 22, fontWeight: FontWeight.bold),
                               ),
                             ]),
                       ),
@@ -243,10 +418,11 @@ Card historyCard(transaction) {
                   gradient: LinearGradient(
                       colors: transaction["type"] == "borrowed"
                           ? [Color(0xFF07dfaf), const Color(0xFF47e544)]
-                          : [Colors.redAccent, Colors.red],
+                          : [Colors.pink, Colors.redAccent],
                       begin: Alignment.topRight,
                       end: Alignment.bottomLeft),
                   shape: BoxShape.rectangle,
+                  borderRadius: BorderRadius.circular(20),
                 ),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
