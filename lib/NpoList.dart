@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
-
 import 'home.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -20,6 +19,16 @@ class NpoList extends StatefulWidget {
 final npoStream = FirebaseFirestore.instance.collection('npos').snapshots();
 
 class _NpoList extends State<NpoList> {
+  // this code refreshes after updating preferred NPO, hopefully
+  void rebuildAllChildren(BuildContext context) {
+    void rebuild(Element el) {
+      el.markNeedsBuild();
+      el.visitChildren(rebuild);
+    }
+
+    (context as Element).visitChildren(rebuild);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -84,7 +93,7 @@ class _NpoList extends State<NpoList> {
     return Card(
       margin: EdgeInsets.all(10),
       shadowColor: currentNPO['name'] == npo ? Colors.pink : Colors.black,
-      elevation: 15,
+      elevation: 8,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(15.0),
@@ -95,7 +104,9 @@ class _NpoList extends State<NpoList> {
         onTap: () {
           showDialog(
             context: context,
-            builder: (context) => NPOProfile(currentNPO: currentNPO),
+            builder: (context) {
+              return NPOProfile(currentNPO);
+            },
           );
         },
         child: Container(
@@ -142,22 +153,8 @@ class _NpoList extends State<NpoList> {
       ),
     );
   }
-}
 
-class NPOProfile extends StatefulWidget {
-  final currentNPO;
-  const NPOProfile({Key key, @required this.currentNPO}) : super(key: key);
-
-  @override
-  _NPOProfile createState() => _NPOProfile();
-}
-
-class _NPOProfile extends State<NPOProfile> {
-  // THIS IS A REDRAW FUNC FOR UPDATING THE HIGHLIGHTED CARD
-  // final redraw = () {
-  //   setState(() {});
-  // };
-  Widget build(BuildContext context) {
+  AlertDialog NPOProfile(currentNPO) {
     return AlertDialog(
       content: Container(
         width: 300,
@@ -173,24 +170,23 @@ class _NPOProfile extends State<NPOProfile> {
                     fontSize: 12,
                   ),
                 ),
-                // backgroundImage: NetworkImage(npo['logo']),
               ),
             ),
             Text(
-              widget.currentNPO['name'],
+              currentNPO['name'],
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            Text(widget.currentNPO['summary']),
+            Text(currentNPO['summary']),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 TextButton(
                   onPressed: () {
-                    print(widget.currentNPO);
-                    npo = widget.currentNPO['name'];
+                    print(currentNPO);
+                    npo = currentNPO['name'];
                     print('🔥');
                     UpdateUser();
                     setState(() {});
@@ -201,7 +197,8 @@ class _NPOProfile extends State<NPOProfile> {
                 Spacer(),
                 TextButton(
                   onPressed: () {
-                    visitNPO(npo: widget.currentNPO['name']);
+                    visitNPO(npo: currentNPO['name']);
+                    rebuildAllChildren(context);
                     Navigator.of(context, rootNavigator: true).pop();
                   },
                   child: Text('Visit Site'),
@@ -226,32 +223,4 @@ decoration: BoxDecoration(
     ),
   ),
 ),
-
-
-Row(
-  mainAxisAlignment: MainAxisAlignment.center,
-  children: [
-    TextButton(
-      onPressed: () {
-        _launchURL(
-          npo: widget.friend['npo'],
-        );
-        adjustDebt(widget.friend['friendship']['friendshipid'],
-            int.parse(_enteredAmount.text), "Doughnation");
-        Navigator.of(context, rootNavigator: true).pop();
-      },
-      child: Text('Doughnate'),
-    ),
-    Spacer(),
-    new TextButton(
-      onPressed: () {
-        adjustDebt(widget.friend['friendship']['friendshipid'],
-            int.parse(_enteredAmount.text), "Adjust");
-        Navigator.of(context, rootNavigator: true).pop();
-      },
-      child: Text('Adjust Debt'),
-    ),
-  ],
-),
-
  */
