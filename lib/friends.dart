@@ -1,12 +1,15 @@
 import 'dart:async';
 import 'package:doughnate/debtHistory/Debtlist.dart';
 import 'home.dart';
+import 'dart:ui' as ui show Image;
 import 'package:flutter/material.dart';
 import 'updateDebt.dart';
 import 'home.dart';
 import 'login.dart';
 import 'search.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import './UI/shapes.dart';
+import './UI/colorsUI.dart';
 
 class Friends extends StatefulWidget {
   Friends({Key key}) : super(key: key);
@@ -16,7 +19,6 @@ class Friends extends StatefulWidget {
 }
 
 class _Friends extends State<Friends> {
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -34,13 +36,13 @@ class _Friends extends State<Friends> {
                       style: TextStyle(
                         fontFamily: 'Futura',
                         fontSize: 24,
-                        color: const Color(0xff707070),
+                        color: Colors.white,
                         fontWeight: FontWeight.w700,
                       ),
                       textAlign: TextAlign.left,
                     ),
                     Spacer(),
-                    TextButton(
+                    ElevatedButton(
                       onPressed: () {
                         Navigator.push(
                           context,
@@ -50,7 +52,17 @@ class _Friends extends State<Friends> {
                           ),
                         );
                       },
-                      child: Text('Add Friend'),
+                      style: ElevatedButton.styleFrom(
+                        primary: primarySalmon,
+                      ),
+                      child: Text('Add Friend',
+                        style: TextStyle(
+                           fontFamily: 'Futura',
+                        fontSize: 14,
+                        color: Colors.black54,
+                        fontWeight: FontWeight.w700,
+                        )
+                      ),
                     ),
                   ],
                 ),
@@ -72,7 +84,7 @@ class _Friends extends State<Friends> {
                       return ListView.builder(
                         itemCount: snapshot.data.length,
                         itemBuilder: (context, int index) {
-                          return buildCard(snapshot.data[index]);
+                            return buildCard(snapshot.data[index]);
                           // snapshot.data.map<Widget>((friend) => buildCard(friend)).toList()
                         },
                       );
@@ -88,12 +100,15 @@ class _Friends extends State<Friends> {
   }
 
   Card buildCard(friend) {
-
     // FirebaseFirestore.instance.collection('users').where("email", isEqualTo: friend['userA']).get()
+
+    final double perc =
+        (friend['total_doughnated'] / friend['total_reimbursed']) * 100;
+    final double displayedPerc = perc.isNaN ? 0.0 : perc;
 
     return Card(
       shadowColor: Colors.black,
-      elevation: 15,
+      elevation: 8,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(15.0),
@@ -108,93 +123,109 @@ class _Friends extends State<Friends> {
           );
         },
         child: Container(
-          padding: EdgeInsets.all(10.0),
+          // padding: EdgeInsets.all(10.0),
           height: 150,
           child: Row(
             children: [
               Expanded(
                 flex: 7,
-                child: Column(crossAxisAlignment: CrossAxisAlignment.start,
-                    // mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        friend['displayName'],
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(8.0, 6.0, 0.0, 5.0),
+                  child: Column(crossAxisAlignment: CrossAxisAlignment.start,
+                      // mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          friend['displayName'],
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
-                      Text(
-                        "90% reimbursed via D🍩ughnations",
-                        style: TextStyle(
-                          fontSize: 14,
-                        ),
-                      ),
-                      //If owner is user, show green card, otherwise show red card.
-                      Container(
-                        height: 70.0,
-                        width: 220.0,
-                        margin: EdgeInsets.only(top: 10),
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                              colors: friend['friendship']
-                                          [friend['friendship']['owner']] ==
-                                      email
-                                  ? [Color(0xFF07dfaf), const Color(0xFF47e544)]
-                                  : [
-                                      Colors.redAccent,
-                                      Colors.red
-                                    ], //[const Color(0xFF02b5e0), const Color(0xFF02cabd)]
-                              begin: Alignment.topRight,
-                              end: Alignment.bottomLeft),
-                          // color: const Color(0xffa9e19c),
-                          shape: BoxShape.rectangle,
-                          borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            friend['friendship']
-                                        [friend['friendship']['owner']] ==
-                                    email
-                                ? Text(
-                                    "You're Owed",
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white,
-                                    ),
-                                  )
-                                : Text(
-                                    "You Owe",
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                            Text(
-                              "¥${friend['friendship']['debt'].toString()}",
-                              style: TextStyle(
-                                fontSize: 30,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
+                        friend['display_doughnated']
+                            ? Text(
+                                "$displayedPerc% reimbursed as D🍩ughnations",
+                                style: TextStyle(
+                                  fontSize: 14,
+                                ),
+                              )
+                            : Text(''),
+                        //If owner is user, show green card, otherwise show red card.
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 0.0),
+                          child: Container(
+                            height: 60.0,
+                            width: 220.0,
+                            margin: EdgeInsets.only(top: 10),
+                            decoration: BoxDecoration(
+                              // gradient: LinearGradient(
+                              //     colors: friend['friendship']
+                              //                 [friend['friendship']['owner']] ==
+                              //             email
+                              //         ? [
+                              //             Color(0xFF07dfaf),
+                              //             const Color(0xFF47e544)
+                              //           ]
+                              //         : [
+                              //             Colors.redAccent,
+                              //             Colors.red
+                              //           ], //[const Color(0xFF02b5e0), const Color(0xFF02cabd)]
+                              //     begin: Alignment.topRight,
+                              //     end: Alignment.bottomLeft),
+                              // color: const Color(0xffa9e19c),
+                              shape: BoxShape.rectangle,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10.0)),
+                              color: friend['friendship'][friend['friendship']['owner']] == email ? primaryGreen2 : primaryRed2,
                             ),
-                          ],
-                        ),
-                      )
-                    ]),
-              ),
-              Expanded(
-                flex: 3,
-                child: Container(
-                  child: CircleAvatar(
-                    radius: 60,
-                    backgroundImage: NetworkImage(friend['profilePic']),
-                  ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                friend['friendship']
+                                            [friend['friendship']['owner']] ==
+                                        email
+                                    ? Text(
+                                        "You're Owed",
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white,
+                                        ),
+                                      )
+                                    : Text(
+                                        "You Owe",
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                Text(
+                                  "¥${friend['friendship']['debt'].toString()}",
+                                  style: TextStyle(
+                                    fontSize: 30,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        )
+                      ]),
                 ),
               ),
+              Expanded(
+                  flex: 3,
+                  child: Container(
+                    constraints: BoxConstraints.expand(),
+                    padding: EdgeInsets.all(0.0),
+                    child: ClipPath(
+                      clipper: ShapeClipper(),
+                      child: FittedBox(
+                          child: Image.network(friend['profilePic']),
+                          fit: BoxFit.cover),
+                    ),
+                  )),
             ],
           ),
         ),

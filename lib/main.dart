@@ -17,10 +17,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
         title: 'Doughnate',
         debugShowCheckedModeBanner:false,
-        theme: ThemeData(
-          primaryColor: const Color(0xfff5f5f5),
-          visualDensity: VisualDensity.adaptivePlatformDensity,
-        ),
+        // theme: ThemeData(
+        //   primaryColor: const Color(0xfff5f5f5),
+        //   visualDensity: VisualDensity.adaptivePlatformDensity,
+        // ),
         home: GoogleAuth());
   }
 }

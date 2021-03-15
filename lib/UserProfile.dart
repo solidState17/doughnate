@@ -19,7 +19,6 @@ class UserProfile extends StatefulWidget {
 }
 
 class _UserProfile extends State<UserProfile> {
-
   final DocumentReference users =
       FirebaseFirestore.instance.collection("users").doc(userid);
 
@@ -126,9 +125,14 @@ class _UserProfile extends State<UserProfile> {
                   stream: users.snapshots(),
                   builder: (BuildContext context,
                       AsyncSnapshot<DocumentSnapshot> snapshot) {
-                    if (!snapshot.hasData || !snapshot.data.exists){
+                    if (!snapshot.hasData || !snapshot.data.exists) {
                       return Center(child: CircularProgressIndicator());
                     }
+
+                    if (snapshot.data['transactions'].length == 0) {
+                      return Center(child: Text('No new transactions', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: const Color(0xff707070)),));
+                    }
+
                     return ListView.builder(
                         itemCount: snapshot.data['transactions'].length,
                         itemBuilder: (context, int index) {
@@ -142,24 +146,23 @@ class _UserProfile extends State<UserProfile> {
                                     color: Colors.white,
                                     size: 30,
                                   )),
-                              onDismissed: (_direction){
+                              onDismissed: (_direction) {
                                 if (_direction == DismissDirection.startToEnd) {
-                                  var specificTimestamp = snapshot.data['transactions'][index]["timestamp"];
+                                  var specificTimestamp = snapshot
+                                      .data['transactions'][index]["timestamp"];
                                   var newTransaction = [];
                                   snapshot.data['transactions'].forEach((val) {
-                                    if(val["timestamp"] != specificTimestamp) {
+                                    if (val["timestamp"] != specificTimestamp) {
                                       newTransaction.add(val);
                                     }
                                   });
-                                  users.update({
-                                    "transactions": newTransaction
-                                  });
-                                  }
+                                  users
+                                      .update({"transactions": newTransaction});
+                                }
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                          content:
-                                              Text("TransAction was Deleted")));
-
+                                    SnackBar(
+                                        content:
+                                            Text("TransAction was Deleted")));
                               },
                               child: historyCard(
                                   snapshot.data["transactions"][index]));

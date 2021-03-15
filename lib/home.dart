@@ -8,6 +8,7 @@ import 'login.dart';
 import 'search.dart';
 import 'NpoList.dart';
 import 'UserProfile.dart';
+import 'UI/colorsUI.dart';
 
 final friendsList = StreamController<List>.broadcast();
 
@@ -21,7 +22,6 @@ Future<void> getAllFriends() async {
   var friendsArray = thisUser.data()['friends'];
 
   friendsArray.forEach((userFriend) async {
-
     final obj = await FirebaseFirestore.instance
         .collection('Friendship')
         .doc(userFriend)
@@ -42,7 +42,7 @@ Future<void> getAllFriends() async {
     });
   });
 
-  new Timer(const Duration(seconds: 1), () => friendsList.sink.add(friends));
+  new Timer(const Duration(seconds: 2), () => friendsList.sink.add(friends));
 
   // friendsList.sink.add(friends);
 }
@@ -89,59 +89,74 @@ class _HomeState extends State<Home> {
         onWillPop: () async {
           return false;
         },
-        child: Scaffold(
-          resizeToAvoidBottomInset: false,
-          backgroundColor: const Color(0xfff5f5f5),
-          appBar: AppBar(
-            elevation: 0,
-            centerTitle: true,
-            title: const Text('Doughnate',
-                style: TextStyle(
-                  fontFamily: 'Futura',
-                  fontSize: 30,
-                  color: const Color(0xff707070),
-                  fontWeight: FontWeight.w700,
-                )),
-            automaticallyImplyLeading: false,
-          ),
-          // this is the home page
-          body: Container(
-            child: Center(child: navPages[_currentIndex]),
-          ),
+        child: Container(
+          decoration: BoxDecoration(gradient: LinearGradient(colors: [
+            bgColor1,
+            bgColor2,
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          )),
+          child: Scaffold(
+            resizeToAvoidBottomInset: false,
+            backgroundColor: Colors.transparent,
+            appBar: AppBar(
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              centerTitle: true,
+              title: const Text('Doughnate',
+                  style: TextStyle(
+                    fontFamily: 'Futura',
+                    fontSize: 30,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w700,
+                  )),
+              automaticallyImplyLeading: false,
+            ),
+            // this is the home page
+            body: Container(
+              child: Center(
+                  child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: navPages[_currentIndex],
+              )),
+            ),
 
-          bottomNavigationBar: BottomNavigationBar(
-            // showUnselectedLabels: true,
-            type: BottomNavigationBarType.fixed,
-            backgroundColor: const Color(0xfff5f5f5),
-            elevation: 0,
-            currentIndex: _currentIndex,
-            items: <BottomNavigationBarItem>[
-              BottomNavigationBarItem(
-                icon: Icon(Icons.home),
-                label: "Home",
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.people_alt_rounded),
-                label: "Friends",
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.view_list_outlined),
-                label: "NPOs",
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.settings),
-                label: "Settings",
-              ),
-            ],
-            onTap: (index) {
-              setState(() {
-                _currentIndex = index;
-              });
-              if (_currentIndex == 1) {
-                getAllFriends();
-              }
-            },
-            selectedItemColor: const Color(0xff4d4d4d),
+            bottomNavigationBar: BottomNavigationBar(
+              // showUnselectedLabels: true,
+              type: BottomNavigationBarType.fixed,
+              backgroundColor: Colors.transparent,
+              unselectedItemColor: Colors.white,
+              elevation: 0,
+              currentIndex: _currentIndex,
+              items: <BottomNavigationBarItem>[
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.home),
+                  label: "Home",
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.people_alt_rounded),
+                  label: "Friends",
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.view_list_outlined),
+                  label: "NPOs",
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.settings),
+                  label: "Settings",
+                ),
+              ],
+              onTap: (index) {
+                setState(() {
+                  _currentIndex = index;
+                });
+                if (_currentIndex == 1) {
+                  getAllFriends();
+                }
+              },
+              selectedItemColor: Colors.white,
+            ),
           ),
         ));
   }

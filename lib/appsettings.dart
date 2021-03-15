@@ -78,7 +78,7 @@ class _AppSettings extends State<AppSettings> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xfff5f5f5),
+      backgroundColor: Colors.transparent,
       body: Center(
         // child: Padding(
         // padding: const EdgeInsets.all(8.0),
@@ -99,7 +99,7 @@ class _AppSettings extends State<AppSettings> {
                             style: TextStyle(
                               fontFamily: 'Futura',
                               fontSize: 24,
-                              color: const Color(0xff707070),
+                              color: Colors.white,
                               fontWeight: FontWeight.w700,
                             ),
                             textAlign: TextAlign.left,
@@ -125,17 +125,21 @@ class _AppSettings extends State<AppSettings> {
                   ),
                   CircleAvatar(
                     radius: 60,
+                    backgroundColor: const Color(0x00000000),
                     child: ClipOval(
                       child: Image(
                         image: NetworkImage(photoURL),
                       ),
                     ),
                   ),
-                  OutlinedButton(
-                    onPressed: () async {
-                      await getImage();
-                    },
-                    child: Text('Upload Picture'),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(100.0, 0.0, 100.0, 0.0),
+                    child: OutlinedButton(
+                      onPressed: () async {
+                        await getImage();
+                      },
+                      child: Text('Upload Picture'),
+                    ),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
@@ -152,42 +156,39 @@ class _AppSettings extends State<AppSettings> {
                       },
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Expanded(
-                      child: StreamBuilder<QuerySnapshot>(
-                        stream: FirebaseFirestore.instance
-                            .collection('npos')
-                            .snapshots(),
-                        builder: (BuildContext content,
-                            AsyncSnapshot<QuerySnapshot> snapshot) {
-                          if (!snapshot.hasData) return Text('No NPOs');
-                          return DropdownSearch(
-                            label: "NPO",
-                            onChanged: (value) {
-                              setState(() {
-                                npo = value;
-                              });
+                         Expanded(
+                          child: StreamBuilder<QuerySnapshot>(
+                            stream: FirebaseFirestore.instance
+                                .collection('npos')
+                                .snapshots(),
+                            builder: (BuildContext content,
+                                AsyncSnapshot<QuerySnapshot> snapshot) {
+                              if (!snapshot.hasData) return Text('No NPOs');
+                              return DropdownSearch(
+                                label: "NPO",
+                                onChanged: (value) {
+                                  setState(() {
+                                    npo = value;
+                                  });
+                                },
+                                selectedItem: npo,
+                                validator: (item) {
+                                  if (item == null)
+                                    return "Required field";
+                                  else if (item == "Brazil")
+                                    return "Invalid item";
+                                  else
+                                    return null;
+                                },
+                                items: snapshot.data.docs.map(
+                                  (doc) {
+                                    return doc['name'];
+                                  },
+                                ).toList(),
+                              );
                             },
-                            selectedItem: npo,
-                            validator: (item) {
-                              if (item == null)
-                                return "Required field";
-                              else if (item == "Brazil")
-                                return "Invalid item";
-                              else
-                                return null;
-                            },
-                            items: snapshot.data.docs.map(
-                              (doc) {
-                                return doc['name'];
-                              },
-                            ).toList(),
-                          );
-                        },
-                      ),
-                    ),
-                  ),
+                          ),
+                        ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Row(
