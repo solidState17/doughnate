@@ -9,6 +9,7 @@ import 'search.dart';
 import 'NpoList.dart';
 import 'UserProfile.dart';
 import 'UI/colorsUI.dart';
+import 'UserProfile.dart';
 
 final friendsList = StreamController<List>.broadcast();
 

@@ -32,7 +32,7 @@ class _Friends extends State<Friends> {
                 child: Row(
                   children: [
                     Text(
-                      "Friends List",
+                      "Friends",
                       style: TextStyle(
                         fontFamily: 'Futura',
                         fontSize: 24,
