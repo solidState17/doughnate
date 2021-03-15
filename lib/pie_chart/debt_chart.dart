@@ -14,8 +14,8 @@ class DebtChart extends StatelessWidget{
       animate: animate,
       animationDuration: Duration(milliseconds: 500),
       defaultRenderer: charts.ArcRendererConfig(
-        arcWidth: 15,
-        strokeWidthPx: 2,
+        arcWidth: 18,
+        strokeWidthPx: 0,
         // arcRendererDecorators: [
         //   charts.ArcLabelDecorator(
         //     labelPadding: -5,

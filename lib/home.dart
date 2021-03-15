@@ -8,6 +8,7 @@ import 'login.dart';
 import 'search.dart';
 import 'NpoList.dart';
 import 'UserProfile.dart';
+import 'UserProfile.dart';
 
 final friendsList = StreamController<List>.broadcast();
 
@@ -91,8 +92,8 @@ class _HomeState extends State<Home> {
         },
         child: Scaffold(
           resizeToAvoidBottomInset: false,
-          backgroundColor: Colors.white,
-          //backgroundColor: const Color(0xfff5f5f5),
+          //backgroundColor: Color(hexColor('#F4B9C4')),
+          backgroundColor: const Color(0xfff5f5f5),
           appBar: AppBar(
             elevation: 0,
             centerTitle: true,
@@ -100,21 +101,23 @@ class _HomeState extends State<Home> {
                 style: TextStyle(
                   fontFamily: 'Futura',
                   fontSize: 30,
-                  color: Colors.black,
-                  //color: const Color(0xff707070),
+                  color: const Color(0xff707070),
                   fontWeight: FontWeight.w700,
                 )),
             automaticallyImplyLeading: false,
           ),
           //this is the home page
-          body: Container(
-            child: Center(child: navPages[_currentIndex]),
+          body: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Container(
+              child: Center(child: navPages[_currentIndex]),
+            ),
           ),
 
           bottomNavigationBar: BottomNavigationBar(
             // showUnselectedLabels: true,
             type: BottomNavigationBarType.fixed,
-            backgroundColor: Colors.white,
+            backgroundColor: const Color(0xfff5f5f5),
             //backgroundColor: const Color(0xfff5f5f5),
             elevation: 0,
             currentIndex: _currentIndex,

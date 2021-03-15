@@ -19,7 +19,7 @@ class NeumorphicPie extends StatelessWidget {
       child: CustomPaint(
         child: Center(),
         painter: ProgressRings(
-          circleWidth: 25.0,
+          circleWidth: 20.0,
           categories: kCategories,
           gradientStartAngle: -0.2,
           gradientEndAngle: 2.1,

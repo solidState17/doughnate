@@ -34,8 +34,8 @@ class UserProfile extends StatelessWidget {
         colorFn: (Expense expense, _) =>
             charts.ColorUtil.fromDartColor(expense.color),
         data: [
-          Expense('Owe', total_borrowed, Color(hexColor('#93f9b9'))),
-          Expense('Owed', total_lent, Color(hexColor('#10ac84'))),
+          Expense('Owe', total_borrowed, Colors.pink),
+          Expense('Owed', total_lent, Color(0xFF47e544)),
         ])
   ];
   final DocumentReference users =
@@ -62,30 +62,32 @@ class UserProfile extends StatelessWidget {
               return Stack(children: [
                 Container(
                   height: height * 0.45,
+                  padding: EdgeInsets.symmetric(horizontal: 10),
                   child: Column(
                     children: [
                       Container(
                         height: 360,
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [
-                              Color(hexColor("#00B4DB")),
-                              Color(hexColor("#0083B0")),
-                            ],
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                          ),
+                         decoration: BoxDecoration(
+                           color: Colors.white,
+                        //   gradient: LinearGradient(
+                        //     colors: [
+                        //       Color(hexColor("#DFF4F6")),
+                        //       Color(hexColor("#C7EBF0")),
+                        //     ],
+                        //     begin: Alignment.topLeft,
+                        //     end: Alignment.bottomRight,
+                        //   ),
                           boxShadow: [
                             BoxShadow(
                               color: Colors.grey,
-                              blurRadius: 5,
+                              blurRadius: 3,
                               offset: Offset(0, 6),
                             ),
                           ],
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: Padding(
-                          padding: EdgeInsets.all(5),
+                          padding: EdgeInsets.symmetric(horizontal: 50, vertical: 10),
                           child: Column(
                             children: [
                               SizedBox(
@@ -124,35 +126,9 @@ class UserProfile extends StatelessWidget {
                                             style: TextStyle(
                                               fontSize: 17,
                                               fontWeight: FontWeight.w600,
-                                              color: Colors.white,
+                                              color: const Color(0xff707070),
                                             ),
                                           ),
-                                        ],
-                                      ),
-                                    ),
-                                    Expanded(
-                                      flex: 2,
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            "${snapshot.data["friends"].length}",
-                                            style: TextStyle(
-                                              fontSize: 25,
-                                              fontWeight: FontWeight.w600,
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            height: 10,
-                                          ),
-                                          Text("Friends",
-                                              style: TextStyle(
-                                                fontSize: 15,
-                                                fontWeight: FontWeight.w600,
-                                                color: Colors.white,
-                                              )),
                                         ],
                                       ),
                                     ),
@@ -166,7 +142,7 @@ class UserProfile extends StatelessWidget {
                                             "¥${snapshot.data["total_doughnated"]}",
                                             style: TextStyle(
                                               fontSize: 25,
-                                              color: Colors.white,
+                                              color: const Color(0xff707070),
                                               fontWeight: FontWeight.w600,
                                             ),
                                           ),
@@ -177,7 +153,7 @@ class UserProfile extends StatelessWidget {
                                             "Donation",
                                             style: TextStyle(
                                               fontSize: 15,
-                                              color: Colors.white,
+                                              color: const Color(0xff707070),
                                               fontWeight: FontWeight.w600,
                                             ),
                                           )
@@ -214,24 +190,25 @@ class UserProfile extends StatelessWidget {
                                     Text(
                                       "Total",
                                       style: TextStyle(
-                                        fontSize: 23,
+                                        fontSize: 25,
                                         fontWeight: FontWeight.w600,
-                                        color: Colors.white,
+                                        color: const Color(0xff707070),
                                       ),
                                     ),
                                     Text(
                                       "¥${totalAmount}",
                                       style: TextStyle(
-                                        fontSize: 23,
+                                        fontSize: 25,
                                         fontWeight: FontWeight.w600,
-                                        color: Colors.white,
+                                        color: const Color(0xff707070),
                                       ),
                                     ),
                                   ],
                                 ),
                               ),
                             ),
-                            NeumorphicPie(),
+                            DebtChart(_series, animate: true,)
+                            //NeumorphicPie(),
                           ]),
                         ),
                         Expanded(
@@ -251,7 +228,7 @@ class UserProfile extends StatelessWidget {
                                             height: 9,
                                             width: 9,
                                             decoration: BoxDecoration(
-                                                color: Color(0xFF07dfaf),
+                                                color : const Color(0xFF47e544),
                                                 borderRadius: BorderRadius.circular(10)
                                             ),
                                           ),
@@ -261,7 +238,7 @@ class UserProfile extends StatelessWidget {
                                           Text("You're Owed",
                                               style: TextStyle(
                                                 fontSize: 20,
-                                                color: Colors.white,
+                                                color: const Color(0xff707070),
                                                 fontWeight: FontWeight.w800,
                                               )),
                                         ],
@@ -272,7 +249,7 @@ class UserProfile extends StatelessWidget {
                                       Text('¥${total_lent}',
                                           style: TextStyle(
                                             fontSize: 25,
-                                            color: Colors.white,
+                                            color: const Color(0xff707070),
                                             fontWeight: FontWeight.w800,
                                           ))
                                     ],
@@ -301,7 +278,7 @@ class UserProfile extends StatelessWidget {
                                               style: TextStyle(
                                                 fontSize: 20,
                                                 fontWeight: FontWeight.w800,
-                                                color: Colors.white,
+                                                color: const Color(0xff707070),
                                               )),
                                         ],
                                       ),
@@ -311,7 +288,7 @@ class UserProfile extends StatelessWidget {
                                       Text('¥${total_borrowed}',
                                           style: TextStyle(
                                             fontSize: 25,
-                                            color: Colors.white,
+                                            color: const Color(0xff707070),
                                             fontWeight: FontWeight.w800,
                                           ))
                                     ],
@@ -376,8 +353,7 @@ class UserProfile extends StatelessWidget {
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                                 content: Text("TransAction was Deleted")));
                           },
-                          child: historyCard(
-                              snapshot.data["transactions"][index]));
+                          child: historyCard(snapshot.data["transactions"][index]));
                     });
               },
             )
@@ -395,11 +371,12 @@ Card historyCard(transaction) {
 
   return Card(
     shadowColor: Colors.black,
-    elevation: 15,
+    elevation: 8,
     shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.all(
       Radius.circular(20.0),
     )),
+
     child: InkWell(
       child: Container(
         height: 85,
