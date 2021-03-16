@@ -26,23 +26,9 @@ hexColor(String colorhexcode) {
 
 class UserProfile extends StatelessWidget {
   UserProfile({Key key}) : super(key: key);
-  static List<charts.Series<Expense, String>> _series = [
-    charts.Series<Expense, String>(
-        id: 'Expense',
-        domainFn: (Expense expense, _) => expense.category,
-        measureFn: (Expense expense, _) => expense.value,
-        labelAccessorFn: (Expense expense, _) => '\¥${expense.value}',
-        colorFn: (Expense expense, _) =>
-            charts.ColorUtil.fromDartColor(expense.color),
-        data: [
-          Expense('Owe', total_borrowed, Colors.pink),
-          Expense('Owed', total_lent, Color(0xFF47e544)),
-        ])
-  ];
-
   final KCategories = [
-    Category('owe', amount: total_borrowed),
-    Category('owed', amount: total_lent),
+    Category([Colors.redAccent, Colors.pink],amount: total_borrowed, ),
+    Category([Color(0xFF07dfaf),const Color(0xFF47e544)],amount: total_lent,),
   ];
 
   final DocumentReference users =
@@ -52,7 +38,6 @@ class UserProfile extends StatelessWidget {
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
-    final timestamp = DateTime.now();
 
     return Column(
       children: <Widget>[
@@ -69,11 +54,11 @@ class UserProfile extends StatelessWidget {
               return Stack(
                 children: [
                   Opacity(
-                    opacity:1,
+                    opacity:0.2,
                     child: Container(
                 height: 250,
                 decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: Colors.purpleAccent,
                     boxShadow: [
                       BoxShadow(
                         color: Colors.grey,
@@ -92,39 +77,7 @@ class UserProfile extends StatelessWidget {
                             Container(
                               padding: EdgeInsets.symmetric(vertical: 30),
                               height: 180,
-                              //child: Stack(
-                                //children: [
                                   child :PieChartView(categories: KCategories,),
-                            //       Container(
-                            //         child: Center(
-                            //           child: Column(
-                            //             mainAxisAlignment:
-                            //             MainAxisAlignment.center,
-                            //             children: [
-                            //               Text(
-                            //                 "Total",
-                            //                 style: TextStyle(
-                            //                   fontSize: 25,
-                            //                   fontWeight: FontWeight.w600,
-                            //                   color: const Color(0xff707070),
-                            //                 ),
-                            //               ),
-                            //               Text("¥${totalAmount}",
-                            //                 style: TextStyle(
-                            //                   fontSize: 25,
-                            //                   fontWeight: FontWeight.w600,
-                            //                   color: const Color(0xff707070),
-                            //                 ),
-                            //               ),
-                            //             ],
-                            //           ),
-                            //         ),
-                            //       ),
-                            //       //DebtChart(_series, animate: true,)
-                            //       NeumorphicPie(categories: kCategories,),
-                            //     ],
-                            //   ), //child: DebtChart(_series, animate: true),
-                            // ),
                             ),
                             Container(
                                 child: Container(
@@ -410,8 +363,8 @@ Card historyCard(transaction) {
 }
 
 class Category {
-  Category(this.name, {@required this.amount});
+  Category(this.gradientColors,{@required this.amount});
 
-  final String name;
   final int amount;
+  final gradientColors;
 }

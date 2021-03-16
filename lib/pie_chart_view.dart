@@ -23,8 +23,9 @@ class PieChartView extends StatelessWidget {
                   child: CustomPaint(
                     child: Center(),
                     foregroundPainter: PieChart(
-                      width: constraint.maxWidth * 0.2,
+                      circleWidth: constraint.maxWidth * 0.2,
                       categories: categories,
+
                     ),
                   ),
                 ),
@@ -45,14 +46,14 @@ class PieChartView extends StatelessWidget {
                             style: TextStyle(
                               fontSize: 23,
                               fontWeight: FontWeight.bold,
-                              color: const Color(0xff707070)
+                              color: Colors.black
                             ),
                           ),
                           Text( totalAmount > 0 ? "+ ¥${totalAmount}" : "- ¥${-totalAmount}",
                             style: TextStyle(
                               fontSize: 23,
                               fontWeight: FontWeight.bold,
-                                color: const Color(0xff707070)
+                                color: Colors.black
                             ),
                           ),
                         ],
@@ -63,4 +64,6 @@ class PieChartView extends StatelessWidget {
           ),
     );
   }
+  @override
+  bool shouldRepaint(CustomPainter painter) => true;
 }
