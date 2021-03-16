@@ -15,6 +15,7 @@ var bgColor2 = Color(hexColor('#D49CE1'));
 // var bgColor2 = Color(hexColor('#B97DCE'));
 var bgText = Colors.white;
 var primaryButtonColor = Color(hexColor('#77E5C7'));
+var primaryButtonColor2 = Color(hexColor('#9CCBE1'));
 var primaryRed = Color(hexColor('#E57795'));
 var primaryRed2 = Color(hexColor('#F2A2DC'));
 var primaryGreen = Color(hexColor('#CCE577'));

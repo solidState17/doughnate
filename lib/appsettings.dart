@@ -158,7 +158,9 @@ class _AppSettings extends State<AppSettings> {
                 await getImage();
                 return showDialog(
                   context: context,
+                  builder: (context) {
                   return imageDialog();
+                  }
                 );
               },
               child: Text('Change Picture'),

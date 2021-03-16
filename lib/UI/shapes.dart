@@ -2,15 +2,20 @@ import 'package:flutter/material.dart';
 import 'dart:ui' as ui show Image;
 
 class CardShape extends CustomPainter {
-  final ui.Image backgroundUser;
-  const CardShape(this.backgroundUser);
+  final Color color;
+
+  CardShape(this.color);
+
+  // const CardShape({ 
+  //   @required this.color
+  // }) : assert(color != null)
 
   @override
   void paint(Canvas canvas, Size size) {
-    var paint = Paint();
-    // ..color = Colors.teal
-    // ..strokeWidth = 5
-    // ..strokeCap = StrokeCap.round;
+    var paint = Paint()
+      ..color = color
+      ..strokeWidth = 5
+      ..strokeCap = StrokeCap.round;
 
     var path = Path();
 
@@ -24,7 +29,7 @@ class CardShape extends CustomPainter {
     path.lineTo(30, 0.0);
 
     canvas.drawPath(path, paint);
-    canvas.drawImage(backgroundUser, Offset.zero, Paint());
+    // canvas.drawImage(backgroundUser, Offset.zero, Paint());
     path.close();
   }
 
@@ -36,14 +41,15 @@ class CardShape extends CustomPainter {
 class ShapeClipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
-      final path = Path();
-      path.moveTo(0, size.height);
-      path.lineTo(size.width, size.height);
-      path.lineTo(size.width, 0.0);
-      path.lineTo(30, 0.0);
-      path.close();
-      return path;
+    final path = Path();
+    path.moveTo(0, size.height);
+    path.lineTo(size.width, size.height);
+    path.lineTo(size.width, 0.0);
+    path.lineTo(30, 0.0);
+    path.close();
+    return path;
   }
+
   @override
   bool shouldReclip(ShapeClipper oldClipper) => false;
 }
