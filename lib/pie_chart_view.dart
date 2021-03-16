@@ -23,7 +23,7 @@ class PieChartView extends StatelessWidget {
                   child: CustomPaint(
                     child: Center(),
                     foregroundPainter: PieChart(
-                      width: constraint.maxWidth * 0.6,
+                      width: constraint.maxWidth * 0.2,
                       categories: categories,
                     ),
                   ),
@@ -31,16 +31,9 @@ class PieChartView extends StatelessWidget {
               ),
               Center(
                 child: Container(
-                    height: constraint.maxWidth * 0.67,
+                  height: 100,
                     decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
-                          Color(hexColor("#00B4DB")),
-                          Color(hexColor("#0083B0")),
-                        ],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
+                      color: Colors.white,
                       shape: BoxShape.circle,
                     ),
                     child: Center(
@@ -50,16 +43,16 @@ class PieChartView extends StatelessWidget {
                           Text(
                             'Total',
                             style: TextStyle(
-                              fontSize: 25,
+                              fontSize: 23,
                               fontWeight: FontWeight.bold,
-                              color: Colors.white
+                              color: const Color(0xff707070)
                             ),
                           ),
                           Text( totalAmount > 0 ? "+ ¥${totalAmount}" : "- ¥${-totalAmount}",
                             style: TextStyle(
-                              fontSize: 25,
+                              fontSize: 23,
                               fontWeight: FontWeight.bold,
-                                color: Colors.white
+                                color: const Color(0xff707070)
                             ),
                           ),
                         ],
