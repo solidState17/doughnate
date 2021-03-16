@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:doughnate/neumorphic_pie/progress_rings.dart';
 import 'package:doughnate/pie_chart.dart';
 import 'package:doughnate/search.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -38,6 +39,12 @@ class UserProfile extends StatelessWidget {
           Expense('Owed', total_lent, Color(0xFF47e544)),
         ])
   ];
+
+  final KCategories = [
+    Category('owe', amount: total_borrowed),
+    Category('owed', amount: total_lent),
+  ];
+
   final DocumentReference users =
       FirebaseFirestore.instance.collection("users").doc(userid);
 
@@ -59,228 +66,193 @@ class UserProfile extends StatelessWidget {
               total_lent = snapshot.data["total_lent"];
               totalAmount = -total_borrowed + total_lent;
 
-              return Column(
+              return Stack(
                 children: [
-                  Container(
-                    height: 340,
-                     decoration: BoxDecoration(
-                       color: Colors.white,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey,
-                          blurRadius: 3,
-                          offset: Offset(0, 6),
-                        ),
-                      ],
-                      borderRadius: BorderRadius.circular(20),
+                  Opacity(
+                    opacity:1,
+                    child: Container(
+                height: 250,
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey,
+                        blurRadius: 3,
+                        offset: Offset(0, 6),
+                      ),
+                    ],
+                    borderRadius: BorderRadius.circular(20),
+                ),
                     ),
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-                      child: Column(
-                        children: [
-                          SizedBox(
-                            height: 20,
-                          ),
-                          Container(
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  flex: 3,
-                                  child: Column(
+                  ),
+                  Column(
+                    children: [
+                        Column(
+                          children: [
+                            Container(
+                              padding: EdgeInsets.symmetric(vertical: 30),
+                              height: 180,
+                              //child: Stack(
+                                //children: [
+                                  child :PieChartView(categories: KCategories,),
+                            //       Container(
+                            //         child: Center(
+                            //           child: Column(
+                            //             mainAxisAlignment:
+                            //             MainAxisAlignment.center,
+                            //             children: [
+                            //               Text(
+                            //                 "Total",
+                            //                 style: TextStyle(
+                            //                   fontSize: 25,
+                            //                   fontWeight: FontWeight.w600,
+                            //                   color: const Color(0xff707070),
+                            //                 ),
+                            //               ),
+                            //               Text("¥${totalAmount}",
+                            //                 style: TextStyle(
+                            //                   fontSize: 25,
+                            //                   fontWeight: FontWeight.w600,
+                            //                   color: const Color(0xff707070),
+                            //                 ),
+                            //               ),
+                            //             ],
+                            //           ),
+                            //         ),
+                            //       ),
+                            //       //DebtChart(_series, animate: true,)
+                            //       NeumorphicPie(categories: kCategories,),
+                            //     ],
+                            //   ), //child: DebtChart(_series, animate: true),
+                            // ),
+                            ),
+                            Container(
+                                child: Container(
+                                  padding: EdgeInsets.only( right: 25, left: 25, bottom: 10),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
                                       Container(
-                                        height: 60,
-                                        width: 60,
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(50),
-                                        ),
-                                        child: Padding(
-                                          padding:
-                                              const EdgeInsets.all(3.0),
-                                          child: CircleAvatar(
-                                            backgroundImage:
-                                                NetworkImage(photoURL),
-                                          ),
-                                        ),
-                                      ),
-                                      Text(
-                                        name,
-                                        style: TextStyle(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.w600,
-                                          color: const Color(0xff707070),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Expanded(
-                                  flex: 5,
-                                  child: Column(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        "¥${snapshot.data["total_doughnated"]}",
-                                        style: TextStyle(
-                                          fontSize: 25,
-                                          color: const Color(0xff707070),
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        height: 10,
-                                      ),
-                                      Text(
-                                        "Donation",
-                                        style: TextStyle(
-                                          fontSize: 15,
-                                          color: const Color(0xff707070),
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                          Container(
-                            padding: EdgeInsets.symmetric(vertical: 10),
-                            height: 200,
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  flex: 3,
-                                  child: Stack(children: [
-                                    Container(
-                                      child: Center(
                                         child: Column(
-                                          mainAxisAlignment: MainAxisAlignment.center,
                                           children: [
-                                            Text(
-                                              "Total",
-                                              style: TextStyle(
-                                                fontSize: 25,
-                                                fontWeight: FontWeight.w600,
-                                                color: const Color(0xff707070),
-                                              ),
+                                            Row(
+                                              mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                              children: [
+                                                Container(
+                                                  height: 8,
+                                                  width: 8,
+                                                  decoration: BoxDecoration(
+                                                      color: const Color(0xFF47e544),
+                                                      borderRadius:
+                                                      BorderRadius.circular(10)),
+                                                ),
+                                                SizedBox(
+                                                  width: 3,
+                                                ),
+                                                Text("Owed",
+                                                    style: TextStyle(
+                                                      fontSize: 18,
+                                                      color: const Color(0xff707070),
+                                                      fontWeight: FontWeight.w800,
+                                                    )),
+                                              ],
+                                            ),
+                                            SizedBox(
+                                              height: 5,
                                             ),
                                             Text(
-                                              "¥${totalAmount}",
+                                              '¥${total_lent}',
                                               style: TextStyle(
-                                                fontSize: 25,
-                                                fontWeight: FontWeight.w600,
+                                                fontSize: 23,
                                                 color: const Color(0xff707070),
+                                                fontWeight: FontWeight.w800,
                                               ),
-                                            ),
+                                            )
                                           ],
                                         ),
                                       ),
-                                    ),
-                                    //DebtChart(_series, animate: true,)
-                                    NeumorphicPie(),
-                                  ],
+                                      Container(
+                                        height:40,
+                                        child: VerticalDivider(
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                      Container(
+                                        child: Column(
+                                          children: [
+                                            Text("Doughnation",
+                                                style: TextStyle(
+                                                  fontSize: 18,
+                                                  color: const Color(0xff707070),
+                                                  fontWeight: FontWeight.w800,
+                                                )),
+                                            SizedBox(
+                                              height: 5,
+                                            ),
+                                            Text(
+                                              '¥${snapshot.data["total_doughnated"]}',
+                                              style: TextStyle(
+                                                fontSize: 23,
+                                                color: const Color(0xff707070),
+                                                fontWeight: FontWeight.w800,
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                      Container(
+                                        height:40,
+                                        child: VerticalDivider(
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                      Container(
+                                        child: Column(
+                                          children: [
+                                            Row(
+                                              mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                              children: [
+                                                Container(
+                                                  height: 8,
+                                                  width: 8,
+                                                  decoration: BoxDecoration(
+                                                      color: Colors.redAccent,
+                                                      borderRadius:
+                                                      BorderRadius.circular(10)),
+                                                ),
+                                                SizedBox(
+                                                  width: 3,
+                                                ),
+                                                Text("Owe",
+                                                    style: TextStyle(
+                                                      fontSize:  18,
+                                                      fontWeight: FontWeight.w800,
+                                                      color: const Color(0xff707070),
+                                                    )),
+                                              ],
+                                            ),
+                                            SizedBox(
+                                              height: 5,
+                                            ),
+                                            Text('¥${total_borrowed}',
+                                                style: TextStyle(
+                                                  fontSize: 23,
+                                                  color: const Color(0xff707070),
+                                                  fontWeight: FontWeight.w800,
+                                                ))
+                                          ],
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
-                                Expanded(
-                                  flex: 3,
-                                  child: Container(
-                                    padding: EdgeInsets.symmetric(vertical: 10),
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Container(
-                                          child: Column(
-                                            children: [
-                                              Row(
-                                                mainAxisAlignment: MainAxisAlignment.center,
-                                                children: [
-                                                  Container(
-                                                    height: 9,
-                                                    width: 9,
-                                                    decoration: BoxDecoration(
-                                                        color : const Color(0xFF47e544),
-                                                        borderRadius: BorderRadius.circular(10)
-                                                    ),
-                                                  ),
-                                                  SizedBox(
-                                                    width:5,
-                                                  ),
-                                                  Text("You're Owed",
-                                                      style: TextStyle(
-                                                        fontSize: 20,
-                                                        color: const Color(0xff707070),
-                                                        fontWeight: FontWeight.w800,
-                                                      )),
-                                                ],
-                                              ),
-                                              SizedBox(
-                                                height: 5,
-                                              ),
-                                              Text('¥${total_lent}',
-                                                  style: TextStyle(
-                                                    fontSize: 25,
-                                                    color: const Color(0xff707070),
-                                                    fontWeight: FontWeight.w800,
-                                                  ),
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                        Container(
-                                            width: 100, height: 1, color: Colors.grey),
-                                        Container(
-                                          child: Column(
-                                            children: [
-                                              Row(
-                                                mainAxisAlignment: MainAxisAlignment.center,
-                                                children: [
-                                                  Container(
-                                                    height: 9,
-                                                    width: 9,
-                                                    decoration: BoxDecoration(
-                                                        color: Colors.redAccent,
-                                                        borderRadius: BorderRadius.circular(10)
-                                                    ),
-                                                  ),
-                                                  SizedBox(
-                                                    width:5,
-                                                  ),
-                                                  Text("You Owe",
-                                                      style: TextStyle(
-                                                        fontSize: 20,
-                                                        fontWeight: FontWeight.w800,
-                                                        color: const Color(0xff707070),
-                                                      )),
-                                                ],
-                                              ),
-                                              SizedBox(
-                                                height: 5,
-                                              ),
-                                              Text('¥${total_borrowed}',
-                                                  style: TextStyle(
-                                                    fontSize: 25,
-                                                    color: const Color(0xff707070),
-                                                    fontWeight: FontWeight.w800,
-                                                  ))
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ),
-                            //child: DebtChart(_series, animate: true),
-                          ),
-                        ],
-                      ),
-                    ),
+                                      )
+                          ],
+                    )],
                   ),
-                ],
+                ]
               );
             }),
         Container(
@@ -291,6 +263,7 @@ class UserProfile extends StatelessWidget {
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 20,
+              color: Colors.white,
             ),
           ),
         ),
@@ -301,8 +274,14 @@ class UserProfile extends StatelessWidget {
               stream: users.snapshots(),
               builder: (BuildContext context,
                   AsyncSnapshot<DocumentSnapshot> snapshot) {
-                if (!snapshot.hasData || !snapshot.data.exists) {
+                if (!snapshot.hasData) {
                   return Center(child: CircularProgressIndicator());
+                } else if(snapshot.data['transactions'].length == 0){
+                  return Center(
+                    child: Text("No Transactions", style: TextStyle(
+                      fontSize: 20, color: Colors.black.withOpacity(0.5),
+                    ),),
+                  );
                 }
                 return ListView.builder(
                     itemCount: snapshot.data['transactions'].length,
@@ -331,7 +310,8 @@ class UserProfile extends StatelessWidget {
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                                 content: Text("TransAction was Deleted")));
                           },
-                          child: historyCard(snapshot.data["transactions"][index]));
+                          child: historyCard(
+                              snapshot.data["transactions"][index]));
                     });
               },
             )
@@ -354,7 +334,6 @@ Card historyCard(transaction) {
         borderRadius: BorderRadius.all(
       Radius.circular(20.0),
     )),
-
     child: InkWell(
       child: Container(
         height: 85,
@@ -428,4 +407,11 @@ Card historyCard(transaction) {
       ),
     ),
   );
+}
+
+class Category {
+  Category(this.name, {@required this.amount});
+
+  final String name;
+  final int amount;
 }

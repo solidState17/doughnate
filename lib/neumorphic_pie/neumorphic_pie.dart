@@ -20,7 +20,7 @@ class NeumorphicPie extends StatelessWidget {
         child: Center(),
         painter: ProgressRings(
           circleWidth: 20.0,
-          categories: kCategories,
+          categories: categories,
           gradientStartAngle: -0.2,
           gradientEndAngle: 2.1,
           progressStartAngle: 1.85,
@@ -29,4 +29,3 @@ class NeumorphicPie extends StatelessWidget {
     );
   }
 }
-

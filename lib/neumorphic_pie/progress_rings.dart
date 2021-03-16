@@ -1,9 +1,9 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import '../UserProfile.dart';
+import 'neumorphic_pie.dart';
 
 class ProgressRings extends CustomPainter {
-  /// From 0.0 to 1.0
   final double circleWidth;
   final num gradientStartAngle;
   final num gradientEndAngle;
@@ -34,7 +34,6 @@ class ProgressRings extends CustomPainter {
       );
 
       return Paint()
-        ..strokeCap = StrokeCap.round
         ..style = PaintingStyle.stroke
         ..strokeWidth = circleWidth
         ..shader = gradient.createShader(boundingSquare);
@@ -71,20 +70,14 @@ class ProgressRings extends CustomPainter {
 }
 
   class Category {
-  Category(this.name, {@required this.amount, @required this.gradientColors});
-  final String name;
-  final int amount;
-  final List<Color> gradientColors;
+    Category(this.name, {@required this.amount, @required this.gradientColors});
+
+    final String name;
+    final int amount;
+    final List<Color> gradientColors;
   }
 
 final kCategories = [
   Category('total_rent', amount: total_borrowed, gradientColors: [Colors.redAccent, Colors.pink]),
   Category('total_rent', amount: total_lent, gradientColors: [Color(0xFF07dfaf),const Color(0xFF47e544)]),
-
 ];
-
-//
-// final kNeumorphicColors = [
-//   [Color(0xFF07dfaf), const Color(0xFF47e544)],
-//   [Colors.redAccent, Colors.pink],
-// ];
