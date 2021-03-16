@@ -9,14 +9,18 @@ Future<void> main() async {
 }
 
 class MyApp extends StatelessWidget {
+
+  MyApp({Key key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
         title: 'Doughnate',
-        theme: ThemeData(
-          primaryColor: const Color(0xfff5f5f5),
-          visualDensity: VisualDensity.adaptivePlatformDensity,
-        ),
+        debugShowCheckedModeBanner:false,
+        // theme: ThemeData(
+        //   primaryColor: const Color(0xfff5f5f5),
+        //   visualDensity: VisualDensity.adaptivePlatformDensity,
+        // ),
         home: GoogleAuth());
   }
 }
