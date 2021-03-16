@@ -77,8 +77,8 @@ class UserProfile extends StatelessWidget {
                     child: Column(
                       children: [
                         Container(
-                          padding: EdgeInsets.symmetric(vertical: 20),
-                          height: 170,
+                          padding: EdgeInsets.symmetric(vertical: 30),
+                          height: 180,
                           child: Stack(
                             children: [
                               Container(
@@ -95,7 +95,7 @@ class UserProfile extends StatelessWidget {
                                           color: const Color(0xff707070),
                                         ),
                                       ),
-                                      Text( totalAmount < 0 ?  "¥ -${totalAmount}" : "¥ ${totalAmount}",
+                                      Text("¥${totalAmount}",
                                         style: TextStyle(
                                           fontSize: 25,
                                           fontWeight: FontWeight.w600,
@@ -113,7 +113,7 @@ class UserProfile extends StatelessWidget {
                         ),
                         Container(
                             child: Container(
-                          padding: EdgeInsets.only( right: 15, left: 15, bottom: 10),
+                          padding: EdgeInsets.only( right: 25, left: 25, bottom: 10),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -125,15 +125,15 @@ class UserProfile extends StatelessWidget {
                                           MainAxisAlignment.center,
                                       children: [
                                         Container(
-                                          height: 9,
-                                          width: 9,
+                                          height: 8,
+                                          width: 8,
                                           decoration: BoxDecoration(
                                               color: const Color(0xFF47e544),
                                               borderRadius:
                                                   BorderRadius.circular(10)),
                                         ),
                                         SizedBox(
-                                          width: 5,
+                                          width: 3,
                                         ),
                                         Text("Owed",
                                             style: TextStyle(
@@ -155,6 +155,12 @@ class UserProfile extends StatelessWidget {
                                       ),
                                     )
                                   ],
+                                ),
+                              ),
+                              Container(
+                                height:40,
+                                child: VerticalDivider(
+                                  color: Colors.black,
                                 ),
                               ),
                               Container(
@@ -181,6 +187,12 @@ class UserProfile extends StatelessWidget {
                                 ),
                               ),
                               Container(
+                                height:40,
+                                child: VerticalDivider(
+                                  color: Colors.black,
+                                ),
+                              ),
+                              Container(
                                 child: Column(
                                   children: [
                                     Row(
@@ -188,15 +200,15 @@ class UserProfile extends StatelessWidget {
                                           MainAxisAlignment.center,
                                       children: [
                                         Container(
-                                          height: 9,
-                                          width: 9,
+                                          height: 8,
+                                          width: 8,
                                           decoration: BoxDecoration(
                                               color: Colors.redAccent,
                                               borderRadius:
                                                   BorderRadius.circular(10)),
                                         ),
                                         SizedBox(
-                                          width: 5,
+                                          width: 3,
                                         ),
                                         Text("Owe",
                                             style: TextStyle(
@@ -246,8 +258,14 @@ class UserProfile extends StatelessWidget {
               stream: users.snapshots(),
               builder: (BuildContext context,
                   AsyncSnapshot<DocumentSnapshot> snapshot) {
-                if (!snapshot.hasData || !snapshot.data.exists) {
+                if (!snapshot.hasData) {
                   return Center(child: CircularProgressIndicator());
+                } else if(snapshot.data['transactions'].length == 0){
+                  return Center(
+                    child: Text("No Transactions", style: TextStyle(
+                      fontSize: 20, color: Colors.black.withOpacity(0.5),
+                    ),),
+                  );
                 }
                 return ListView.builder(
                     itemCount: snapshot.data['transactions'].length,
