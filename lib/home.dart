@@ -101,24 +101,24 @@ class _HomeState extends State<Home> {
           child: Scaffold(
             resizeToAvoidBottomInset: false,
             backgroundColor: Colors.transparent,
-            appBar: AppBar(
-              backgroundColor: Colors.transparent,
-              elevation: 0,
-              centerTitle: true,
-              title: const Text('Doughnate',
-                  style: TextStyle(
-                    fontFamily: 'Futura',
-                    fontSize: 30,
-                    color: Colors.white,
-                    fontWeight: FontWeight.w700,
-                  )),
-              automaticallyImplyLeading: false,
-            ),
+            // appBar: AppBar(
+            //   backgroundColor: Colors.transparent,
+            //   elevation: 0,
+            //   centerTitle: true,
+            //   title: const Text('Doughnate',
+            //       style: TextStyle(
+            //         fontFamily: 'Futura',
+            //         fontSize: 30,
+            //         color: Colors.white,
+            //         fontWeight: FontWeight.w700,
+            //       )),
+            //   automaticallyImplyLeading: false,
+            // ),
             // this is the home page
             body: Container(
               child: Center(
                   child: Padding(
-                padding: const EdgeInsets.all(10.0),
+                padding: const EdgeInsets.fromLTRB(10.0, 30.0, 10.0, 10.0),
                 child: navPages[_currentIndex],
               )),
             ),

@@ -143,12 +143,12 @@ class _Friends extends State<Friends> {
                         ),
                         friend['display_doughnated']
                             ? Text(
-                                "$displayedPerc% reimbursed as D🍩ughnations",
+                                "$displayedPerc% D🍩ughnated to preferred NPO",
                                 style: TextStyle(
                                   fontSize: 14,
                                 ),
                               )
-                            : Text(''),
+                            : Text("Prefers D🍩ughnations to ${friend['npo']}"),
                         //If owner is user, show green card, otherwise show red card.
                         Padding(
                           padding: const EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 0.0),
