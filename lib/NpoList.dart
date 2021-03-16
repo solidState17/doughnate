@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:doughnate/UI/colorsUI.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'home.dart';
 import 'package:flutter/material.dart';
@@ -43,13 +44,13 @@ class _NpoList extends State<NpoList> {
                 style: TextStyle(
                   fontFamily: 'Futura',
                   fontSize: 24,
-                  color: const Color(0xff707070),
+                  color: Colors.white,
                   fontWeight: FontWeight.w700,
                 ),
                 textAlign: TextAlign.left,
               ),
               Spacer(),
-              TextButton(
+              ElevatedButton(
                 onPressed: () {
                   Navigator.push(
                     context,
@@ -60,7 +61,18 @@ class _NpoList extends State<NpoList> {
                     ),
                   );
                 },
-                child: Text('Become NPO Partner'),
+                style: ElevatedButton.styleFrom(
+                  primary: primarySalmon,
+                ),
+                child: Text(
+                  'Become NPO Partner',
+                  style: TextStyle(
+                    fontFamily: 'Futura',
+                    fontSize: 14,
+                    color: Colors.black54,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
               ),
             ],
           ),
@@ -143,7 +155,8 @@ class _NpoList extends State<NpoList> {
                         fontSize: 12,
                       ),
                     ),
-                    // backgroundImage: NetworkImage(npo['logo']),
+                    // backgroundImage: NetworkImage(npo['logo'])
+                    backgroundImage: NetworkImage(currentNPO['logo']),
                   ),
                 ),
               ),

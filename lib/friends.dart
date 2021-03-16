@@ -55,13 +55,14 @@ class _Friends extends State<Friends> {
                       style: ElevatedButton.styleFrom(
                         primary: primarySalmon,
                       ),
-                      child: Text('Add Friend',
+                      child: Text(
+                        'Add Friend',
                         style: TextStyle(
-                           fontFamily: 'Futura',
-                        fontSize: 14,
-                        color: Colors.black54,
-                        fontWeight: FontWeight.w700,
-                        )
+                          fontFamily: 'Futura',
+                          fontSize: 14,
+                          color: Colors.black54,
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
                     ),
                   ],
@@ -84,7 +85,7 @@ class _Friends extends State<Friends> {
                       return ListView.builder(
                         itemCount: snapshot.data.length,
                         itemBuilder: (context, int index) {
-                            return buildCard(snapshot.data[index]);
+                          return buildCard(snapshot.data[index]);
                           // snapshot.data.map<Widget>((friend) => buildCard(friend)).toList()
                         },
                       );
@@ -151,7 +152,8 @@ class _Friends extends State<Friends> {
                             : Text(''),
                         //If owner is user, show green card, otherwise show red card.
                         Padding(
-                          padding: const EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 0.0),
+                          padding:
+                              const EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 0.0),
                           child: Container(
                             height: 60.0,
                             width: 220.0,
@@ -175,7 +177,11 @@ class _Friends extends State<Friends> {
                               shape: BoxShape.rectangle,
                               borderRadius:
                                   BorderRadius.all(Radius.circular(10.0)),
-                              color: friend['friendship'][friend['friendship']['owner']] == email ? primaryGreen2 : primaryRed2,
+                              color: friend['friendship']
+                                          [friend['friendship']['owner']] ==
+                                      email
+                                  ? primaryGreen2
+                                  : primaryRed2,
                             ),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
