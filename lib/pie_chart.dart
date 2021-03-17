@@ -47,16 +47,7 @@ class PieChart extends CustomPainter {
   bool shouldRepaint(CustomPainter oldDelegate) => true;
 }
 
-// class Category {
-//   Category(this.name, {@required this.amount});
-//
-//   final String name;
-//   final int amount;
-// }
-
 final kNeumorphicColors = [
-  // Color(hexColor(('#7CC53E'))),
-  // Color(hexColor(('#FA045A'))),
-  primaryGreen2,
   primaryRed2,
+  primaryGreen2,
 ];

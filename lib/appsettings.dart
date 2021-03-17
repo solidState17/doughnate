@@ -46,7 +46,7 @@ class _AppSettings extends State<AppSettings> {
   void deleteSelf() async {
     final GoogleSignIn _googleSignIn = GoogleSignIn();
     final deletedUser =
-        FirebaseFirestore.instance.collection('users').doc(userid);
+    FirebaseFirestore.instance.collection('users').doc(userid);
 
     // final deletedData = await deletedUser.get();
 
@@ -188,7 +188,7 @@ class _AppSettings extends State<AppSettings> {
               children: [
                 StreamBuilder<QuerySnapshot>(
                   stream:
-                      FirebaseFirestore.instance.collection('npos').snapshots(),
+                  FirebaseFirestore.instance.collection('npos').snapshots(),
                   builder: (BuildContext content,
                       AsyncSnapshot<QuerySnapshot> snapshot) {
                     if (!snapshot.hasData)
@@ -217,7 +217,7 @@ class _AppSettings extends State<AppSettings> {
                             return null;
                         },
                         items: snapshot.data.docs.map(
-                          (doc) {
+                              (doc) {
                             return doc['name'];
                           },
                         ).toList(),
@@ -226,7 +226,7 @@ class _AppSettings extends State<AppSettings> {
                   },
                 ),
                 Expanded(
-                                  child: Row(
+                  child: Row(
                     children: <Widget>[
                       Text("Display Doughnations?",
                           style: DefaultTextUI(
@@ -238,7 +238,7 @@ class _AppSettings extends State<AppSettings> {
                           value: display_doughnated,
                           onChanged: (value) {
                             setState(
-                              () {
+                                  () {
                                 display_doughnated = value;
                               },
                             );
@@ -305,10 +305,10 @@ Future<void> UpdateUser() async {
       .collection('users')
       .doc(userid)
       .update({
-        "displayname": name,
-        "display_doughnated": display_doughnated,
-        "npo": npo,
-      })
+    "displayname": name,
+    "display_doughnated": display_doughnated,
+    "npo": npo,
+  })
       .then((value) => print('Save to Firebase suceeded'))
       .catchError((onError) => {print(onError)});
 }

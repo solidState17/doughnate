@@ -237,6 +237,16 @@ class _UpdateDebt extends State<UpdateDebt> {
     );
   }
 
+  changedColor() {
+    if (widget.friend['friendship']['debt'] == 0) {
+      return bgColor1;
+    } else if (widget.friend['friendship'][widget.friend['friendship']['debt']] == email) {
+      return primaryGreen2;
+    }else{
+      return primaryRed2;
+    }
+  }
+
   Widget build(BuildContext context) {
     return AlertDialog(
       title: Stack(
@@ -311,19 +321,7 @@ class _UpdateDebt extends State<UpdateDebt> {
                   height: 45,
                   decoration: BoxDecoration(
                     shape: BoxShape.rectangle,
-                    color: widget.friend['friendship'][widget.friend['friendship']['owner']] == email ? primaryGreen2 : primaryRed2,
-                    // gradient: LinearGradient(
-                    //     colors: widget.friend['friendship']
-                    //                 [widget.friend['friendship']['owner']] ==
-                    //             email
-                    //         ? [Color(0xFF07dfaf), Color(0xFF47e544)]
-                    //         : [
-                    //             Colors.redAccent,
-                    //             Colors.red
-                    //           ] //[const Color(0xFF02b5e0), const Color(0xFF02cabd)]
-                    //     ,
-                    //     begin: Alignment.topRight,
-                    //     end: Alignment.bottomLeft),
+                    color: changedColor(),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Align(

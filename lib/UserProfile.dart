@@ -419,30 +419,6 @@ Card historyCard(transaction) {
                     ),
                   ),
                 )
-
-              //   decoration: BoxDecoration(
-              //     gradient: LinearGradient(
-              //         colors: transaction["type"] == "borrowed"
-              //             ? [Color(0xFF07dfaf), const Color(0xFF47e544)]
-              //             : [Colors.pink, Colors.redAccent],
-              //         begin: Alignment.topRight,
-              //         end: Alignment.bottomLeft),
-              //     shape: BoxShape.rectangle,
-              //     borderRadius: BorderRadius.circular(20),
-              //   ),
-              //   child: Column(
-              //     mainAxisAlignment: MainAxisAlignment.center,
-              //     children: [
-              //       Text(
-              //         "¥${transaction['amount'].toString()}",
-              //         style: TextStyle(
-              //           fontSize: 30,
-              //           fontWeight: FontWeight.bold,
-              //           color: Colors.white,
-              //         ),
-              //       ),
-              //     ],
-              //   ),
             ),
             // ),
           ],
