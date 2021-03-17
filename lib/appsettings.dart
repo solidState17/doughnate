@@ -21,7 +21,9 @@ class _AppSettings extends State<AppSettings> {
   FirebaseStorage _store = FirebaseStorage.instance;
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   // make this bool equal to current value in firebase
-  TextEditingController display_name = TextEditingController(text: name);
+  TextEditingController display_name = TextEditingController(
+    text: name,
+  );
   File _image;
 
   final ImagePicker picker = ImagePicker();
@@ -31,7 +33,9 @@ class _AppSettings extends State<AppSettings> {
 
     setState(() {
       if (pickedFile != null) {
-        _image = File(pickedFile.path);
+        _image = File(
+          pickedFile.path,
+        );
         imageDialog();
       } else {
         print('No image selected.');
@@ -70,13 +74,18 @@ class _AppSettings extends State<AppSettings> {
 
   AlertDialog confirmDeleteAccount(userInfo) {
     return AlertDialog(
-        title: Text('Are you sure?'),
-        content: ElevatedButton(
-          onPressed: () {
-            return deleteSelf();
-          },
-          child: Text('Delete Account'),
-        ));
+      title: Text(
+        'Are you sure?',
+      ),
+      content: ElevatedButton(
+        onPressed: () {
+          return deleteSelf();
+        },
+        child: Text(
+          'Delete Account',
+        ),
+      ),
+    );
   }
 
   AlertDialog imageDialog() {
@@ -103,7 +112,6 @@ class _AppSettings extends State<AppSettings> {
                   color: Colors.white,
                   fontWeight: FontWeight.w700,
                 ),
-                textAlign: TextAlign.left,
               ),
             ),
             Spacer(),
@@ -124,26 +132,33 @@ class _AppSettings extends State<AppSettings> {
                                 "Solid State Kabushikigaishi is amazing. Founded by Shota, Nick, and Seth. Solid State exceeded 200 gajilion USD in reveneue in it's first year"),
                           ],
                         ),
-                      ),
-                    ),
-                  );
-                } else {
-                  showDialog(
+                      )),
+                    );
+                  } else {
+                    showDialog(
                       context: context,
                       builder: (context) {
                         return confirmDeleteAccount(value);
-                      });
-                }
-              },
-              itemBuilder: (context) => [
-                PopupMenuItem(value: userid, child: Text('Delete Account')),
-                PopupMenuItem(value: 'about', child: Text('About Us')),
-              ],
-            ),
-          ]),
+                      },
+                    );
+                  }
+                },
+                itemBuilder: (context) => [
+                  PopupMenuItem(
+                    value: userid,
+                    child: Text('Delete Account'),
+                  ),
+                  PopupMenuItem(
+                    value: 'about',
+                    child: Text('About Us'),
+                  ),
+                ],
+              ),
+            ],
+          ),
           CircleAvatar(
             radius: 60,
-            backgroundColor: const Color(0x00000000),
+            backgroundColor: Color(0x00000000),
             child: ClipOval(
               child: Image(
                 image: NetworkImage(photoURL),
@@ -161,11 +176,13 @@ class _AppSettings extends State<AppSettings> {
                       return imageDialog();
                     });
               },
-              child: Text('Change Picture'),
+              child: Text(
+                'Change Picture',
+              ),
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: EdgeInsets.all(8.0),
             child: TextField(
               controller: display_name,
               style: DefaultTextUI(
@@ -173,14 +190,16 @@ class _AppSettings extends State<AppSettings> {
                 color: Colors.black54,
                 fontWeight: FontWeight.w700,
               ),
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 labelText: "Display Name",
                 hintText: 'Enter your display name',
               ),
               onSubmitted: (value) => {
-                setState(() {
-                  name = value;
-                }),
+                setState(
+                  () {
+                    name = value;
+                  },
+                ),
               },
             ),
           ),
@@ -278,7 +297,7 @@ class _AppSettings extends State<AppSettings> {
           // ),
           Spacer(),
           Padding(
-            padding: const EdgeInsets.all(5.0),
+            padding: EdgeInsets.all(5.0),
             child: ElevatedButton(
               onPressed: () {
                 UpdateUser();
@@ -297,8 +316,6 @@ class _AppSettings extends State<AppSettings> {
     );
   }
 }
-
-// maybe we should make one single class / for updating firebase after MVP that includes users, debts, etc ? 🤔
 
 Future<void> UpdateUser() async {
   final FirebaseFirestore db = FirebaseFirestore.instance;

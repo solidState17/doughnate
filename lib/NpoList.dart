@@ -11,6 +11,7 @@ import 'home.dart';
 import 'login.dart';
 import 'search.dart';
 import 'appsettings.dart';
+import "npo_apply.dart";
 
 class NpoList extends StatefulWidget {
   NpoList({Key key}) : super(key: key);
@@ -317,17 +318,6 @@ class _NpoList extends State<NpoList> {
       ),
     );
   }
-}
+  // add npo application here
 
-/*
-ALT LOGO RENDER:
-decoration: BoxDecoration(
-  shape: BoxShape.circle,
-  image: DecorationImage(
-    fit: BoxFit.fill,
-    image: NetworkImage(
-      widget.friend['profilePic'],
-    ),
-  ),
-),
- */
+}
