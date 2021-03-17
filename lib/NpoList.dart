@@ -149,13 +149,6 @@ class _NpoList extends State<NpoList> {
                 child: Container(
                   child: CircleAvatar(
                     radius: 60,
-                    child: Text(
-                      'LOGO RENDER',
-                      style: TextStyle(
-                        fontSize: 12,
-                      ),
-                    ),
-                    // backgroundImage: NetworkImage(npo['logo'])
                     backgroundImage: NetworkImage(currentNPO['logo']),
                   ),
                 ),
@@ -176,13 +169,8 @@ class _NpoList extends State<NpoList> {
           children: [
             Container(
               child: CircleAvatar(
-                radius: 60,
-                child: Text(
-                  'LOGO RENDER',
-                  style: TextStyle(
-                    fontSize: 12,
-                  ),
-                ),
+                radius: 80,
+                backgroundImage: NetworkImage(currentNPO['logo']),
               ),
             ),
             Text(
