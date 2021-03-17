@@ -20,7 +20,6 @@ class _npo_application extends State<Apply> {
 
   Widget build(BuildContext context) {
     final node = FocusScope.of(context);
-    final bottom = MediaQuery.of(context).viewInsets.bottom;
 
     return Scaffold(
       resizeToAvoidBottomInset: true,
