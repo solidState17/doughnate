@@ -47,50 +47,50 @@ class _SearchTextFieldState extends State<Search> {
       resizeToAvoidBottomInset: false,
       // backgroundColor: Colors.transparent,
       appBar: AppBar(
-        automaticallyImplyLeading: true,
-        elevation: 0,
-        backgroundColor: bgColor1,
+          automaticallyImplyLeading: true,
+          elevation: 0,
+          backgroundColor: bgColor1,
           title: Text("Search Friends",
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold))),
       body: Column(children: <Widget>[
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-        Expanded(
-          flex: 12,
-          child: Container(
-            padding: EdgeInsets.only(top: 30, left: 10),
-            child: TextField(
-                controller: _controller,
-                onChanged: (x) => friendName = x,
-                decoration: InputDecoration(
-                  enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.transparent),
-                      borderRadius: BorderRadius.all(Radius.circular(10))),
-                  focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.transparent),
-                      borderRadius: BorderRadius.all(Radius.circular(10))),
-                  hintText: "Email",
-                  filled: true,
-                )),
-          ),
-        ),
-        Expanded(
-            flex: 2,
-            child: Container(
-                padding: EdgeInsets.only(top: 35),
-                child: IconButton(
-                  icon: Icon(Icons.search),
-                  onPressed: () {
-                    print(email);
-                    print(index);
-                    name == email
-                        ? setState(() {
-                            index = 3;
-                          })
-                        : searchFriends(name);
-                  },
-                )))
+            Expanded(
+              flex: 12,
+              child: Container(
+                padding: EdgeInsets.only(top: 30, left: 10),
+                child: TextField(
+                    controller: _controller,
+                    onChanged: (x) => friendName = x,
+                    decoration: InputDecoration(
+                      enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.transparent),
+                          borderRadius: BorderRadius.all(Radius.circular(10))),
+                      focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.transparent),
+                          borderRadius: BorderRadius.all(Radius.circular(10))),
+                      hintText: "Email",
+                      filled: true,
+                    )),
+              ),
+            ),
+            Expanded(
+                flex: 2,
+                child: Container(
+                    padding: EdgeInsets.only(top: 35),
+                    child: IconButton(
+                      icon: Icon(Icons.search),
+                      onPressed: () {
+                        print(email);
+                        print(index);
+                        name == email
+                            ? setState(() {
+                                index = 3;
+                              })
+                            : searchFriends(name);
+                      },
+                    )))
           ],
         ),
         Container(
@@ -157,7 +157,18 @@ class FriendsInfo extends StatelessWidget {
   //       .catchError((error) => print("Failed to add user: $error"));
   // }
 
-  Future<void> sendFriendInvite() async {
+  Future<bool> checkForFriend(friendEmail) async {
+    final userRef = firestore.collection('users').doc(userid);
+    final userData = await userRef.get();
+    for (var item in userData.data()['friends']) {
+      if (item['friendemail'] == friendEmail) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  Future<void> sendFriendInvite(context) async {
     // final userA = await firestore.collection("users").doc(userid).get();
     final userBData = await firestore
         .collection('users')
@@ -166,13 +177,25 @@ class FriendsInfo extends StatelessWidget {
     final userB =
         firestore.collection("users").doc(userBData.docs[0].data()['authID']);
 
-    userB.update({
-      "friend_requests": FieldValue.arrayUnion([{
-        "email": email,
-        "profilePic": photoURL,
-        "displayName": name,
-      }]),
-    });
+    final haveFriend = await checkForFriend(friendUserEmail);
+
+    if (haveFriend) {
+      return ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text("${userBData[0].data()['displayName']} is already a friend")));
+    } 
+
+      userB.update({
+        "friend_requests": FieldValue.arrayUnion([
+          {
+            "email": email,
+            "profilePic": photoURL,
+            "displayName": name,
+          }
+        ]),
+      });
+
+      return ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                content: Text("Sent friend request")));
   }
 
   Widget build(BuildContext context) {
@@ -195,7 +218,7 @@ class FriendsInfo extends StatelessWidget {
           color: Colors.green,
           child: TextButton(
               onPressed: () {
-                sendFriendInvite();
+                sendFriendInvite(context);
                 Navigator.of(context, rootNavigator: true).pop();
               },
               child: Text(
@@ -210,25 +233,24 @@ class FriendsInfo extends StatelessWidget {
 
 class MyEmailAdress extends StatelessWidget {
   Widget build(BuildContext context) {
-    return
-        SizedBox(
-          height:300,
-          child: Container(
-            padding: EdgeInsets.only(left: 20, right: 20),
-            child: Center(
-              child: Text(
-                "Input email address is yours",
-                style: TextStyle(
-                    fontSize: 18, fontWeight: FontWeight.bold, color: Colors.grey),
-              ),
-            ),
+    return SizedBox(
+      height: 300,
+      child: Container(
+        padding: EdgeInsets.only(left: 20, right: 20),
+        child: Center(
+          child: Text(
+            "Input email address is yours",
+            style: TextStyle(
+                fontSize: 18, fontWeight: FontWeight.bold, color: Colors.grey),
           ),
-        );
+        ),
+      ),
+    );
   }
 }
 
 class DefaultPage extends StatelessWidget {
-final FirebaseFirestore firestore = FirebaseFirestore.instance;
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
   CollectionReference friendship =
       FirebaseFirestore.instance.collection('Friendship');
   Future<void> approveFriends() async {
@@ -240,30 +262,40 @@ final FirebaseFirestore firestore = FirebaseFirestore.instance;
     final userB =
         firestore.collection("users").doc(userBData.docs[0].data()['authID']);
 
-     friendship
-        .add({
-          "userA": friendUserEmail,
-          "userB": email,
-          "debt": 0,
-          "owner": "",
-          "friendshipid": "",
-        }).then((newFriend) {
-          friendship.doc(newFriend.id).update({
-            "friendshipid": newFriend.id,
-          });
-          userA.update({
-            "friends": FieldValue.arrayUnion([newFriend.id])
-          });
-          userB.update({
-            "friends": FieldValue.arrayUnion([newFriend.id])
-          });
-        });
+    friendship.add({
+      "userA": friendUserEmail,
+      "userB": email,
+      "debt": 0,
+      "owner": "",
+      "friendshipid": "",
+    }).then((newFriend) {
+      friendship.doc(newFriend.id).update({
+        "friendshipid": newFriend.id,
+      });
+      userA.update({
+        "friends": FieldValue.arrayUnion([
+          {
+            'friendshipid': newFriend.id,
+            'friendid': userBData.docs[0].data()['authID'],
+            'friendemail': userBData.docs[0].data()['email']
+          }
+        ])
+      });
+      userB.update({
+        "friends": FieldValue.arrayUnion([
+          {
+            'friendshipid': newFriend.id,
+            'friendid': userid,
+            'friendemail': email
+          }
+        ])
+      });
+    });
 
+    removeFriendFromInvitations(friendUserEmail);
+    getAllFriends();
 
-                removeFriendFromInvitations(friendUserEmail);
-                getAllFriends();
-
-        // .catchError((error) => print("Failed to add user: $error"));
+    // .catchError((error) => print("Failed to add user: $error"));
   }
 
   Future<void> removeFriendFromInvitations(invite) async {
@@ -283,80 +315,92 @@ final FirebaseFirestore firestore = FirebaseFirestore.instance;
   }
 
   Widget build(BuildContext context) {
-      
-      return SingleChildScrollView(
-       child: Container(
-      child: StreamBuilder(
-        stream: firestore.collection('users').doc(userid).snapshots(),
-        builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-          if (!snapshot.hasData) return Text('No new friend requests');
-          var data = snapshot.data;
-          var invitation = data['friend_requests'];
-          return ListView.builder(
+    return SingleChildScrollView(
+        child: Container(
+            child: StreamBuilder(
+      stream: firestore.collection('users').doc(userid).snapshots(),
+      builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+        if (!snapshot.hasData) return Text('No new friend requests');
+        var data = snapshot.data;
+        var invitation = data['friend_requests'];
+        return ListView.builder(
             itemCount: invitation.length,
             scrollDirection: Axis.vertical,
             shrinkWrap: true,
             itemBuilder: (context, index) {
               return Card(
                 child: ListTile(
-                  leading: CircleAvatar( backgroundImage: NetworkImage(invitation[index]['profilePic'])),
-                  title: Text("${invitation[index]['displayName']} wants to add you as a friend!"),
-                  trailing: IconButton(
-                    icon: Icon(Icons.more_vert),
-                    onPressed: () {
-                      showDialog(
-                        context: context,
-                        builder: (context) {
-                          return AlertDialog(
-                            title: Center(child: Text('What to do?')),
-                            content: Container(
-                              height: 200,
-                              width: 600,
-                              child: Column(
-                               children: [
-                                  SizedBox(
-                                  height: 70.0,
-                                  width: 100.0,
-                                  child: IconButton(
-                                  padding: EdgeInsets.all(0.0),
-                                  icon: Icon(Icons.group_add_rounded, size: 60),
-                                  tooltip: 'Add friend',
-                                  onPressed: () {
-                                    friendUserEmail = invitation[index]['email'];
-                                    approveFriends();
-                                  },
-                                )),
-                                Text('Add friend'),
-                                Spacer(),
-                                SizedBox(
-                                  height: 70.0,
-                                  width: 100.0,
-                                  child: IconButton(
-                                  padding: EdgeInsets.all(0.0),
-                                  icon: Icon(Icons.remove_circle_rounded, size: 60),
-                                  tooltip: 'No thanks!',
-                                  onPressed: () {
-                                    removeFriendFromInvitations(invitation[index]);
-                                  }
-                                )),
-                                Text('Decline'),
-                              ],
-                            )
-                          ));
-                        }
-                      );
-                    }
-                  )
-                ),
+                    leading: CircleAvatar(
+                        backgroundImage:
+                            NetworkImage(invitation[index]['profilePic'])),
+                    title: Text(
+                        "${invitation[index]['displayName']} wants to add you as a friend!"),
+                    trailing: IconButton(
+                        icon: Icon(Icons.more_vert),
+                        onPressed: () {
+                          showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                    title: Center(child: Text('What to do?')),
+                                    content: Container(
+                                        height: 200,
+                                        width: 600,
+                                        child: Column(
+                                          children: [
+                                            SizedBox(
+                                                height: 70.0,
+                                                width: 100.0,
+                                                child: IconButton(
+                                                  padding: EdgeInsets.all(0.0),
+                                                  icon: Icon(
+                                                      Icons.group_add_rounded,
+                                                      size: 60),
+                                                  tooltip: 'Add friend',
+                                                  onPressed: () {
+                                                    friendUserEmail =
+                                                        invitation[index]
+                                                            ['email'];
+                                                    approveFriends();
+                                                    Navigator.of(context,
+                                                            rootNavigator: true)
+                                                        .pop();
+                                                  },
+                                                )),
+                                            Text('Add friend'),
+                                            Spacer(),
+                                            SizedBox(
+                                                height: 70.0,
+                                                width: 100.0,
+                                                child: IconButton(
+                                                    padding:
+                                                        EdgeInsets.all(0.0),
+                                                    icon: Icon(
+                                                        Icons
+                                                            .remove_circle_rounded,
+                                                        size: 60),
+                                                    tooltip: 'No thanks!',
+                                                    onPressed: () {
+                                                      removeFriendFromInvitations(
+                                                          invitation[index]);
+                                                      Navigator.of(context,
+                                                              rootNavigator:
+                                                                  true)
+                                                          .pop();
+                                                    })),
+                                            Text('Decline'),
+                                          ],
+                                        )));
+                              });
+                        })),
               );
-            }
-          );
-        },
-      )));
+            });
+      },
+    )));
   }
 }
 
-class Invitation{
+class Invitation {
   final String display_name;
   final String email;
   final String profilePic;

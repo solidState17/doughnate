@@ -199,7 +199,7 @@ class _AppSettings extends State<AppSettings> {
                             fontWeight: FontWeight.w700,
                           ));
                     return Padding(
-                      padding: const EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10.0),
+                      padding: const EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
                       child: DropdownSearch(
                         label: "NPO",
                         onChanged: (value) {
