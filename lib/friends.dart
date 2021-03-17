@@ -20,6 +20,15 @@ class Friends extends StatefulWidget {
 }
 
 class _Friends extends State<Friends> {
+  void showAddFriend() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => Search(),
+        fullscreenDialog: true,
+      ),
+    );
+  }
 
   final DocumentReference users =
       FirebaseFirestore.instance.collection("users").doc(userid);
@@ -47,12 +56,25 @@ class _Friends extends State<Friends> {
                     ),
                     Spacer(),
                     StreamBuilder(
-                      stream: users.snapshots(),
-                      builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-                        if(!snapshot.hasData) return ClickableIcon(iconData: Icons.person_add, text: 'Add Friend', notificationNumber: 0, color: Colors.white);
-                        return ClickableIcon(iconData: Icons.person_add, text: 'Add Friend', notificationNumber: snapshot.data["friend_requests"].length, color: Colors.white);
-                      }
-                    )
+                        stream: users.snapshots(),
+                        builder: (context,
+                            AsyncSnapshot<DocumentSnapshot> snapshot) {
+                          if (!snapshot.hasData)
+                            return ClickableIcon(
+                                iconData: Icons.person_add,
+                                text: 'Add Friend',
+                                notificationNumber: 0,
+                                color: Colors.white,
+                                onTap: showAddFriend);
+                          return ClickableIcon(
+                              iconData: Icons.person_add,
+                              text: 'Add Friend',
+                              notificationNumber:
+                                  snapshot.data["friend_requests"].length,
+                              color: Colors.white,
+                              onTap: showAddFriend,
+                              );
+                        })
                     // IconButton(
                     //   icon: Icon(Icons.person_add),
                     //   color: Colors.white,
@@ -64,18 +86,18 @@ class _Friends extends State<Friends> {
                     //         fullscreenDialog: true,
                     //       ),
                     //     );
-                      // },
-                      // style: ElevatedButton.styleFrom(
-                      //   primary: primaryButtonColor2,
-                      // ),
-                      // child: Text('Add Friend',
-                      //   style: TextStyle(
-                      //      fontFamily: 'Futura',
-                      //   fontSize: 14,
-                      //   color: Colors.black54,
-                      //   fontWeight: FontWeight.w700,
-                      //   )
-                      // ),
+                    // },
+                    // style: ElevatedButton.styleFrom(
+                    //   primary: primaryButtonColor2,
+                    // ),
+                    // child: Text('Add Friend',
+                    //   style: TextStyle(
+                    //      fontFamily: 'Futura',
+                    //   fontSize: 14,
+                    //   color: Colors.black54,
+                    //   fontWeight: FontWeight.w700,
+                    //   )
+                    // ),
                     // ),
                   ],
                 ),

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:doughnate/UI/colorsUI.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'UI/shapes.dart';
 import 'home.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -148,15 +149,17 @@ class _NpoList extends State<NpoList> {
                 flex: 3,
                 child: Container(
                   child: CircleAvatar(
+                    backgroundColor: Colors.transparent,
                     radius: 60,
-                    child: Text(
-                      'LOGO RENDER',
-                      style: TextStyle(
-                        fontSize: 12,
-                      ),
-                    ),
+                    child: FittedBox(child: Image.network(currentNPO['logo']), fit: BoxFit.contain)
+                    // Text(
+                    //   'LOGO RENDER',
+                    //   style: TextStyle(
+                    //     fontSize: 12,
+                    //   ),
+                    // ),
                     // backgroundImage: NetworkImage(npo['logo'])
-                    backgroundImage: NetworkImage(currentNPO['logo']),
+                    // backgroundImage: NetworkImage(currentNPO['logo']),
                   ),
                 ),
               ),

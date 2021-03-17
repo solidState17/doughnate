@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/rendering.dart';
 import './login.dart';
+import 'UI/colorsUI.dart';
 import 'home.dart';
 
 var friendUserPic = "";
@@ -44,7 +45,11 @@ class _SearchTextFieldState extends State<Search> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
+      // backgroundColor: Colors.transparent,
       appBar: AppBar(
+        automaticallyImplyLeading: true,
+        elevation: 0,
+        backgroundColor: bgColor1,
           title: Text("Search Friends",
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold))),
       body: Column(children: <Widget>[
