@@ -25,16 +25,16 @@ Future<void> getAllFriends() async {
   friendsArray.forEach((userFriend) async {
     final obj = await FirebaseFirestore.instance
         .collection('Friendship')
-        .doc(userFriend)
+        .doc(userFriend['friendshipid'])
         .get();
 
-    var user = obj.data()['userA'] == email
-        ? obj.data()['userB']
-        : obj.data()['userA'];
+    // var user = obj.data()['userA'] == email
+    //     ? obj.data()['userB']
+    //     : obj.data()['userA'];
 
     FirebaseFirestore.instance
         .collection('users')
-        .where("email", isEqualTo: user)
+        .where("email", isEqualTo: userFriend['friendemail'])
         .get()
         .then((document) {
       final allData = document.docs[0].data();

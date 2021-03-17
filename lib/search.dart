@@ -181,7 +181,7 @@ class FriendsInfo extends StatelessWidget {
 
     if (haveFriend) {
       return ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text("${userBData[0].data()['displayName']} is already a friend")));
+          content: Text("${userBData.docs[0].data()['displayName']} is already a friend")));
     } 
 
       userB.update({

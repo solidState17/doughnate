@@ -42,11 +42,12 @@ class _UpdateDebt extends State<UpdateDebt> {
       } else {
         setOwner = friendshipDocument['userA'] == email ? 'userB' : 'userA';
       }
-    }
-
-    if (friendshipDocument['debt'] + amount < 0) {
+    } else {
       setOwner = currentOwner == 'userA' ? 'userB' : 'userA';
     }
+
+    // if (friendshipDocument['debt'] + amount < 0) {
+    // }
 
     //? Create transaction notification for friend
     if (amount > 0) {
@@ -65,6 +66,7 @@ class _UpdateDebt extends State<UpdateDebt> {
 
     friendship.update({
       'owner': setOwner,
+      'debt': friendshipData.data()['debt'] + amount,
     });
   }
 
