@@ -81,13 +81,11 @@ class _AppSettings extends State<AppSettings> {
 
   AlertDialog imageDialog() {
     return AlertDialog(
-      content: Column(
-        children: [
-          Container(child: Image.file(_image)),
-          TextButton(onPressed: (){}, child: Text('Upload Image')),
-          ]
-      ),
-      );
+      content: Column(children: [
+        Container(child: Image.file(_image)),
+        TextButton(onPressed: () {}, child: Text('Upload Image')),
+      ]),
+    );
   }
 
   @override
@@ -157,11 +155,10 @@ class _AppSettings extends State<AppSettings> {
               onPressed: () async {
                 await getImage();
                 return showDialog(
-                  context: context,
-                  builder: (context) {
-                  return imageDialog();
-                  }
-                );
+                    context: context,
+                    builder: (context) {
+                      return imageDialog();
+                    });
               },
               child: Text('Change Picture'),
             ),
@@ -187,66 +184,97 @@ class _AppSettings extends State<AppSettings> {
             ),
           ),
           Expanded(
-            child: StreamBuilder<QuerySnapshot>(
-              stream: FirebaseFirestore.instance.collection('npos').snapshots(),
-              builder: (BuildContext content,
-                  AsyncSnapshot<QuerySnapshot> snapshot) {
-                if (!snapshot.hasData)
-                  return Text('No NPOs',
-                      style: DefaultTextUI(
-                        size: 24,
-                        color: Colors.white,
-                        fontWeight: FontWeight.w700,
-                      ));
-                return DropdownSearch(
-                  label: "NPO",
-                  onChanged: (value) {
-                    setState(() {
-                      npo = value;
-                    });
-                  },
-                  selectedItem: npo,
-                  validator: (item) {
-                    if (item == null)
-                      return "Required field";
-                    else if (item == "Brazil")
-                      return "Invalid item";
-                    else
-                      return null;
-                  },
-                  items: snapshot.data.docs.map(
-                    (doc) {
-                      return doc['name'];
-                    },
-                  ).toList(),
-                );
-              },
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              children: <Widget>[
-                Text("Display Doughnations?",
-                    style: DefaultTextUI(
-                      size: 14,
-                      color: Colors.black54,
-                      fontWeight: FontWeight.w700,
-                    )),
-                Switch(
-                    value: display_doughnated,
-                    onChanged: (value) {
-                      setState(
-                        () {
-                          display_doughnated = value;
+            child: Column(
+              children: [
+                StreamBuilder<QuerySnapshot>(
+                  stream:
+                      FirebaseFirestore.instance.collection('npos').snapshots(),
+                  builder: (BuildContext content,
+                      AsyncSnapshot<QuerySnapshot> snapshot) {
+                    if (!snapshot.hasData)
+                      return Text('No NPOs',
+                          style: DefaultTextUI(
+                            size: 24,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w700,
+                          ));
+                    return Padding(
+                      padding: const EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10.0),
+                      child: DropdownSearch(
+                        label: "NPO",
+                        onChanged: (value) {
+                          setState(() {
+                            npo = value;
+                          });
                         },
-                      );
-                    },
-                    activeTrackColor: Colors.red,
-                    activeColor: Colors.blue),
+                        selectedItem: npo,
+                        validator: (item) {
+                          if (item == null)
+                            return "Required field";
+                          else if (item == "Brazil")
+                            return "Invalid item";
+                          else
+                            return null;
+                        },
+                        items: snapshot.data.docs.map(
+                          (doc) {
+                            return doc['name'];
+                          },
+                        ).toList(),
+                      ),
+                    );
+                  },
+                ),
+                Expanded(
+                                  child: Row(
+                    children: <Widget>[
+                      Text("Display Doughnations?",
+                          style: DefaultTextUI(
+                            size: 14,
+                            color: Colors.black54,
+                            fontWeight: FontWeight.w700,
+                          )),
+                      Switch(
+                          value: display_doughnated,
+                          onChanged: (value) {
+                            setState(
+                              () {
+                                display_doughnated = value;
+                              },
+                            );
+                          },
+                          activeTrackColor: Colors.red,
+                          activeColor: Colors.blue),
+                    ],
+                  ),
+                ),
               ],
             ),
           ),
+          // Padding(
+          //   padding: const EdgeInsets.fromLTRB(8.0, 0.0, 0.0, 0.0),
+          //   child: Row(
+          //     children: <Widget>[
+          //       Text("Display Doughnations?",
+          //           style: DefaultTextUI(
+          //             size: 14,
+          //             color: Colors.black54,
+          //             fontWeight: FontWeight.w700,
+          //           )),
+          //       Switch(
+          //           value: display_doughnated,
+          //           onChanged: (value) {
+          //             setState(
+          //               () {
+          //                 display_doughnated = value;
+          //               },
+          //             );
+          //           },
+          //           activeTrackColor: Colors.red,
+          //           activeColor: Colors.blue),
+          //     ],
+          //   ),
+          // ),
           Spacer(),
           Padding(
             padding: const EdgeInsets.all(5.0),
