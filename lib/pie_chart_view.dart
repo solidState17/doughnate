@@ -23,16 +23,15 @@ class PieChartView extends StatelessWidget {
                   child: CustomPaint(
                     child: Center(),
                     foregroundPainter: PieChart(
-                      circleWidth: constraint.maxWidth * 0.2,
+                      width: constraint.maxWidth * 0.2,
                       categories: categories,
-
                     ),
                   ),
                 ),
               ),
               Center(
                 child: Container(
-                  height: 100,
+                    height: 100,
                     decoration: BoxDecoration(
                       color: Colors.white,
                       shape: BoxShape.circle,
@@ -44,16 +43,16 @@ class PieChartView extends StatelessWidget {
                           Text(
                             'Total',
                             style: TextStyle(
-                              fontSize: 23,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black
+                                fontSize: 23,
+                                fontWeight: FontWeight.bold,
+                                color: const Color(0xff707070)
                             ),
                           ),
-                          Text( totalAmount > 0 ? "+ ¥${totalAmount}" : "- ¥${-totalAmount}",
+                          Text( "${totalAmount}",
                             style: TextStyle(
-                              fontSize: 23,
-                              fontWeight: FontWeight.bold,
-                                color: Colors.black
+                                fontSize: 23,
+                                fontWeight: FontWeight.bold,
+                                color: const Color(0xff707070)
                             ),
                           ),
                         ],
@@ -64,6 +63,4 @@ class PieChartView extends StatelessWidget {
           ),
     );
   }
-  @override
-  bool shouldRepaint(CustomPainter painter) => true;
 }

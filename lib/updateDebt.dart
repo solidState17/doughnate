@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'UI/colorsUI.dart';
 import 'login.dart';
 import 'home.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -244,7 +245,10 @@ class _UpdateDebt extends State<UpdateDebt> {
             child: Container(
               child: Column(
                 children: [
-                  Text("${widget.friend['displayName']}"),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 10.0),
+                    child: Text("${widget.friend['displayName']}"),
+                  ),
                   Container(
                     width: 120,
                     height: 120,
@@ -263,8 +267,8 @@ class _UpdateDebt extends State<UpdateDebt> {
             ),
           ),
           Positioned(
-            top: 0,
-            right: 0,
+            top: -12,
+            right: -15,
             child: PopupMenuButton(
               onSelected: (value) {
                 showDialog(
@@ -286,12 +290,20 @@ class _UpdateDebt extends State<UpdateDebt> {
       ),
       content: SingleChildScrollView(
               child: Container(
-          height: 300,
+          height: 235,
           width: 300,
           child: Column(
             children: [
-              Text(
-                  "${widget.friend['displayName']} supports ${widget.friend['npo']}"),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 8.0),
+                child: Text(
+                    "Supports ${widget.friend['npo']}",
+                    style: DefaultTextUI(
+                      color: Colors.black,
+                      fontWeight: FontWeight.w400,
+                      size: 15
+                    )),
+              ),
               Padding(
                 padding: EdgeInsets.all(8.0),
                 child: Container(
@@ -299,31 +311,30 @@ class _UpdateDebt extends State<UpdateDebt> {
                   height: 45,
                   decoration: BoxDecoration(
                     shape: BoxShape.rectangle,
-                    gradient: LinearGradient(
-                        colors: widget.friend['friendship']
-                                    [widget.friend['friendship']['owner']] ==
-                                email
-                            ? [Color(0xFF07dfaf), Color(0xFF47e544)]
-                            : [
-                                Colors.redAccent,
-                                Colors.red
-                              ] //[const Color(0xFF02b5e0), const Color(0xFF02cabd)]
-                        ,
-                        begin: Alignment.topRight,
-                        end: Alignment.bottomLeft),
+                    color: widget.friend['friendship'][widget.friend['friendship']['owner']] == email ? primaryGreen2 : primaryRed2,
+                    // gradient: LinearGradient(
+                    //     colors: widget.friend['friendship']
+                    //                 [widget.friend['friendship']['owner']] ==
+                    //             email
+                    //         ? [Color(0xFF07dfaf), Color(0xFF47e544)]
+                    //         : [
+                    //             Colors.redAccent,
+                    //             Colors.red
+                    //           ] //[const Color(0xFF02b5e0), const Color(0xFF02cabd)]
+                    //     ,
+                    //     begin: Alignment.topRight,
+                    //     end: Alignment.bottomLeft),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Align(
                     alignment: Alignment.center,
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Text(
-                            widget.friend['friendship']['debt'].toString(),
-                          ),
-                        ),
-                      ],
+                    child: Text(
+                      "¥${widget.friend['friendship']['debt'].toString()}",
+                      style: DefaultTextUI(
+                        size: 22,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.white,
+                      ),
                     ),
                   ),
                 ),
@@ -336,31 +347,33 @@ class _UpdateDebt extends State<UpdateDebt> {
                   keyboardType: TextInputType.number,
                 ),
               ),
-              Spacer(),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  TextButton(
-                    onPressed: () {
-                      visitNPO(
-                        npo: widget.friend['npo'],
-                      );
-                      adjustDebt(widget.friend, int.parse(_enteredAmount.text),
-                          "Doughnation");
-                      Navigator.of(context, rootNavigator: true).pop();
-                    },
-                    child: Text('Doughnate'),
-                  ),
-                  Spacer(),
-                  TextButton(
-                    onPressed: () {
-                      adjustDebt(widget.friend, int.parse(_enteredAmount.text),
-                          "Adjust");
-                      Navigator.of(context, rootNavigator: true).pop();
-                    },
-                    child: Text('Adjust Debt'),
-                  ),
-                ],
+              Padding(
+                padding: const EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 0.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    TextButton(
+                      onPressed: () {
+                        visitNPO(
+                          npo: widget.friend['npo'],
+                        );
+                        adjustDebt(widget.friend, int.parse(_enteredAmount.text),
+                            "Doughnation");
+                        Navigator.of(context, rootNavigator: true).pop();
+                      },
+                      child: Text('Doughnate'),
+                    ),
+                    Spacer(),
+                    TextButton(
+                      onPressed: () {
+                        adjustDebt(widget.friend, int.parse(_enteredAmount.text),
+                            "Adjust");
+                        Navigator.of(context, rootNavigator: true).pop();
+                      },
+                      child: Text('Adjust Debt'),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),

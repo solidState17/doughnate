@@ -1,21 +1,15 @@
+
 import 'package:flutter/material.dart';
 import 'dart:math';
 import 'package:doughnate/UserProfile.dart';
 
-class PieChart extends CustomPainter {
-  final double circleWidth;
-  final num gradientStartAngle;
-  final num gradientEndAngle;
-  final double progressStartAngle;
-  final List<Category> categories;
+import 'UI/colorsUI.dart';
 
-  PieChart({
-    this.circleWidth,
-    this.gradientStartAngle = 3 * pi / 2,
-    this.gradientEndAngle = 4 * pi / 2,
-    this.progressStartAngle = 0,
-    this.categories,
-  });
+class PieChart extends CustomPainter {
+  PieChart({@required this.categories, @required this.width});
+
+  final List<Category> categories;
+  final double width;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -24,22 +18,12 @@ class PieChart extends CustomPainter {
 
     Rect boundingSquare = Rect.fromCircle(center: center, radius: radius);
 
-    paint(List<Color> colors,
-        {double startAngle = 0.0, double endAngle = pi * 2}) {
-      final Gradient gradient = SweepGradient(
-        startAngle: startAngle,
-        endAngle: endAngle,
-        colors: colors,
-      );
+    var paint = Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = width / 2;
 
-      return Paint()
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = circleWidth
-        ..shader = gradient.createShader(boundingSquare);
-    }
 
-    double total = 0;
-    // Calculate total amount from each category
+    int total = 0;
     categories.forEach((expense) => total += expense.amount);
 
     double startRadian = -pi / 2;
@@ -47,19 +31,32 @@ class PieChart extends CustomPainter {
     for (var index = 0; index < categories.length; index++) {
       final currentCategory = categories.elementAt(index);
       final sweepRadian = currentCategory.amount / total * 2 * pi;
-      final gradient = currentCategory.gradientColors;
+      paint.color = kNeumorphicColors.elementAt(index % categories.length);
       canvas.drawArc(
         Rect.fromCircle(center: center, radius: radius),
         startRadian,
         sweepRadian,
         false,
-        paint(
-          gradient,
-          startAngle: gradientStartAngle,
-          endAngle: gradientEndAngle,
-        ),
+        paint,
       );
       startRadian += sweepRadian;
     }
   }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => true;
 }
+
+// class Category {
+//   Category(this.name, {@required this.amount});
+//
+//   final String name;
+//   final int amount;
+// }
+
+final kNeumorphicColors = [
+  // Color(hexColor(('#7CC53E'))),
+  // Color(hexColor(('#FA045A'))),
+  primaryGreen2,
+  primaryRed2,
+];

@@ -5,6 +5,8 @@ import 'package:doughnate/pie_chart.dart';
 import 'package:doughnate/search.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'UI/colorsUI.dart';
+import 'UI/shapes.dart';
 import 'login.dart';
 import 'pie_chart_view.dart';
 import 'package:intl/intl.dart';
@@ -26,18 +28,33 @@ hexColor(String colorhexcode) {
 
 class UserProfile extends StatelessWidget {
   UserProfile({Key key}) : super(key: key);
+  static List<charts.Series<Expense, String>> _series = [
+    charts.Series<Expense, String>(
+        id: 'Expense',
+        domainFn: (Expense expense, _) => expense.category,
+        measureFn: (Expense expense, _) => expense.value,
+        labelAccessorFn: (Expense expense, _) => '\¥${expense.value}',
+        colorFn: (Expense expense, _) =>
+            charts.ColorUtil.fromDartColor(expense.color),
+        data: [
+          Expense('Owe', total_borrowed, Colors.pink),
+          Expense('Owed', total_lent, Color(0xFF47e544)),
+        ])
+  ];
+
   final KCategories = [
-    Category([Colors.redAccent, Colors.pink],amount: total_borrowed, ),
-    Category([Color(0xFF07dfaf),const Color(0xFF47e544)],amount: total_lent,),
+    Category('owe', amount: total_borrowed),
+    Category('owed', amount: total_lent),
   ];
 
   final DocumentReference users =
-      FirebaseFirestore.instance.collection("users").doc(userid);
+  FirebaseFirestore.instance.collection("users").doc(userid);
 
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
+    final timestamp = DateTime.now();
 
     return Column(
       children: <Widget>[
@@ -51,161 +68,204 @@ class UserProfile extends StatelessWidget {
               total_lent = snapshot.data["total_lent"];
               totalAmount = -total_borrowed + total_lent;
 
-              return Stack(
-                children: [
+              return Padding(
+                padding: const EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
+                child: Stack(children: [
                   Opacity(
-                    opacity:0.2,
+                    opacity: 1,
                     child: Container(
-                height: 250,
-                decoration: BoxDecoration(
-                    color: Colors.purpleAccent,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey,
-                        blurRadius: 3,
-                        offset: Offset(0, 6),
+                      height: 250,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey,
+                            blurRadius: 3,
+                            offset: Offset(0, 6),
+                          ),
+                        ],
+                        borderRadius: BorderRadius.circular(20),
                       ),
-                    ],
-                    borderRadius: BorderRadius.circular(20),
-                ),
                     ),
                   ),
                   Column(
                     children: [
-                        Column(
-                          children: [
-                            Container(
-                              padding: EdgeInsets.symmetric(vertical: 30),
-                              height: 180,
-                                  child :PieChartView(categories: KCategories,),
+                      Column(
+                        children: [
+                          Container(
+                            padding: EdgeInsets.symmetric(vertical: 30),
+                            height: 180,
+                            //child: Stack(
+                            //children: [
+                            child: PieChartView(
+                              categories: KCategories,
                             ),
-                            Container(
-                                child: Container(
-                                  padding: EdgeInsets.only( right: 25, left: 25, bottom: 10),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Container(
-                                        child: Column(
+                            //       Container(
+                            //         child: Center(
+                            //           child: Column(
+                            //             mainAxisAlignment:
+                            //             MainAxisAlignment.center,
+                            //             children: [
+                            //               Text(
+                            //                 "Total",
+                            //                 style: TextStyle(
+                            //                   fontSize: 25,
+                            //                   fontWeight: FontWeight.w600,
+                            //                   color: const Color(0xff707070),
+                            //                 ),
+                            //               ),
+                            //               Text("¥${totalAmount}",
+                            //                 style: TextStyle(
+                            //                   fontSize: 25,
+                            //                   fontWeight: FontWeight.w600,
+                            //                   color: const Color(0xff707070),
+                            //                 ),
+                            //               ),
+                            //             ],
+                            //           ),
+                            //         ),
+                            //       ),
+                            //       //DebtChart(_series, animate: true,)
+                            //       NeumorphicPie(categories: kCategories,),
+                            //     ],
+                            //   ), //child: DebtChart(_series, animate: true),
+                            // ),
+                          ),
+                          Container(
+                            child: Container(
+                              padding: EdgeInsets.only(
+                                  right: 25, left: 25, bottom: 10),
+                              child: Row(
+                                mainAxisAlignment:
+                                MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Container(
+                                    child: Column(
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment:
+                                          MainAxisAlignment.center,
                                           children: [
-                                            Row(
-                                              mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                              children: [
-                                                Container(
-                                                  height: 8,
-                                                  width: 8,
-                                                  decoration: BoxDecoration(
-                                                      color: const Color(0xFF47e544),
-                                                      borderRadius:
-                                                      BorderRadius.circular(10)),
-                                                ),
-                                                SizedBox(
-                                                  width: 3,
-                                                ),
-                                                Text("Owed",
-                                                    style: TextStyle(
-                                                      fontSize: 18,
-                                                      color: const Color(0xff707070),
-                                                      fontWeight: FontWeight.w800,
-                                                    )),
-                                              ],
+                                            Container(
+                                              height: 8,
+                                              width: 8,
+                                              decoration: BoxDecoration(
+                                                  color:
+                                                  primaryGreen2,
+                                                  borderRadius:
+                                                  BorderRadius.circular(
+                                                      10)),
                                             ),
                                             SizedBox(
-                                              height: 5,
+                                              width: 3,
                                             ),
-                                            Text(
-                                              '¥${total_lent}',
-                                              style: TextStyle(
-                                                fontSize: 23,
-                                                color: const Color(0xff707070),
-                                                fontWeight: FontWeight.w800,
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                      Container(
-                                        height:40,
-                                        child: VerticalDivider(
-                                          color: Colors.black,
-                                        ),
-                                      ),
-                                      Container(
-                                        child: Column(
-                                          children: [
-                                            Text("Doughnation",
+                                            Text("Owed",
                                                 style: TextStyle(
                                                   fontSize: 18,
-                                                  color: const Color(0xff707070),
+                                                  color:
+                                                  const Color(0xff707070),
                                                   fontWeight: FontWeight.w800,
                                                 )),
-                                            SizedBox(
-                                              height: 5,
-                                            ),
-                                            Text(
-                                              '¥${snapshot.data["total_doughnated"]}',
-                                              style: TextStyle(
-                                                fontSize: 23,
-                                                color: const Color(0xff707070),
-                                                fontWeight: FontWeight.w800,
-                                              ),
-                                            )
                                           ],
                                         ),
-                                      ),
-                                      Container(
-                                        height:40,
-                                        child: VerticalDivider(
-                                          color: Colors.black,
+                                        SizedBox(
+                                          height: 5,
                                         ),
-                                      ),
-                                      Container(
-                                        child: Column(
-                                          children: [
-                                            Row(
-                                              mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                              children: [
-                                                Container(
-                                                  height: 8,
-                                                  width: 8,
-                                                  decoration: BoxDecoration(
-                                                      color: Colors.redAccent,
-                                                      borderRadius:
-                                                      BorderRadius.circular(10)),
-                                                ),
-                                                SizedBox(
-                                                  width: 3,
-                                                ),
-                                                Text("Owe",
-                                                    style: TextStyle(
-                                                      fontSize:  18,
-                                                      fontWeight: FontWeight.w800,
-                                                      color: const Color(0xff707070),
-                                                    )),
-                                              ],
-                                            ),
-                                            SizedBox(
-                                              height: 5,
-                                            ),
-                                            Text('¥${total_borrowed}',
-                                                style: TextStyle(
-                                                  fontSize: 23,
-                                                  color: const Color(0xff707070),
-                                                  fontWeight: FontWeight.w800,
-                                                ))
-                                          ],
-                                        ),
-                                      ),
-                                    ],
+                                        Text(
+                                          '¥${total_lent}',
+                                          style: TextStyle(
+                                            fontSize: 23,
+                                            color: const Color(0xff707070),
+                                            fontWeight: FontWeight.w800,
+                                          ),
+                                        )
+                                      ],
+                                    ),
                                   ),
-                                ),
-                                      )
-                          ],
-                    )],
+                                  Container(
+                                    height: 40,
+                                    child: VerticalDivider(
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                  Container(
+                                    child: Column(
+                                      children: [
+                                        Text("Doughnation",
+                                            style: TextStyle(
+                                              fontSize: 18,
+                                              color: const Color(0xff707070),
+                                              fontWeight: FontWeight.w800,
+                                            )),
+                                        SizedBox(
+                                          height: 5,
+                                        ),
+                                        Text(
+                                          '¥${snapshot.data["total_doughnated"]}',
+                                          style: TextStyle(
+                                            fontSize: 23,
+                                            color: const Color(0xff707070),
+                                            fontWeight: FontWeight.w800,
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                  Container(
+                                    height: 40,
+                                    child: VerticalDivider(
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                  Container(
+                                    child: Column(
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                          children: [
+                                            Container(
+                                              height: 8,
+                                              width: 8,
+                                              decoration: BoxDecoration(
+                                                  color: primaryRed2,
+                                                  borderRadius:
+                                                  BorderRadius.circular(
+                                                      10)),
+                                            ),
+                                            SizedBox(
+                                              width: 3,
+                                            ),
+                                            Text("Owe",
+                                                style: TextStyle(
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.w800,
+                                                  color:
+                                                  const Color(0xff707070),
+                                                )),
+                                          ],
+                                        ),
+                                        SizedBox(
+                                          height: 5,
+                                        ),
+                                        Text('¥${total_borrowed}',
+                                            style: TextStyle(
+                                              fontSize: 23,
+                                              color: const Color(0xff707070),
+                                              fontWeight: FontWeight.w800,
+                                            ))
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          )
+                        ],
+                      )
+                    ],
                   ),
-                ]
+                ]),
               );
             }),
         Container(
@@ -213,10 +273,10 @@ class UserProfile extends StatelessWidget {
           margin: EdgeInsets.only(top: 20, bottom: 10, left: 20),
           child: Text(
             "Recent Transactions",
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 20,
+            style: DefaultTextUI(
+              size: 16,
               color: Colors.white,
+              fontWeight: FontWeight.w700,
             ),
           ),
         ),
@@ -224,52 +284,56 @@ class UserProfile extends StatelessWidget {
           child: Column(children: [
             Expanded(
                 child: StreamBuilder(
-              stream: users.snapshots(),
-              builder: (BuildContext context,
-                  AsyncSnapshot<DocumentSnapshot> snapshot) {
-                if (!snapshot.hasData) {
-                  return Center(child: CircularProgressIndicator());
-                } else if(snapshot.data['transactions'].length == 0){
-                  return Center(
-                    child: Text("No Transactions", style: TextStyle(
-                      fontSize: 20, color: Colors.black.withOpacity(0.5),
-                    ),),
-                  );
-                }
-                return ListView.builder(
-                    itemCount: snapshot.data['transactions'].length,
-                    itemBuilder: (context, int index) {
-                      return Dismissible(
-                          key: Key("${snapshot.data['transactions'][index]}"),
-                          background: Container(
-                              color: Colors.red,
-                              child: Icon(
-                                Icons.delete,
-                                color: Colors.white,
-                                size: 30,
-                              )),
-                          onDismissed: (_direction) {
-                            if (_direction == DismissDirection.startToEnd) {
-                              var specificTimestamp = snapshot
-                                  .data['transactions'][index]["timestamp"];
-                              var newTransaction = [];
-                              snapshot.data['transactions'].forEach((val) {
-                                if (val["timestamp"] != specificTimestamp) {
-                                  newTransaction.add(val);
+                  stream: users.snapshots(),
+                  builder: (BuildContext context,
+                      AsyncSnapshot<DocumentSnapshot> snapshot) {
+                    if (!snapshot.hasData) {
+                      return Center(child: CircularProgressIndicator());
+                    } else if (snapshot.data['transactions'].length == 0) {
+                      return Center(
+                        child: Text(
+                          "No Transactions",
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: Colors.black.withOpacity(0.5),
+                          ),
+                        ),
+                      );
+                    }
+                    return ListView.builder(
+                        itemCount: snapshot.data['transactions'].length,
+                        itemBuilder: (context, int index) {
+                          return Dismissible(
+                              key: Key("${snapshot.data['transactions'][index]}"),
+                              background: Container(
+                                  color: Colors.red,
+                                  child: Icon(
+                                    Icons.delete,
+                                    color: Colors.white,
+                                    size: 30,
+                                  )),
+                              onDismissed: (_direction) {
+                                if (_direction == DismissDirection.startToEnd) {
+                                  var specificTimestamp = snapshot
+                                      .data['transactions'][index]["timestamp"];
+                                  var newTransaction = [];
+                                  snapshot.data['transactions'].forEach((val) {
+                                    if (val["timestamp"] != specificTimestamp) {
+                                      newTransaction.add(val);
+                                    }
+                                  });
+                                  users.update({"transactions": newTransaction});
                                 }
-                              });
-                              users.update({"transactions": newTransaction});
-                            }
-                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                content: Text("TransAction was Deleted")));
-                          },
-                          child: historyCard(
-                              snapshot.data["transactions"][index]));
-                    });
-              },
-            )
-                //friends.map((friend) => buildCard(friend)).toList(),
-                ),
+                                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                    content: Text("Transaction was Deleted")));
+                              },
+                              child: historyCard(
+                                  snapshot.data["transactions"][index]));
+                        });
+                  },
+                )
+              //friends.map((friend) => buildCard(friend)).toList(),
+            ),
           ]),
         ),
       ],
@@ -279,14 +343,16 @@ class UserProfile extends StatelessWidget {
 
 Card historyCard(transaction) {
   DateTime myDateTime = (transaction['timestamp']).toDate();
+  final Color colorChoice =
+  transaction['amount'] < 0 ? primaryRed2 : primaryGreen2;
 
   return Card(
     shadowColor: Colors.black,
     elevation: 8,
     shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.all(
-      Radius.circular(20.0),
-    )),
+          Radius.circular(20.0),
+        )),
     child: InkWell(
       child: Container(
         height: 85,
@@ -310,15 +376,18 @@ Card historyCard(transaction) {
                               Text(
                                 DateFormat('yyyy/MM/dd(E) HH:mm')
                                     .format(myDateTime),
-                                style: TextStyle(
-                                  fontSize: 16,
+                                style: DefaultTextUI(
+                                  color: Colors.black,
+                                  size: 14,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
                               Text(
                                 "${transaction['name']}",
-                                style: TextStyle(
-                                    fontSize: 22, fontWeight: FontWeight.bold),
+                                style: DefaultTextUI(
+                                    color: Colors.black,
+                                    size: 20,
+                                    fontWeight: FontWeight.bold),
                               ),
                             ]),
                       ),
@@ -328,33 +397,54 @@ Card historyCard(transaction) {
               ),
             ),
             Expanded(
-              flex: 3,
-              child: Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                      colors: transaction["type"] == "borrowed"
-                          ? [Color(0xFF07dfaf), const Color(0xFF47e544)]
-                          : [Colors.pink, Colors.redAccent],
-                      begin: Alignment.topRight,
-                      end: Alignment.bottomLeft),
-                  shape: BoxShape.rectangle,
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      "¥${transaction['amount'].toString()}",
-                      style: TextStyle(
-                        fontSize: 30,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                flex: 3,
+                child: Container(
+                  height: 85,
+                  padding: EdgeInsets.all(0.0),
+                  child: CustomPaint(
+                    painter: CardShape(colorChoice),
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(12.0, 0.0, 0.0, 0.0),
+                        child: Text(
+                          "¥${transaction['amount'].abs().toString()}",
+                          style: DefaultTextUI(
+                            size: 27,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
                       ),
                     ),
-                  ],
-                ),
-              ),
+                  ),
+                )
+
+              //   decoration: BoxDecoration(
+              //     gradient: LinearGradient(
+              //         colors: transaction["type"] == "borrowed"
+              //             ? [Color(0xFF07dfaf), const Color(0xFF47e544)]
+              //             : [Colors.pink, Colors.redAccent],
+              //         begin: Alignment.topRight,
+              //         end: Alignment.bottomLeft),
+              //     shape: BoxShape.rectangle,
+              //     borderRadius: BorderRadius.circular(20),
+              //   ),
+              //   child: Column(
+              //     mainAxisAlignment: MainAxisAlignment.center,
+              //     children: [
+              //       Text(
+              //         "¥${transaction['amount'].toString()}",
+              //         style: TextStyle(
+              //           fontSize: 30,
+              //           fontWeight: FontWeight.bold,
+              //           color: Colors.white,
+              //         ),
+              //       ),
+              //     ],
+              //   ),
             ),
+            // ),
           ],
         ),
       ),
@@ -363,8 +453,8 @@ Card historyCard(transaction) {
 }
 
 class Category {
-  Category(this.gradientColors,{@required this.amount});
+  Category(this.name, {@required this.amount});
 
+  final String name;
   final int amount;
-  final gradientColors;
 }
