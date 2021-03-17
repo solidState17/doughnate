@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:doughnate/UI/colorsUI.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'UI/shapes.dart';
 import 'home.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -9,6 +10,7 @@ import 'home.dart';
 import 'login.dart';
 import 'search.dart';
 import 'appsettings.dart';
+import "npo_apply.dart";
 
 class NpoList extends StatefulWidget {
   NpoList({Key key}) : super(key: key);
@@ -51,12 +53,12 @@ class _NpoList extends State<NpoList> {
               ),
               Spacer(),
               ElevatedButton(
+                // chance this to call npo application
                 onPressed: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      // change this to call application form, not friend search.
-                      builder: (context) => Search(),
+                      builder: (context) => Apply(),
                       fullscreenDialog: true,
                     ),
                   );
@@ -148,8 +150,12 @@ class _NpoList extends State<NpoList> {
                 flex: 3,
                 child: Container(
                   child: CircleAvatar(
+                    backgroundColor: Colors.transparent,
                     radius: 60,
-                    backgroundImage: NetworkImage(currentNPO['logo']),
+                    child: FittedBox(
+                      child: Image.network(currentNPO['logo']),
+                      fit: BoxFit.contain,
+                    ),
                   ),
                 ),
               ),
@@ -170,7 +176,9 @@ class _NpoList extends State<NpoList> {
             Container(
               child: CircleAvatar(
                 radius: 80,
-                backgroundImage: NetworkImage(currentNPO['logo']),
+                backgroundImage: NetworkImage(
+                  currentNPO['logo'],
+                ),
               ),
             ),
             Text(
@@ -180,7 +188,9 @@ class _NpoList extends State<NpoList> {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            Text(currentNPO['summary']),
+            Text(
+              currentNPO['summary'],
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -188,7 +198,6 @@ class _NpoList extends State<NpoList> {
                   onPressed: () {
                     print(currentNPO);
                     npo = currentNPO['name'];
-                    print('🔥');
                     UpdateUser();
                     setState(() {});
                     Navigator.of(context, rootNavigator: true).pop();
@@ -198,7 +207,9 @@ class _NpoList extends State<NpoList> {
                 Spacer(),
                 TextButton(
                   onPressed: () {
-                    visitNPO(npo: currentNPO['name']);
+                    visitNPO(
+                      npo: currentNPO['name'],
+                    );
                     rebuildAllChildren(context);
                     Navigator.of(context, rootNavigator: true).pop();
                   },
@@ -211,17 +222,6 @@ class _NpoList extends State<NpoList> {
       ),
     );
   }
-}
+  // add npo application here
 
-/*
-ALT LOGO RENDER:
-decoration: BoxDecoration(
-  shape: BoxShape.circle,
-  image: DecorationImage(
-    fit: BoxFit.fill,
-    image: NetworkImage(
-      widget.friend['profilePic'],
-    ),
-  ),
-),
- */
+}

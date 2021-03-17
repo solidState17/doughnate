@@ -22,30 +22,32 @@ Future<void> getAllFriends() async {
 
   var friendsArray = thisUser.data()['friends'];
 
-  friendsArray.forEach((userFriend) async {
-    final obj = await FirebaseFirestore.instance
-        .collection('Friendship')
-        .doc(userFriend)
-        .get();
+  friendsArray.forEach(
+    (userFriend) async {
+      final obj = await FirebaseFirestore.instance
+          .collection('Friendship')
+          .doc(userFriend)
+          .get();
 
-    var user = obj.data()['userA'] == email
-        ? obj.data()['userB']
-        : obj.data()['userA'];
+      var user = obj.data()['userA'] == email
+          ? obj.data()['userB']
+          : obj.data()['userA'];
 
-    FirebaseFirestore.instance
-        .collection('users')
-        .where("email", isEqualTo: user)
-        .get()
-        .then((document) {
-      final allData = document.docs[0].data();
-      allData['friendship'] = obj.data();
-      friends.add(allData);
-    });
-  });
+      FirebaseFirestore.instance
+          .collection('users')
+          .where("email", isEqualTo: user)
+          .get()
+          .then(
+        (document) {
+          final allData = document.docs[0].data();
+          allData['friendship'] = obj.data();
+          friends.add(allData);
+        },
+      );
+    },
+  );
 
   new Timer(const Duration(seconds: 2), () => friendsList.sink.add(friends));
-
-  // friendsList.sink.add(friends);
 }
 
 class Home extends StatefulWidget {
@@ -63,22 +65,22 @@ class _HomeState extends State<Home> {
 
   // this is to add friends based on the search query triggers by add button.
   Future<void> handleAddingFriend() async {
-    db
-        .collection("users")
-        .where("email", isEqualTo: _email.text)
-        .get()
-        .then((value) {
-      if (value.docs.length > 0) {
-        print("You have this friend already!");
-        return;
-      }
-      final userData = value.docs[0].data();
-      db.collection("Friendship").add({
-        "userA": userData['email'],
-        "userB": email,
-        "debt": 0,
-      });
-    });
+    db.collection("users").where("email", isEqualTo: _email.text).get().then(
+      (value) {
+        if (value.docs.length > 0) {
+          print("You have this friend already!");
+          return;
+        }
+        final userData = value.docs[0].data();
+        db.collection("Friendship").add(
+          {
+            "userA": userData['email'],
+            "userB": email,
+            "debt": 0,
+          },
+        );
+      },
+    );
 
     getAllFriends();
   }
@@ -87,78 +89,83 @@ class _HomeState extends State<Home> {
     final navPages = [UserProfile(), Friends(), NpoList(), AppSettings()];
 
     return WillPopScope(
-        onWillPop: () async {
-          return false;
-        },
-        child: Container(
-          decoration: BoxDecoration(gradient: LinearGradient(colors: [
-            bgColor1,
-            bgColor2,
-          ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          )),
-          child: Scaffold(
-            resizeToAvoidBottomInset: false,
-            backgroundColor: Colors.transparent,
-            appBar: AppBar(
-              backgroundColor: Colors.transparent,
-              elevation: 0,
-              centerTitle: true,
-              title: const Text('Doughnate',
-                  style: TextStyle(
-                    fontFamily: 'Futura',
-                    fontSize: 30,
-                    color: Colors.white,
-                    fontWeight: FontWeight.w700,
-                  )),
-              automaticallyImplyLeading: false,
-            ),
-            // this is the home page
-            body: Container(
-              child: Center(
-                  child: Padding(
-                padding: const EdgeInsets.all(10.0),
+      onWillPop: () async {
+        return false;
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              bgColor1,
+              bgColor2,
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+        child: Scaffold(
+          resizeToAvoidBottomInset: false,
+          backgroundColor: Colors.transparent,
+          // appBar: AppBar(
+          //   backgroundColor: Colors.transparent,
+          //   elevation: 0,
+          //   centerTitle: true,
+          //   title: const Text('Doughnate',
+          //       style: TextStyle(
+          //         fontFamily: 'Futura',
+          //         fontSize: 30,
+          //         color: Colors.white,
+          //         fontWeight: FontWeight.w700,
+          //       )),
+          //   automaticallyImplyLeading: false,
+          // ),
+          // this is the home page
+          body: Container(
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(10.0, 30.0, 10.0, 10.0),
                 child: navPages[_currentIndex],
-              )),
-            ),
-
-            bottomNavigationBar: BottomNavigationBar(
-              // showUnselectedLabels: true,
-              type: BottomNavigationBarType.fixed,
-              backgroundColor: Colors.transparent,
-              unselectedItemColor: Colors.white,
-              elevation: 0,
-              currentIndex: _currentIndex,
-              items: <BottomNavigationBarItem>[
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.home),
-                  label: "Home",
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.people_alt_rounded),
-                  label: "Friends",
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.view_list_outlined),
-                  label: "NPOs",
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.settings),
-                  label: "Settings",
-                ),
-              ],
-              onTap: (index) {
-                setState(() {
-                  _currentIndex = index;
-                });
-                if (_currentIndex == 1) {
-                  getAllFriends();
-                }
-              },
-              selectedItemColor: Colors.white,
+              ),
             ),
           ),
-        ));
+
+          bottomNavigationBar: BottomNavigationBar(
+            // showUnselectedLabels: true,
+            type: BottomNavigationBarType.fixed,
+            backgroundColor: Colors.transparent,
+            unselectedItemColor: Colors.white,
+            elevation: 0,
+            currentIndex: _currentIndex,
+            items: <BottomNavigationBarItem>[
+              BottomNavigationBarItem(
+                icon: Icon(Icons.home),
+                label: "Home",
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.people_alt_rounded),
+                label: "Friends",
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.view_list_outlined),
+                label: "NPOs",
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.settings),
+                label: "Settings",
+              ),
+            ],
+            onTap: (index) {
+              setState(() {
+                _currentIndex = index;
+              });
+              if (_currentIndex == 1) {
+                getAllFriends();
+              }
+            },
+            selectedItemColor: Colors.white,
+          ),
+        ),
+      ),
+    );
   }
 }

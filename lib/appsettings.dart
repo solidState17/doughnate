@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'login.dart';
+import './UI/colorsUI.dart';
 import 'package:path/path.dart' as Path;
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
@@ -31,11 +32,14 @@ class _AppSettings extends State<AppSettings> {
     setState(() {
       if (pickedFile != null) {
         _image = File(pickedFile.path);
+        imageDialog();
       } else {
         print('No image selected.');
       }
     });
   }
+
+  Future uploadImage() {}
 
   void deleteOthers(doc) async {}
 
@@ -75,185 +79,191 @@ class _AppSettings extends State<AppSettings> {
         ));
   }
 
+  AlertDialog imageDialog() {
+    return AlertDialog(
+      content: Column(
+        children: [
+          Container(child: Image.file(_image)),
+          TextButton(onPressed: (){}, child: Text('Upload Image')),
+          ]
+      ),
+      );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      body: Center(
-        // child: Padding(
-        // padding: const EdgeInsets.all(8.0),
-        child: Column(
-          children: [
-            Expanded(
-              child: ListView(
-                shrinkWrap: true,
-                children: [
-                  Container(
-                    child: Align(
-                      alignment: Alignment.topLeft,
-                      child: Padding(
-                        padding: const EdgeInsets.all(18.0),
-                        child: Row(children: [
-                          Text(
-                            "Settings",
-                            style: TextStyle(
-                              fontFamily: 'Futura',
-                              fontSize: 24,
-                              color: Colors.white,
-                              fontWeight: FontWeight.w700,
-                            ),
-                            textAlign: TextAlign.left,
-                          ),
-                          Spacer(),
-                          PopupMenuButton(
-                            onSelected: (value) {
-                              showDialog(
-                                  context: context,
-                                  builder: (context) {
-                                    return confirmDeleteAccount(value);
-                                  });
-                            },
-                            itemBuilder: (context) => [
-                              PopupMenuItem(
-                                  value: userid, child: Text('Delete Account')),
-                            ],
-                          ),
-                        ]),
-                      ),
-                    ),
-                    height: 80.0,
-                  ),
-                  CircleAvatar(
-                    radius: 60,
-                    backgroundColor: const Color(0x00000000),
-                    child: ClipOval(
-                      child: Image(
-                        image: NetworkImage(photoURL),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(100.0, 0.0, 100.0, 0.0),
-                    child: OutlinedButton(
-                      onPressed: () async {
-                        await getImage();
-                      },
-                      child: Text('Upload Picture'),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: TextField(
-                      controller: display_name,
-                      decoration: const InputDecoration(
-                        labelText: "Display Name",
-                        hintText: 'Enter your display name',
-                      ),
-                      onSubmitted: (value) => {
-                        setState(() {
-                          name = value;
-                        }),
-                      },
-                    ),
-                  ),
-                         Expanded(
-                          child: StreamBuilder<QuerySnapshot>(
-                            stream: FirebaseFirestore.instance
-                                .collection('npos')
-                                .snapshots(),
-                            builder: (BuildContext content,
-                                AsyncSnapshot<QuerySnapshot> snapshot) {
-                              if (!snapshot.hasData) return Text('No NPOs');
-                              return DropdownSearch(
-                                label: "NPO",
-                                onChanged: (value) {
-                                  setState(() {
-                                    npo = value;
-                                  });
-                                },
-                                selectedItem: npo,
-                                validator: (item) {
-                                  if (item == null)
-                                    return "Required field";
-                                  else if (item == "Brazil")
-                                    return "Invalid item";
-                                  else
-                                    return null;
-                                },
-                                items: snapshot.data.docs.map(
-                                  (doc) {
-                                    return doc['name'];
-                                  },
-                                ).toList(),
-                              );
-                            },
-                          ),
-                        ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      children: <Widget>[
-                        Text("Display Doughnations?"),
-                        Switch(
-                            value: display_doughnated,
-                            onChanged: (value) {
-                              setState(
-                                () {
-                                  display_doughnated = value;
-                                },
-                              );
-                            },
-                            activeTrackColor: Colors.red,
-                            activeColor: Colors.blue),
-                      ],
-                    ),
-                  ),
-                  Spacer(),
-                  Padding(
-                    padding: const EdgeInsets.all(5.0),
-                    child: TextButton(
-                      onPressed: () {
-                        UpdateUser();
-                        final snackBar = SnackBar(
-                          content: Text('Saved changes successfully!'),
-                          backgroundColor: Colors.pink,
-                        );
-                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                      },
-                      child: Text("Save Changes"),
-                      autofocus: true,
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(5.0),
-                    child: TextButton(
-                      onPressed: () {
-                        showDialog(
-                          context: context,
-                          builder: (context) => AlertDialog(
-                            content: Container(
-                              width: 120,
-                              height: 120,
-                              child: Column(
-                                children: [
-                                  Text('About Solid State'),
-                                  Text(
-                                      "Solid State Kabushikigaishi is amazing. Founded by Shota, Nick, and Seth. Solid State exceeded 200 gajilion USD in reveneue in it's first year"),
-                                ],
-                              ),
-                            ),
-                          ),
-                        );
-                      },
-                      child: Text("Learn about Solid State"),
-                      autofocus: true,
-                    ),
-                  ),
-                ],
+    return Container(
+      child: Column(
+        children: [
+          Row(children: [
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Text(
+                "Settings",
+                style: DefaultTextUI(
+                  size: 24,
+                  color: Colors.white,
+                  fontWeight: FontWeight.w700,
+                ),
+                textAlign: TextAlign.left,
               ),
             ),
-          ],
-        ),
+            Spacer(),
+            PopupMenuButton(
+              onSelected: (value) {
+                if (value == 'about') {
+                  return showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      content: Container(
+                        width: 120,
+                        height: 120,
+                        child: Column(
+                          children: [
+                            Text('About Solid State'),
+                            Text(
+                                "Solid State Kabushikigaishi is amazing. Founded by Shota, Nick, and Seth. Solid State exceeded 200 gajilion USD in reveneue in it's first year"),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                } else {
+                  showDialog(
+                      context: context,
+                      builder: (context) {
+                        return confirmDeleteAccount(value);
+                      });
+                }
+              },
+              itemBuilder: (context) => [
+                PopupMenuItem(value: userid, child: Text('Delete Account')),
+                PopupMenuItem(value: 'about', child: Text('About Us')),
+              ],
+            ),
+          ]),
+          CircleAvatar(
+            radius: 60,
+            backgroundColor: const Color(0x00000000),
+            child: ClipOval(
+              child: Image(
+                image: NetworkImage(photoURL),
+              ),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.fromLTRB(100.0, 0.0, 100.0, 0.0),
+            child: ElevatedButton(
+              onPressed: () async {
+                await getImage();
+                return showDialog(
+                  context: context,
+                  builder: (context) {
+                  return imageDialog();
+                  }
+                );
+              },
+              child: Text('Change Picture'),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextField(
+              controller: display_name,
+              style: DefaultTextUI(
+                size: 18,
+                color: Colors.black54,
+                fontWeight: FontWeight.w700,
+              ),
+              decoration: const InputDecoration(
+                labelText: "Display Name",
+                hintText: 'Enter your display name',
+              ),
+              onSubmitted: (value) => {
+                setState(() {
+                  name = value;
+                }),
+              },
+            ),
+          ),
+          Expanded(
+            child: StreamBuilder<QuerySnapshot>(
+              stream: FirebaseFirestore.instance.collection('npos').snapshots(),
+              builder: (BuildContext content,
+                  AsyncSnapshot<QuerySnapshot> snapshot) {
+                if (!snapshot.hasData)
+                  return Text('No NPOs',
+                      style: DefaultTextUI(
+                        size: 24,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w700,
+                      ));
+                return DropdownSearch(
+                  label: "NPO",
+                  onChanged: (value) {
+                    setState(() {
+                      npo = value;
+                    });
+                  },
+                  selectedItem: npo,
+                  validator: (item) {
+                    if (item == null)
+                      return "Required field";
+                    else if (item == "Brazil")
+                      return "Invalid item";
+                    else
+                      return null;
+                  },
+                  items: snapshot.data.docs.map(
+                    (doc) {
+                      return doc['name'];
+                    },
+                  ).toList(),
+                );
+              },
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              children: <Widget>[
+                Text("Display Doughnations?",
+                    style: DefaultTextUI(
+                      size: 14,
+                      color: Colors.black54,
+                      fontWeight: FontWeight.w700,
+                    )),
+                Switch(
+                    value: display_doughnated,
+                    onChanged: (value) {
+                      setState(
+                        () {
+                          display_doughnated = value;
+                        },
+                      );
+                    },
+                    activeTrackColor: Colors.red,
+                    activeColor: Colors.blue),
+              ],
+            ),
+          ),
+          Spacer(),
+          Padding(
+            padding: const EdgeInsets.all(5.0),
+            child: ElevatedButton(
+              onPressed: () {
+                UpdateUser();
+                final snackBar = SnackBar(
+                  content: Text('Saved changes successfully!'),
+                  backgroundColor: Colors.pink,
+                );
+                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              },
+              child: Text("Save Changes"),
+              autofocus: true,
+            ),
+          ),
+        ],
       ),
     );
   }
