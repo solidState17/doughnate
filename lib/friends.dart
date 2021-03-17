@@ -32,11 +32,7 @@ class _Friends extends State<Friends> {
 
   final DocumentReference users =
       FirebaseFirestore.instance.collection("users").doc(userid);
-<<<<<<< HEAD
-      
-=======
 
->>>>>>> 92a849cf1a8f201cee37bae4426889a9934d3f39
   @override
   Widget build(BuildContext context) {
     return Container(
