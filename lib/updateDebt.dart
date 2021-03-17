@@ -51,11 +51,9 @@ class _UpdateDebt extends State<UpdateDebt> {
 
     //? Create transaction notification for friend
     if (amount > 0) {
-      handleAddingTransactions(
-          friendUser['authID'], amount, type);
+      handleAddingTransactions(friendUser['authID'], amount, type);
     } else {
-      handleAddingTransactions(
-          friendUser['authID'], amount, type);
+      handleAddingTransactions(friendUser['authID'], amount, type);
     }
 
     if (friendshipDocument[setOwner] == email) {
@@ -64,85 +62,12 @@ class _UpdateDebt extends State<UpdateDebt> {
       handleIndividualUserUpdates(friendUser['authID'], userid, amount, type);
     }
 
+    final total = friendshipData.data()['debt'] + amount;
     friendship.update({
       'owner': setOwner,
-      'debt': friendshipData.data()['debt'] + amount,
+      'debt': total.abs(),
     });
   }
-
-  // Future<void> adjustDebt(id, amount, type) async {
-  //   //! Getting Document from database
-  //   final debt = db.collection("Friendship").doc(id);
-
-  //   //! Awaiting for the data that we need
-  //   var debtData = await debt.get();
-  //   var debtTotal = debtData.data()['debt'];
-  //   var debtOwner = debtData.data()['owner'];
-  //   var friendUser = debtData.data()['userA'] == email
-  //       ? debtData.data()['userB']
-  //       : debtData.data()['userA'];
-
-  //   if (debtOwner != 'userA' || debtOwner != 'userB') {
-  //     if (amount > 0) {
-  //       debtOwner = debtData.data()['userA'] == email ? 'userA' : 'userB';
-  //     }
-  //   } else {
-  //     debtOwner = debtData.data()['userA'] == email ? 'userB' : 'userA';
-  //   }
-
-  //   if (debtData.data()[debtOwner] == email) {
-  //     if (amount > 0) {
-  //       //? lending more money
-  //       handleAddingTransactions(friendUser, amount, "lent");
-  //     } else {
-  //       if (type == 'doughnation') {
-  //         //? doughnated on your behalf
-  //         handleAddingTransactions(friendUser, amount, "doughnated");
-  //       } else {
-  //         //? reduced debt
-  //         handleAddingTransactions(friendUser, amount, "reduced");
-  //       }
-  //     }
-  //   } else {
-  //     if (amount > 0) {
-  //       //? borrowed money
-  //       handleAddingTransactions(friendUser, amount, "borrowed");
-  //     } else {
-  //       //? doughnation
-  //       if (type == "doughnation") {
-  //         handleAddingTransactions(friendUser, amount, "doughnated");
-  //       } else {
-  //         //? Payback
-  //         handleAddingTransactions(friendUser, amount, "returned");
-  //       }
-  //     }
-  //   }
-
-  //   var lender = debtData.data()[debtOwner];
-  //   var borrower = debtOwner == 'userA' ? 'userB' : 'userA';
-
-  //   //! Check whether the direction of the transation is addition or subtraction
-
-  //   if (debtTotal + amount < 0) {
-  //     debtOwner = debtOwner == 'userA' ? 'userB' : 'userA';
-  //     handleIndividualUserUpdates(
-  //         debtData.data()[debtOwner],
-  //         debtData.data()[debtOwner == 'userA' ? 'userB' : 'userA'],
-  //         amount,
-  //         type);
-  //   } else {
-  //     handleIndividualUserUpdates(
-  //         debtData.data()[lender], debtData.data()[borrower], amount, type);
-  //   }
-
-  //   //! Update the database to reflect changes
-  //   debtTotal += amount;
-  //   debt.update({
-  //     "debt": debtTotal.abs(),
-  //     "owner": debtOwner,
-  //   });
-  //   getAllFriends();
-  // }
 
   Future<void> handleAddingTransactions(id, amount, type) async {
     var friendData = db.collection('users').doc(id);
@@ -242,9 +167,11 @@ class _UpdateDebt extends State<UpdateDebt> {
   changedColor() {
     if (widget.friend['friendship']['debt'] == 0) {
       return bgColor1;
-    } else if (widget.friend['friendship'][widget.friend['friendship']['debt']] == email) {
+    } else if (widget.friend['friendship']
+            [widget.friend['friendship']['debt']] ==
+        email) {
       return primaryGreen2;
-    }else{
+    } else {
       return primaryRed2;
     }
   }
@@ -301,20 +228,18 @@ class _UpdateDebt extends State<UpdateDebt> {
         ],
       ),
       content: SingleChildScrollView(
-              child: Container(
+        child: Container(
           height: 235,
           width: 300,
           child: Column(
             children: [
               Padding(
                 padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 8.0),
-                child: Text(
-                    "Supports ${widget.friend['npo']}",
+                child: Text("Supports ${widget.friend['npo']}",
                     style: DefaultTextUI(
-                      color: Colors.black,
-                      fontWeight: FontWeight.w400,
-                      size: 15
-                    )),
+                        color: Colors.black,
+                        fontWeight: FontWeight.w400,
+                        size: 15)),
               ),
               Padding(
                 padding: EdgeInsets.all(8.0),
@@ -357,8 +282,8 @@ class _UpdateDebt extends State<UpdateDebt> {
                         visitNPO(
                           npo: widget.friend['npo'],
                         );
-                        adjustDebt(widget.friend, int.parse(_enteredAmount.text),
-                            "Doughnation");
+                        adjustDebt(widget.friend,
+                            int.parse(_enteredAmount.text), "Doughnation");
                         Navigator.of(context, rootNavigator: true).pop();
                       },
                       child: Text('Doughnate'),
@@ -366,8 +291,8 @@ class _UpdateDebt extends State<UpdateDebt> {
                     Spacer(),
                     TextButton(
                       onPressed: () {
-                        adjustDebt(widget.friend, int.parse(_enteredAmount.text),
-                            "Adjust");
+                        adjustDebt(widget.friend,
+                            int.parse(_enteredAmount.text), "Adjust");
                         Navigator.of(context, rootNavigator: true).pop();
                       },
                       child: Text('Adjust Debt'),

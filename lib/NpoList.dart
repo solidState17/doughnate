@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:doughnate/UI/colorsUI.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'UI/iconButtons.dart';
 import 'UI/shapes.dart';
 import 'home.dart';
 import 'package:flutter/material.dart';
@@ -31,6 +32,17 @@ class _NpoList extends State<NpoList> {
     (context as Element).visitChildren(rebuild);
   }
 
+  void handleAddNPO() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        // change this to call application form, not friend search.
+        builder: (context) => Search(),
+        fullscreenDialog: true,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -42,39 +54,45 @@ class _NpoList extends State<NpoList> {
             children: [
               Text(
                 "Find an NPO",
-                style: TextStyle(
-                  fontFamily: 'Futura',
-                  fontSize: 24,
+                style: DefaultTextUI(
+                  size: textHeading,
                   color: Colors.white,
                   fontWeight: FontWeight.w700,
                 ),
                 textAlign: TextAlign.left,
               ),
               Spacer(),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      // change this to call application form, not friend search.
-                      builder: (context) => Search(),
-                      fullscreenDialog: true,
-                    ),
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  primary: primarySalmon,
-                ),
-                child: Text(
-                  'Become NPO Partner',
-                  style: TextStyle(
-                    fontFamily: 'Futura',
-                    fontSize: 14,
-                    color: Colors.black54,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
+              ClickableIcon(
+                iconData: Icons.add,
+                text: 'Add NPO',
+                color: Colors.white,
+                notificationNumber: 0,
+                onTap: handleAddNPO,
               ),
+              // ElevatedButton(
+              //   onPressed: () {
+              //     Navigator.push(
+              //       context,
+              //       MaterialPageRoute(
+              //         // change this to call application form, not friend search.
+              //         builder: (context) => Search(),
+              //         fullscreenDialog: true,
+              //       ),
+              //     );
+              //   },
+              //   style: ElevatedButton.styleFrom(
+              //     primary: primarySalmon,
+              //   ),
+              //   child: Text(
+              //     'Become NPO Partner',
+              //     style: TextStyle(
+              //       fontFamily: 'Futura',
+              //       fontSize: 14,
+              //       color: Colors.black54,
+              //       fontWeight: FontWeight.w700,
+              //     ),
+              //   ),
+              // ),
             ],
           ),
         ),
@@ -90,8 +108,11 @@ class _NpoList extends State<NpoList> {
                 scrollDirection: Axis.vertical,
                 shrinkWrap: true,
                 itemBuilder: (BuildContext context, index) {
-                  return npoCard(
-                    snapshot.data.docs[index],
+                  return Padding(
+                    padding: const EdgeInsets.fromLTRB(0.0, 0.0, 4.0, 4.0),
+                    child: npoCard(
+                      snapshot.data.docs[index],
+                    ),
                   );
                 },
               );
@@ -104,124 +125,194 @@ class _NpoList extends State<NpoList> {
 
   Card npoCard(currentNPO) {
     return Card(
-      margin: EdgeInsets.all(10),
-      shadowColor: currentNPO['name'] == npo ? Colors.pink : Colors.black,
       elevation: 8,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(15.0),
-          bottomLeft: Radius.circular(15.0),
-        ),
-      ),
-      child: InkWell(
-        onTap: () {
-          showDialog(
-            context: context,
-            builder: (context) {
-              return NPOProfile(currentNPO);
-            },
-          );
-        },
-        child: Container(
-          height: 150,
-          padding: EdgeInsets.all(10.0),
-          child: Row(
-            children: [
-              Expanded(
-                flex: 7,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      currentNPO['name'],
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Text(
-                      currentNPO['summary'],
-                    ),
-                  ],
-                ),
-              ),
-              Expanded(
-                flex: 3,
-                child: Container(
-                  child: CircleAvatar(
-                    backgroundColor: Colors.transparent,
-                    radius: 60,
-                    child: FittedBox(child: Image.network(currentNPO['logo']), fit: BoxFit.contain)
-                    // Text(
-                    //   'LOGO RENDER',
-                    //   style: TextStyle(
-                    //     fontSize: 12,
-                    //   ),
-                    // ),
-                    // backgroundImage: NetworkImage(npo['logo'])
-                    // backgroundImage: NetworkImage(currentNPO['logo']),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  AlertDialog NPOProfile(currentNPO) {
-    return AlertDialog(
-      content: Container(
-        width: 300,
-        height: 400,
+      shadowColor: currentNPO['name'] == npo ? primaryRed : Colors.black,
+        clipBehavior: Clip.antiAlias,
         child: Column(
           children: [
+            ListTile(
+                title: Text(currentNPO['name']),
+                subtitle: Text('Category of NPO'),
+                trailing: ClickableIcon(
+                    iconData: Icons.favorite,
+                    color: currentNPO['name'] == npo
+                        ? primaryRed
+                        : Colors.black54,
+                    notificationNumber: 0,
+                    text: '',
+                    onTap: () {
+                    })),
+            // ),
             Container(
-              child: CircleAvatar(
-                radius: 60,
-                child: Text(
-                  'LOGO RENDER',
-                  style: TextStyle(
-                    fontSize: 12,
-                  ),
-                ),
+              height: 150,
+              width: 120,
+              child: FittedBox(
+                child: Image.network(currentNPO['logo']),
+                fit: BoxFit.fitHeight,
               ),
             ),
-            Text(
-              currentNPO['name'],
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            Text(currentNPO['summary']),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+            ButtonBar(
+              alignment: MainAxisAlignment.end,
               children: [
                 TextButton(
                   onPressed: () {
-                    print(currentNPO);
-                    npo = currentNPO['name'];
-                    print('🔥');
-                    UpdateUser();
-                    setState(() {});
-                    Navigator.of(context, rootNavigator: true).pop();
+                    showDialog(
+                        context: context,
+                        builder: (context) {
+                          return NPOProfile(currentNPO);
+                        });
                   },
-                  child: Text('Set To Prefered'),
-                ),
-                Spacer(),
-                TextButton(
-                  onPressed: () {
-                    visitNPO(npo: currentNPO['name']);
-                    rebuildAllChildren(context);
-                    Navigator.of(context, rootNavigator: true).pop();
-                  },
-                  child: Text('Visit Site'),
-                ),
+                  child: Text('Learn more'),
+                )
               ],
             ),
           ],
+        ));
+  }
+
+  // Card npoCard(currentNPO) {
+  //   return Card(
+  //     // margin: EdgeInsets.all(10),
+  //     shadowColor: currentNPO['name'] == npo ? Colors.pink : Colors.black,
+  //     elevation: 8,
+  //     shape: RoundedRectangleBorder(
+  //       borderRadius: BorderRadius.only(
+  //         topLeft: Radius.circular(15.0),
+  //         bottomLeft: Radius.circular(15.0),
+  //       ),
+  //     ),
+  //     child: InkWell(
+  //       onTap: () {
+  //         showDialog(
+  //           context: context,
+  //           builder: (context) {
+  //             return NPOProfile(currentNPO);
+  //           },
+  //         );
+  //       },
+  //       child: Container(
+  //         height: 150,
+  //         padding: EdgeInsets.all(10.0),
+  //         child: Row(
+  //           children: [
+  //             Expanded(
+  //               flex: 7,
+  //               child: Column(
+  //                 crossAxisAlignment: CrossAxisAlignment.start,
+  //                 children: [
+  //                   Text(
+  //                     currentNPO['name'],
+  //                     style: TextStyle(
+  //                       fontSize: 20,
+  //                       fontWeight: FontWeight.bold,
+  //                     ),
+  //                   ),
+  //                   // Text(
+  //                   //   currentNPO['summary'],
+  //                   // ),
+  //                 ],
+  //               ),
+  //             ),
+  //             Expanded(
+  //               flex: 3,
+  //               child: Container(
+  //                   height: 150,
+  //                   constraints: BoxConstraints.expand(),
+  //                   // child: CircleAvatar(
+  //                   //     backgroundColor: Colors.transparent,
+  //                   //     radius: 60,
+  //                   child: FittedBox(
+  //                       child: Image.network(currentNPO['logo']),
+  //                       fit: BoxFit.contain)
+  //                   // Text(
+  //                   //   'LOGO RENDER',
+  //                   //   style: TextStyle(
+  //                   //     fontSize: 12,
+  //                   //   ),
+  //                   // ),
+  //                   // backgroundImage: NetworkImage(npo['logo'])
+  //                   // backgroundImage: NetworkImage(currentNPO['logo']),
+  //                   // ),
+  //                   ),
+  //             ),
+  //           ],
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
+
+  AlertDialog NPOProfile(currentNPO) {
+    return AlertDialog(
+      insetPadding: EdgeInsets.all(12.0),
+      content: Container(
+        width: MediaQuery.of(context).size.width,
+        height: 400,
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Container(
+                height: 150,
+                child: CircleAvatar(
+                  radius: 60,
+                  child: Text(
+                    'LOGO RENDER',
+                    style: TextStyle(
+                      fontSize: 12,
+                    ),
+                  ),
+                ),
+              ),
+              Text("${currentNPO['supporters']} active d🍩ughnaters!",
+                  style: DefaultTextUI(
+                      size: 12,
+                      color: Colors.black54,
+                      fontWeight: FontWeight.w600)),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 4.0),
+                child: Text(
+                  currentNPO['name'],
+                  style: DefaultTextUI(
+                    size: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 4.0),
+                child: Text(currentNPO['summary'],
+                    style: TextStyle(
+                      height: 2,
+                    )),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      print(currentNPO);
+                      npo = currentNPO['name'];
+                      print('🔥');
+                      UpdateUser();
+                      setState(() {});
+                      Navigator.of(context, rootNavigator: true).pop();
+                    },
+                    child: Text('Set To Prefered'),
+                  ),
+                  Spacer(),
+                  TextButton(
+                    onPressed: () {
+                      visitNPO(npo: currentNPO['name']);
+                      rebuildAllChildren(context);
+                      Navigator.of(context, rootNavigator: true).pop();
+                    },
+                    child: Text('Visit Site'),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

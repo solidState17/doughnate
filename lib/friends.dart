@@ -49,7 +49,7 @@ class _Friends extends State<Friends> {
                       "Friends",
                       style: TextStyle(
                         fontFamily: 'Futura',
-                        fontSize: 24,
+                        fontSize: 30,
                         color: Colors.white,
                         fontWeight: FontWeight.w700,
                       ),
@@ -194,7 +194,7 @@ class _Friends extends State<Friends> {
                         ),
                         friend['display_doughnated']
                             ? Text(
-                                "$displayedPerc% D🍩ughnated to preferred NPO",
+                                "${displayedPerc.toStringAsFixed(2)}% D🍩ughnated to preferred NPO",
                                 style: TextStyle(
                                   fontSize: 14,
                                 ),

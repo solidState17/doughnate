@@ -40,3 +40,7 @@ class DefaultTextUI extends TextStyle {
             fontSize: size,
             fontFamily: fontFamily);
 }
+
+double textHeading = 30.0;
+double sub_heading = 22.0;
+double para = 18.0;

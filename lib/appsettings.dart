@@ -99,7 +99,7 @@ class _AppSettings extends State<AppSettings> {
               child: Text(
                 "Settings",
                 style: DefaultTextUI(
-                  size: 24,
+                  size: textHeading,
                   color: Colors.white,
                   fontWeight: FontWeight.w700,
                 ),
@@ -108,6 +108,7 @@ class _AppSettings extends State<AppSettings> {
             ),
             Spacer(),
             PopupMenuButton(
+              color: Colors.white,
               onSelected: (value) {
                 if (value == 'about') {
                   return showDialog(
