@@ -7,13 +7,13 @@ import 'colorsUI.dart';
 class ClickableIcon extends StatelessWidget {
   final String text;
   final IconData iconData;
-  //final VoidCallback onTap;
+  final VoidCallback onTap;
   final int notificationNumber;
   final Color color;
 
   const ClickableIcon(
       {Key key,
-     // this.onTap,
+     this.onTap,
       @required this.text,
       @required this.color,
       @required this.iconData,
