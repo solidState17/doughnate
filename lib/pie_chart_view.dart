@@ -31,7 +31,7 @@ class PieChartView extends StatelessWidget {
               ),
               Center(
                 child: Container(
-                  height: 100,
+                    height: 100,
                     decoration: BoxDecoration(
                       color: Colors.white,
                       shape: BoxShape.circle,
@@ -43,15 +43,15 @@ class PieChartView extends StatelessWidget {
                           Text(
                             'Total',
                             style: TextStyle(
-                              fontSize: 23,
-                              fontWeight: FontWeight.bold,
-                              color: const Color(0xff707070)
+                                fontSize: 23,
+                                fontWeight: FontWeight.bold,
+                                color: const Color(0xff707070)
                             ),
                           ),
-                          Text( totalAmount > 0 ? "+ ¥${totalAmount}" : "- ¥${-totalAmount}",
+                          Text( "${totalAmount}",
                             style: TextStyle(
-                              fontSize: 23,
-                              fontWeight: FontWeight.bold,
+                                fontSize: 23,
+                                fontWeight: FontWeight.bold,
                                 color: const Color(0xff707070)
                             ),
                           ),

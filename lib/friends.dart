@@ -32,7 +32,11 @@ class _Friends extends State<Friends> {
 
   final DocumentReference users =
       FirebaseFirestore.instance.collection("users").doc(userid);
+<<<<<<< HEAD
       
+=======
+
+>>>>>>> 92a849cf1a8f201cee37bae4426889a9934d3f39
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -68,38 +72,14 @@ class _Friends extends State<Friends> {
                                 color: Colors.white,
                                 onTap: showAddFriend);
                           return ClickableIcon(
-                              iconData: Icons.person_add,
-                              text: 'Add Friend',
-                              notificationNumber:
-                                  snapshot.data["friend_requests"].length,
-                              color: Colors.white,
-                              onTap: showAddFriend,
-                              );
+                            iconData: Icons.person_add,
+                            text: 'Add Friend',
+                            notificationNumber:
+                                snapshot.data["friend_requests"].length,
+                            color: Colors.white,
+                            onTap: showAddFriend,
+                          );
                         })
-                    // IconButton(
-                    //   icon: Icon(Icons.person_add),
-                    //   color: Colors.white,
-                    //   onPressed: () {
-                    //     Navigator.push(
-                    //       context,
-                    //       MaterialPageRoute(
-                    //         builder: (context) => Search(),
-                    //         fullscreenDialog: true,
-                    //       ),
-                    //     );
-                    // },
-                    // style: ElevatedButton.styleFrom(
-                    //   primary: primaryButtonColor2,
-                    // ),
-                    // child: Text('Add Friend',
-                    //   style: TextStyle(
-                    //      fontFamily: 'Futura',
-                    //   fontSize: 14,
-                    //   color: Colors.black54,
-                    //   fontWeight: FontWeight.w700,
-                    //   )
-                    // ),
-                    // ),
                   ],
                 ),
               ),
@@ -136,11 +116,50 @@ class _Friends extends State<Friends> {
   }
 
   Card buildCard(friend) {
-    // FirebaseFirestore.instance.collection('users').where("email", isEqualTo: friend['userA']).get()
-
     final double perc =
         (friend['total_doughnated'] / friend['total_reimbursed']) * 100;
     final double displayedPerc = perc.isNaN ? 0.0 : perc;
+
+    changedColor() {
+      if (friend['friendship']['debt'] == 0) {
+        return bgColor1;
+      } else if (friend['friendship'][friend['friendship']['owner']] == email) {
+        return primaryGreen2;
+      } else {
+        return primaryRed2;
+      }
+    }
+
+    changeText() {
+      if (friend['friendship']['debt'] == 0) {
+        return Text(
+          "You're Even",
+          style: TextStyle(
+            fontSize: 25,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        );
+      } else if (friend['friendship'][friend['friendship']['owner']] == email) {
+        return Text(
+          "You're Owed",
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        );
+      } else {
+        return Text(
+          "You Owe",
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        );
+      }
+    }
 
     return Card(
       shadowColor: Colors.black,
@@ -194,60 +213,25 @@ class _Friends extends State<Friends> {
                             width: 220.0,
                             margin: EdgeInsets.only(top: 10),
                             decoration: BoxDecoration(
-                              // gradient: LinearGradient(
-                              //     colors: friend['friendship']
-                              //                 [friend['friendship']['owner']] ==
-                              //             email
-                              //         ? [
-                              //             Color(0xFF07dfaf),
-                              //             const Color(0xFF47e544)
-                              //           ]
-                              //         : [
-                              //             Colors.redAccent,
-                              //             Colors.red
-                              //           ], //[const Color(0xFF02b5e0), const Color(0xFF02cabd)]
-                              //     begin: Alignment.topRight,
-                              //     end: Alignment.bottomLeft),
-                              // color: const Color(0xffa9e19c),
                               shape: BoxShape.rectangle,
                               borderRadius:
                                   BorderRadius.all(Radius.circular(10.0)),
-                              color: friend['friendship']
-                                          [friend['friendship']['owner']] ==
-                                      email
-                                  ? primaryGreen2
-                                  : primaryRed2,
+                              color: changedColor(),
                             ),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                friend['friendship']
-                                            [friend['friendship']['owner']] ==
-                                        email
-                                    ? Text(
-                                        "You're Owed",
-                                        style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.white,
-                                        ),
-                                      )
+                                changeText(),
+                                friend['friendship']['debt'] == 0
+                                    ? Container()
                                     : Text(
-                                        "You Owe",
+                                        "¥${friend['friendship']['debt'].toString()}",
                                         style: TextStyle(
-                                          fontSize: 18,
+                                          fontSize: 30,
                                           fontWeight: FontWeight.bold,
                                           color: Colors.white,
                                         ),
                                       ),
-                                Text(
-                                  "¥${friend['friendship']['debt'].toString()}",
-                                  style: TextStyle(
-                                    fontSize: 30,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white,
-                                  ),
-                                ),
                               ],
                             ),
                           ),

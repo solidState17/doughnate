@@ -9,7 +9,7 @@ hexColor(String colorhexcode) {
   return colorint;
 }
 
-var bgColor1 = Color(hexColor('#9CA9E1'));
+var bgColor1 = Color(hexColor('#9CA9E1')); //blue one
 var bgColor2 = Color(hexColor('#D49CE1'));
 // var bgColor1 = Color(hexColor('#9077E5'));
 // var bgColor2 = Color(hexColor('#B97DCE'));

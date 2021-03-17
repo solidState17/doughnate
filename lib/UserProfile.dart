@@ -48,7 +48,7 @@ class UserProfile extends StatelessWidget {
   ];
 
   final DocumentReference users =
-      FirebaseFirestore.instance.collection("users").doc(userid);
+  FirebaseFirestore.instance.collection("users").doc(userid);
 
   @override
   Widget build(BuildContext context) {
@@ -137,24 +137,24 @@ class UserProfile extends StatelessWidget {
                                   right: 25, left: 25, bottom: 10),
                               child: Row(
                                 mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                MainAxisAlignment.spaceBetween,
                                 children: [
                                   Container(
                                     child: Column(
                                       children: [
                                         Row(
                                           mainAxisAlignment:
-                                              MainAxisAlignment.center,
+                                          MainAxisAlignment.center,
                                           children: [
                                             Container(
                                               height: 8,
                                               width: 8,
                                               decoration: BoxDecoration(
                                                   color:
-                                                      primaryGreen2,
+                                                  primaryGreen2,
                                                   borderRadius:
-                                                      BorderRadius.circular(
-                                                          10)),
+                                                  BorderRadius.circular(
+                                                      10)),
                                             ),
                                             SizedBox(
                                               width: 3,
@@ -163,7 +163,7 @@ class UserProfile extends StatelessWidget {
                                                 style: TextStyle(
                                                   fontSize: 18,
                                                   color:
-                                                      const Color(0xff707070),
+                                                  const Color(0xff707070),
                                                   fontWeight: FontWeight.w800,
                                                 )),
                                           ],
@@ -222,7 +222,7 @@ class UserProfile extends StatelessWidget {
                                       children: [
                                         Row(
                                           mainAxisAlignment:
-                                              MainAxisAlignment.center,
+                                          MainAxisAlignment.center,
                                           children: [
                                             Container(
                                               height: 8,
@@ -230,8 +230,8 @@ class UserProfile extends StatelessWidget {
                                               decoration: BoxDecoration(
                                                   color: primaryRed2,
                                                   borderRadius:
-                                                      BorderRadius.circular(
-                                                          10)),
+                                                  BorderRadius.circular(
+                                                      10)),
                                             ),
                                             SizedBox(
                                               width: 3,
@@ -241,7 +241,7 @@ class UserProfile extends StatelessWidget {
                                                   fontSize: 18,
                                                   fontWeight: FontWeight.w800,
                                                   color:
-                                                      const Color(0xff707070),
+                                                  const Color(0xff707070),
                                                 )),
                                           ],
                                         ),
@@ -284,56 +284,56 @@ class UserProfile extends StatelessWidget {
           child: Column(children: [
             Expanded(
                 child: StreamBuilder(
-              stream: users.snapshots(),
-              builder: (BuildContext context,
-                  AsyncSnapshot<DocumentSnapshot> snapshot) {
-                if (!snapshot.hasData) {
-                  return Center(child: CircularProgressIndicator());
-                } else if (snapshot.data['transactions'].length == 0) {
-                  return Center(
-                    child: Text(
-                      "No Transactions",
-                      style: TextStyle(
-                        fontSize: 20,
-                        color: Colors.black.withOpacity(0.5),
-                      ),
-                    ),
-                  );
-                }
-                return ListView.builder(
-                    itemCount: snapshot.data['transactions'].length,
-                    itemBuilder: (context, int index) {
-                      return Dismissible(
-                          key: Key("${snapshot.data['transactions'][index]}"),
-                          background: Container(
-                              color: Colors.red,
-                              child: Icon(
-                                Icons.delete,
-                                color: Colors.white,
-                                size: 30,
-                              )),
-                          onDismissed: (_direction) {
-                            if (_direction == DismissDirection.startToEnd) {
-                              var specificTimestamp = snapshot
-                                  .data['transactions'][index]["timestamp"];
-                              var newTransaction = [];
-                              snapshot.data['transactions'].forEach((val) {
-                                if (val["timestamp"] != specificTimestamp) {
-                                  newTransaction.add(val);
+                  stream: users.snapshots(),
+                  builder: (BuildContext context,
+                      AsyncSnapshot<DocumentSnapshot> snapshot) {
+                    if (!snapshot.hasData) {
+                      return Center(child: CircularProgressIndicator());
+                    } else if (snapshot.data['transactions'].length == 0) {
+                      return Center(
+                        child: Text(
+                          "No Transactions",
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: Colors.black.withOpacity(0.5),
+                          ),
+                        ),
+                      );
+                    }
+                    return ListView.builder(
+                        itemCount: snapshot.data['transactions'].length,
+                        itemBuilder: (context, int index) {
+                          return Dismissible(
+                              key: Key("${snapshot.data['transactions'][index]}"),
+                              background: Container(
+                                  color: Colors.red,
+                                  child: Icon(
+                                    Icons.delete,
+                                    color: Colors.white,
+                                    size: 30,
+                                  )),
+                              onDismissed: (_direction) {
+                                if (_direction == DismissDirection.startToEnd) {
+                                  var specificTimestamp = snapshot
+                                      .data['transactions'][index]["timestamp"];
+                                  var newTransaction = [];
+                                  snapshot.data['transactions'].forEach((val) {
+                                    if (val["timestamp"] != specificTimestamp) {
+                                      newTransaction.add(val);
+                                    }
+                                  });
+                                  users.update({"transactions": newTransaction});
                                 }
-                              });
-                              users.update({"transactions": newTransaction});
-                            }
-                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                content: Text("Transaction was Deleted")));
-                          },
-                          child: historyCard(
-                              snapshot.data["transactions"][index]));
-                    });
-              },
-            )
-                //friends.map((friend) => buildCard(friend)).toList(),
-                ),
+                                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                    content: Text("Transaction was Deleted")));
+                              },
+                              child: historyCard(
+                                  snapshot.data["transactions"][index]));
+                        });
+                  },
+                )
+              //friends.map((friend) => buildCard(friend)).toList(),
+            ),
           ]),
         ),
       ],
@@ -344,15 +344,15 @@ class UserProfile extends StatelessWidget {
 Card historyCard(transaction) {
   DateTime myDateTime = (transaction['timestamp']).toDate();
   final Color colorChoice =
-      transaction['amount'] < 0 ? primaryRed2 : primaryGreen2;
+  transaction['amount'] < 0 ? primaryRed2 : primaryGreen2;
 
   return Card(
     shadowColor: Colors.black,
     elevation: 8,
     shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.all(
-      Radius.circular(20.0),
-    )),
+          Radius.circular(20.0),
+        )),
     child: InkWell(
       child: Container(
         height: 85,
@@ -419,31 +419,7 @@ Card historyCard(transaction) {
                     ),
                   ),
                 )
-
-                //   decoration: BoxDecoration(
-                //     gradient: LinearGradient(
-                //         colors: transaction["type"] == "borrowed"
-                //             ? [Color(0xFF07dfaf), const Color(0xFF47e544)]
-                //             : [Colors.pink, Colors.redAccent],
-                //         begin: Alignment.topRight,
-                //         end: Alignment.bottomLeft),
-                //     shape: BoxShape.rectangle,
-                //     borderRadius: BorderRadius.circular(20),
-                //   ),
-                //   child: Column(
-                //     mainAxisAlignment: MainAxisAlignment.center,
-                //     children: [
-                //       Text(
-                //         "¥${transaction['amount'].toString()}",
-                //         style: TextStyle(
-                //           fontSize: 30,
-                //           fontWeight: FontWeight.bold,
-                //           color: Colors.white,
-                //         ),
-                //       ),
-                //     ],
-                //   ),
-                ),
+            ),
             // ),
           ],
         ),
