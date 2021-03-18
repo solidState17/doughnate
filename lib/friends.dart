@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:doughnate/database/friensshipShotaVer.dart';
 import 'package:doughnate/debtHistory/Debtlist.dart';
 import 'home.dart';
 import 'dart:ui' as ui show Image;
@@ -92,7 +93,6 @@ class _Friends extends State<Friends> {
                         return Center(
                           child: CircularProgressIndicator(),
                         );
-
                       return ListView.builder(
                         itemCount: snapshot.data.length,
                         itemBuilder: (context, int index) {

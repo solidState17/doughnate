@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'dart:math';
 import 'package:doughnate/UserProfile.dart';
