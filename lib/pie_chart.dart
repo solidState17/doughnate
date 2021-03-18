@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'dart:math';
 import 'package:doughnate/UserProfile.dart';
@@ -31,7 +30,8 @@ class PieChart extends CustomPainter {
     for (var index = 0; index < categories.length; index++) {
       final currentCategory = categories.elementAt(index);
       final sweepRadian = currentCategory.amount / total * 2 * pi;
-      paint.color = kNeumorphicColors.elementAt(index % categories.length);
+      // paint.color = kNeumorphicColors.elementAt(index % categories.length);
+      paint.color = currentCategory.color;
       canvas.drawArc(
         Rect.fromCircle(center: center, radius: radius),
         startRadian,
