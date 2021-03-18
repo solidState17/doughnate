@@ -283,11 +283,13 @@ class _NpoList extends State<NpoList> {
   }
 
   void updatePreferredNPO(currentNPO) {
+    //manage number of npo supporters
     final String direction = currentNPO['name'] == npo ? 'down' : 'up';
     changeNPOActiveCount(currentNPO['npoid'], direction);
 
+    //save preferred NPO and re-render
     npo = currentNPO['name'];
     UpdateUser();
-    setState(() {}); // re-render after change
+    setState(() {});
   }
 }
