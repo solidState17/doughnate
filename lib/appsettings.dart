@@ -168,6 +168,9 @@ class _AppSettings extends State<AppSettings> {
           Padding(
             padding: EdgeInsets.fromLTRB(100.0, 0.0, 100.0, 0.0),
             child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                primary: primaryButtonColor2,
+              ),
               onPressed: () async {
                 await getImage();
                 return showDialog(

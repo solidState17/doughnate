@@ -12,6 +12,7 @@ import 'login.dart';
 import 'search.dart';
 import 'appsettings.dart';
 import "npo_apply.dart";
+import './database/npos.dart';
 
 class NpoList extends StatefulWidget {
   NpoList({Key key}) : super(key: key);
@@ -126,8 +127,8 @@ class _NpoList extends State<NpoList> {
 
   Card npoCard(currentNPO) {
     return Card(
-      elevation: 8,
-      shadowColor: currentNPO['name'] == npo ? primaryRed : Colors.black,
+        elevation: 8,
+        shadowColor: currentNPO['name'] == npo ? primaryRed : Colors.black,
         clipBehavior: Clip.antiAlias,
         child: Column(
           children: [
@@ -136,12 +137,14 @@ class _NpoList extends State<NpoList> {
                 subtitle: Text('Category of NPO'),
                 trailing: ClickableIcon(
                     iconData: Icons.favorite,
-                    color: currentNPO['name'] == npo
-                        ? primaryRed
-                        : Colors.black54,
+                    color:
+                        currentNPO['name'] == npo ? primaryRed : Colors.black54,
                     notificationNumber: 0,
                     text: '',
                     onTap: () {
+                      final String direction =
+                          currentNPO['name'] == npo ? 'down' : 'up';
+                      changeNPOActiveCount(currentNPO['npoid'], direction);
                     })),
             // ),
             Container(
