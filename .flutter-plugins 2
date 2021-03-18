@@ -1,0 +1,10 @@
+# This is a generated file; do not edit or check into version control.
+cloud_firestore=/Users/taniguchishouta/Desktop/developer/flutter/.pub-cache/hosted/pub.dartlang.org/cloud_firestore-1.0.0/
+cloud_firestore_web=/Users/taniguchishouta/Desktop/developer/flutter/.pub-cache/hosted/pub.dartlang.org/cloud_firestore_web-1.0.0/
+firebase_auth=/Users/taniguchishouta/Desktop/developer/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_auth-1.0.0/
+firebase_auth_web=/Users/taniguchishouta/Desktop/developer/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_auth_web-1.0.0/
+firebase_core=/Users/taniguchishouta/Desktop/developer/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_core-1.0.0/
+firebase_core_web=/Users/taniguchishouta/Desktop/developer/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_core_web-1.0.0/
+firebase_database=/Users/taniguchishouta/Desktop/developer/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_database-6.1.0/
+google_sign_in=/Users/taniguchishouta/Desktop/developer/flutter/.pub-cache/hosted/pub.dartlang.org/google_sign_in-5.0.0/
+google_sign_in_web=/Users/taniguchishouta/Desktop/developer/flutter/.pub-cache/hosted/pub.dartlang.org/google_sign_in_web-0.10.0/

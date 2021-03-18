@@ -1,14 +1,55 @@
+import 'dart:async';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-// import './login.dart';
-// import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'appsettings.dart';
 import 'friends.dart';
 import 'login.dart';
+import 'search.dart';
+import 'NpoList.dart';
+import 'UserProfile.dart';
+import 'UI/colorsUI.dart';
+import 'UserProfile.dart';
 
-var friends = [];
+final friendsList = StreamController<List>.broadcast();
+
+Stream stream = friendsList.stream;
+
+Future<void> getAllFriends() async {
+  var friends = [];
+  final thisUser =
+      await FirebaseFirestore.instance.collection('users').doc(userid).get();
+
+  var friendsArray = thisUser.data()['friends'];
+
+  friendsArray.forEach((userFriend) async {
+    final obj = await FirebaseFirestore.instance
+        .collection('Friendship')
+        .doc(userFriend['friendshipid'])
+        .get();
+
+    // var user = obj.data()['userA'] == email
+    //     ? obj.data()['userB']
+    //     : obj.data()['userA'];
+
+    FirebaseFirestore.instance
+        .collection('users')
+        .where("email", isEqualTo: userFriend['friendemail'])
+        .get()
+        .then((document) {
+      final allData = document.docs[0].data();
+      allData['friendship'] = obj.data();
+      friends.add(allData);
+    });
+  });
+
+  new Timer(const Duration(seconds: 2), () => friendsList.sink.add(friends));
+}
 
 class Home extends StatefulWidget {
+  final String value;
+  Home({this.value});
+
   @override
   _HomeState createState() => _HomeState();
 }
@@ -20,92 +61,75 @@ class _HomeState extends State<Home> {
 
   // this is to add friends based on the search query triggers by add button.
   Future<void> handleAddingFriend() async {
-    db
-        .collection("users")
-        .where("email", isEqualTo: _email.text)
-        .get()
-        .then((value) {
-      final userData = value.docs[0].data();
-      db.collection("Friendship").add({
-        "userA": userData['email'],
-        "userB": email,
-        "debt": 0,
-      });
-    });
-  }
+    db.collection("users").where("email", isEqualTo: _email.text).get().then(
+      (value) {
+        if (value.docs.length > 0) {
+          print("You have this friend already!");
+          return;
+        }
+        final userData = value.docs[0].data();
+        db.collection("Friendship").add(
+          {
+            "userA": userData['email'],
+            "userB": email,
+            "debt": 0,
+          },
+        );
+      },
+    );
 
-  // this will refresh the friendship list
-  Future<void> getAllFriends() async {
-    var friendsArray = [];
-    friends = [];
-
-    /*
-
-    userA
-    userB
-    debt
-
-    */
-
-    final userA = await db
-        .collection("Friendship")
-        .where("userA", isEqualTo: email)
-        .get();
-
-    final userB = await db
-        .collection("Friendship")
-        .where("userB", isEqualTo: email)
-        .get();
-
-    userA.docs.forEach((document) {
-      friendsArray.add(document.data());
-    });
-
-    userB.docs.forEach((document) {
-      friendsArray.add(document.data());
-    });
-
-    friendsArray.forEach((friend) async {
-      var user = friend['userA'] == email ? friend['userB'] : friend['userA'];
-
-      final pulledUser =
-          await db.collection("users").where("email", isEqualTo: user).get();
-
-      final listUser = pulledUser.docs[0].data();
-      listUser['friendship'] = friend;
-
-      friends.add(listUser);
-    });
+    getAllFriends();
   }
 
   Widget build(BuildContext context) {
+    final navPages = [UserProfile(), Friends(), NpoList(), AppSettings()];
+
     return WillPopScope(
-        onWillPop: () async {
-          return false;
-        },
-        child: Scaffold(
-          backgroundColor: const Color(0xfff5f5f5),
-          appBar: AppBar(
-            elevation: 0,
-            centerTitle: true,
-            title: const Text('Doughnate',
-                style: TextStyle(
-                  fontFamily: 'Futura',
-                  fontSize: 30,
-                  color: const Color(0xff707070),
-                  fontWeight: FontWeight.w700,
-                )),
-            automaticallyImplyLeading: false,
+      onWillPop: () async {
+        return false;
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              bgColor1,
+              bgColor2,
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
           ),
+        ),
+        child: Scaffold(
+          resizeToAvoidBottomInset: false,
+          backgroundColor: Colors.transparent,
+          // appBar: AppBar(
+          //   backgroundColor: Colors.transparent,
+          //   elevation: 0,
+          //   centerTitle: true,
+          //   title: const Text('Doughnate',
+          //       style: TextStyle(
+          //         fontFamily: 'Futura',
+          //         fontSize: 30,
+          //         color: Colors.white,
+          //         fontWeight: FontWeight.w700,
+          //       )),
+          //   automaticallyImplyLeading: false,
+          // ),
           // this is the home page
           body: Container(
-            child:
-                Center(child: _currentIndex == 2 ? AppSettings() : Friends()),
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(10.0, 30.0, 10.0, 10.0),
+                child: navPages[_currentIndex],
+              ),
+            ),
           ),
 
           bottomNavigationBar: BottomNavigationBar(
             // showUnselectedLabels: true,
-            backgroundColor: const Color(0xfff5f5f5),
+            type: BottomNavigationBarType.fixed,
+            backgroundColor: Colors.transparent,
+            unselectedItemColor: Colors.white,
             elevation: 0,
             currentIndex: _currentIndex,
             items: <BottomNavigationBarItem>[
@@ -114,8 +138,12 @@ class _HomeState extends State<Home> {
                 label: "Home",
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.add_outlined),
-                label: "Add",
+                icon: Icon(Icons.people_alt_rounded),
+                label: "Friends",
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.view_list_outlined),
+                label: "NPOs",
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.settings),
@@ -127,30 +155,13 @@ class _HomeState extends State<Home> {
                 _currentIndex = index;
               });
               if (_currentIndex == 1) {
-                TextEditingController email = TextEditingController();
-                showDialog(
-                    context: context,
-                    builder: (context) => new AlertDialog(
-                            title: new Text("Enter an email address:"),
-                            content: new TextFormField(
-                              controller: _email,
-                              decoration: const InputDecoration(
-                                labelText: "email",
-                                hintText: 'Enter an email',
-                              ),
-                            ),
-                            actions: <Widget>[
-                              new TextButton(
-                                  onPressed: () {
-                                    // handleAddingFriend();
-                                    getAllFriends();
-                                  },
-                                  child: new Text("Add"))
-                            ]));
+                getAllFriends();
               }
             },
-            selectedItemColor: const Color(0xff4d4d4d),
+            selectedItemColor: Colors.white,
           ),
-        ));
+        ),
+      ),
+    );
   }
 }
