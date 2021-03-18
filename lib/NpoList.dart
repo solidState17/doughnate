@@ -127,16 +127,6 @@ class _NpoList extends State<NpoList> {
                 fit: BoxFit.fitHeight,
               ),
             ),
-          Container(
-            height: 150,
-            width: 120,
-            child: FittedBox(
-              child: Image.network(
-                currentNPO['logo'],
-              ),
-              fit: BoxFit.fitHeight,
-            ),
-          ),
           ButtonBar(
             alignment: MainAxisAlignment.end,
             children: [

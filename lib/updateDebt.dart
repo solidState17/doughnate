@@ -36,14 +36,16 @@ class _UpdateDebt extends State<UpdateDebt> {
 
     //! Clarify ownership
 
-    if (currentOwner == "" || friendshipData.data()['debt'] == 0) {
+    if (friendshipData.data()['debt'] == 0) {
       if (amount > 0) {
         setOwner = friendshipDocument['userA'] == email ? 'userA' : 'userB';
       } else {
         setOwner = friendshipDocument['userA'] == email ? 'userB' : 'userA';
       }
-    } else {
+    } else if (friendshipData.data()['debt'] + amount < 0) {
       setOwner = currentOwner == 'userA' ? 'userB' : 'userA';
+    } else {
+      setOwner = currentOwner;
     }
 
     // if (friendshipDocument['debt'] + amount < 0) {
@@ -140,6 +142,7 @@ class _UpdateDebt extends State<UpdateDebt> {
         "total_borrowed": total_borrowed,
       });
     }
+    getAllFriends();
   }
 
   Future<void> deleteFriend(friendId) async {
@@ -168,7 +171,7 @@ class _UpdateDebt extends State<UpdateDebt> {
     if (widget.friend['friendship']['debt'] == 0) {
       return bgColor1;
     } else if (widget.friend['friendship']
-            [widget.friend['friendship']['debt']] ==
+            [widget.friend['friendship']['owner']] ==
         email) {
       return primaryGreen2;
     } else {
@@ -229,7 +232,7 @@ class _UpdateDebt extends State<UpdateDebt> {
       ),
       content: SingleChildScrollView(
         child: Container(
-          height: 235,
+          height: 240,
           width: 300,
           child: Column(
             children: [
