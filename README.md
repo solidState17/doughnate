@@ -1,16 +1,85 @@
-# doughnate
+## <img src="./assets/doughnateBG.png" alt="doughnate logo image with a donut">
 
-A new Flutter project.
+---
 
-## Getting Started
+#### Doughnate is a social debt tracking app with a twist! Choose charitable organizations and have your friends donate to them on your behalf in place of paying you back! Let's make finance a little sweeter for everyone!
 
-This project is a starting point for a Flutter application.
+---
 
-A few resources to get you started if this is your first Flutter project:
+## Table of contents
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+- [General info](#general-info)
+- [Screenshots](#screenshots)
+- [Technologies](#technologies)
+- [Setup](#setup)
+- [Features](#features)
+- [Status](#status)
+- [Inspiration](#inspiration)
+- [Contact](#contact)
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## General info
+
+Doughnate came out of interest to motivate people to participate more in social causes. Everyone in their groups of friends exchange little debts, and we wanted to take those little debts and give them a bigger purpose. Find an NPO that you care about or submit one that you'd like to be reviewed!
+
+## Screenshots
+
+<img src="./assets/screenshot.png" alt="Home image of Doughnate app" height="400px">
+<img src="./assets/friendsview.png" alt="friends image of Doughnate app" height="400px">
+<img src="./assets/npoview.png" alt="npo image of Doughnate app" height="400px">
+
+## Technologies
+
+![Dart](https://img.shields.io/badge/-Dart-000000?style=flat-square&logo=Dart)
+![Flutter](https://img.shields.io/badge/-Flutter-000000?style=flat-square&logo=Flutter)
+![Firebase](https://img.shields.io/badge/-Firebase-000000?style=flat-square&logo=Firebase)
+![VsCode](https://img.shields.io/badge/-VsCode-000000?style=flat-square&logo=visual-studio-code&logoColor=0078D7)
+
+## Setup
+
+Describe how to install / setup your local environement / add link to demo version.
+
+## Code Examples
+
+Show examples of usage:
+`put-your-code-here`
+
+## Features
+
+- Sign in through google account
+- Add friends
+- Adjust debt between friends
+- Learn more about NPOs
+- Doughnate on your friends behalf
+
+To-do list:
+
+- Pay NPOs directly in app
+- More customization for color scheme
+
+## Inspiration
+
+Initial idea inspired by expense tracking applications like SplitWise.
+
+## Contact Team Solid State
+
+<div>
+  <div>
+    <h3>Nick - Tech Lead</h3>
+    <img src="./assets/mypic.jpg" height="200px">
+    <br>
+    <a href="https://github.com/ntaylor6422"><img src="https://img.shields.io/badge/-Github-000000?style=flat-square&logo=Github"></a>
+    <a href="https://linkedin.com/in/nicktdev"><img src="https://img.shields.io/badge/-Linkedin-000000?style=flat-square&logo=Linkedin"></a>
+  <div>
+    <h3>Shota - Firebase/Frontend</h3>
+    <img src="./assets/ShotaPic.jpg" height="200px">
+    <br>
+    <a href="https://github.com/Gukou4869"><img src="https://img.shields.io/badge/-Github-000000?style=flat-square&logo=Github"></a>
+    <a href="https://linkedin.com/in/Gukou4869"><img src="https://img.shields.io/badge/-Linkedin-000000?style=flat-square&logo=Linkedin"></a>
+  <div>
+    <h3>Seth - Frontend</h3>
+    <img src="./assets/sethPic.jpg" height="200px">
+    <br>
+    <a href="https://github.com/sethwright"><img src="https://img.shields.io/badge/-Github-000000?style=flat-square&logo=Github"></a>
+    <a href="https://linkedin.com/in/wseth"><img src="https://img.shields.io/badge/-Linkedin-000000?style=flat-square&logo=Linkedin"></a>
+  <div>
+<div>
