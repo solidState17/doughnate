@@ -168,6 +168,9 @@ class _AppSettings extends State<AppSettings> {
           Padding(
             padding: EdgeInsets.fromLTRB(100.0, 0.0, 100.0, 0.0),
             child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                primary: primaryRed,
+              ),
               onPressed: () async {
                 await getImage();
                 return showDialog(
@@ -299,6 +302,9 @@ class _AppSettings extends State<AppSettings> {
           Padding(
             padding: EdgeInsets.all(5.0),
             child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                primary: primaryButtonColor,
+              ),
               onPressed: () {
                 UpdateUser();
                 final snackBar = SnackBar(
@@ -307,7 +313,7 @@ class _AppSettings extends State<AppSettings> {
                 );
                 ScaffoldMessenger.of(context).showSnackBar(snackBar);
               },
-              child: Text("Save Changes"),
+              child: Text("Save Changes", style: TextStyle(color: Colors.black87)),
               autofocus: true,
             ),
           ),

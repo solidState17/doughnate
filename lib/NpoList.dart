@@ -12,6 +12,7 @@ import 'login.dart';
 import 'search.dart';
 import 'appsettings.dart';
 import "npo_apply.dart";
+import './database/npos.dart';
 
 class NpoList extends StatefulWidget {
   NpoList({Key key}) : super(key: key);
@@ -23,7 +24,6 @@ class NpoList extends StatefulWidget {
 final npoStream = FirebaseFirestore.instance.collection('npos').snapshots();
 
 class _NpoList extends State<NpoList> {
-  // this code refreshes after updating preferred NPO, hopefully
   void rebuildAllChildren(BuildContext context) {
     void rebuild(Element el) {
       el.markNeedsBuild();
@@ -31,17 +31,6 @@ class _NpoList extends State<NpoList> {
     }
 
     (context as Element).visitChildren(rebuild);
-  }
-
-  void handleAddNPO() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        // change this to call application form, not friend search.
-        builder: (context) => Search(),
-        fullscreenDialog: true,
-      ),
-    );
   }
 
   @override
@@ -68,32 +57,16 @@ class _NpoList extends State<NpoList> {
                 text: 'Add NPO',
                 color: Colors.white,
                 notificationNumber: 0,
-                onTap: handleAddNPO,
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => Apply(),
+                      fullscreenDialog: true,
+                    ),
+                  );
+                },
               ),
-              // ElevatedButton(
-              //   onPressed: () {
-              //     Navigator.push(
-              //       context,
-              //       MaterialPageRoute(
-              //         // change this to call application form, not friend search.
-              //         builder: (context) => Search(),
-              //         fullscreenDialog: true,
-              //       ),
-              //     );
-              //   },
-              //   style: ElevatedButton.styleFrom(
-              //     primary: primarySalmon,
-              //   ),
-              //   child: Text(
-              //     'Become NPO Partner',
-              //     style: TextStyle(
-              //       fontFamily: 'Futura',
-              //       fontSize: 14,
-              //       color: Colors.black54,
-              //       fontWeight: FontWeight.w700,
-              //     ),
-              //   ),
-              // ),
             ],
           ),
         ),
@@ -126,8 +99,8 @@ class _NpoList extends State<NpoList> {
 
   Card npoCard(currentNPO) {
     return Card(
-      elevation: 8,
-      shadowColor: currentNPO['name'] == npo ? primaryRed : Colors.black,
+        elevation: 8,
+        shadowColor: currentNPO['name'] == npo ? primaryRed : Colors.black,
         clipBehavior: Clip.antiAlias,
         child: Column(
           children: [
@@ -136,12 +109,14 @@ class _NpoList extends State<NpoList> {
                 subtitle: Text('Category of NPO'),
                 trailing: ClickableIcon(
                     iconData: Icons.favorite,
-                    color: currentNPO['name'] == npo
-                        ? primaryRed
-                        : Colors.black54,
+                    color:
+                        currentNPO['name'] == npo ? primaryRed : Colors.black54,
                     notificationNumber: 0,
                     text: '',
                     onTap: () {
+                      final String direction =
+                          currentNPO['name'] == npo ? 'down' : 'up';
+                      changeNPOActiveCount(currentNPO['npoid'], direction);
                     })),
             // ),
             Container(
@@ -152,23 +127,25 @@ class _NpoList extends State<NpoList> {
                 fit: BoxFit.fitHeight,
               ),
             ),
-            ButtonBar(
-              alignment: MainAxisAlignment.end,
-              children: [
-                TextButton(
-                  onPressed: () {
-                    showDialog(
-                        context: context,
-                        builder: (context) {
-                          return NPOProfile(currentNPO);
-                        });
-                  },
-                  child: Text('Learn more'),
-                )
-              ],
-            ),
-          ],
-        ));
+          ButtonBar(
+            alignment: MainAxisAlignment.end,
+            children: [
+              TextButton(
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return NPOProfile(currentNPO);
+                    },
+                  );
+                },
+                child: Text('Learn more'),
+              )
+            ],
+          ),
+        ],
+      ),
+    );
   }
 
   // Card npoCard(currentNPO) {
@@ -318,6 +295,4 @@ class _NpoList extends State<NpoList> {
       ),
     );
   }
-  // add npo application here
-
 }
