@@ -36,12 +36,14 @@ Doughnate came out of interest to motivate people to participate more in social 
 
 ## Setup
 
-Describe how to install / setup your local environement / add link to demo version.
+1. Fork and close this repo
+2. Start up on your editor of choice
+3. Ensure you have an android emulator
+4. Set up your Firebase project
 
-## Code Examples
+Run the below code in your terminal or use Android Studio GUI to run the package.
 
-Show examples of usage:
-`put-your-code-here`
+`Flutter run`
 
 ## Features
 
@@ -62,7 +64,6 @@ Initial idea inspired by expense tracking applications like SplitWise.
 
 ## Contact Team Solid State
 
-<div>
   <div>
     <h3>Nick - Tech Lead</h3>
     <img src="./assets/mypic.jpg" height="200px">
@@ -82,4 +83,3 @@ Initial idea inspired by expense tracking applications like SplitWise.
     <a href="https://github.com/sethwright"><img src="https://img.shields.io/badge/-Github-000000?style=flat-square&logo=Github"></a>
     <a href="https://linkedin.com/in/wseth"><img src="https://img.shields.io/badge/-Linkedin-000000?style=flat-square&logo=Linkedin"></a>
   <div>
-<div>
