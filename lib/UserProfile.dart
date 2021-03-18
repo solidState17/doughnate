@@ -274,7 +274,7 @@ class UserProfile extends StatelessWidget {
                               });
                               users.update({"transactions": newTransaction});
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                content: Text("Transaction was Deleted")));
+                                content: Text("Transaction was deleted")));
                           },
                           child: historyCard(
                               snapshot.data["transactions"][index]));
