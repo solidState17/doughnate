@@ -219,15 +219,11 @@ class _NpoList extends State<NpoList> {
           child: Column(
             children: [
               Container(
-                height: 150,
-                child: CircleAvatar(
-                  radius: 60,
-                  child: Text(
-                    'LOGO RENDER',
-                    style: TextStyle(
-                      fontSize: 12,
-                    ),
-                  ),
+                height: 170,
+                width: 150,
+                child: FittedBox(
+                  child: Image.network(currentNPO['logo']),
+                  fit: BoxFit.fitHeight,
                 ),
               ),
               Text("${currentNPO['supporters']} active d🍩ughnaters!",
