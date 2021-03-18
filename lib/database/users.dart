@@ -23,33 +23,34 @@ class UserDB {
 }
 
 Future<void> createUser(currentUser) async {
-  userCollection
-      .where("authID", isEqualTo: currentUser.uid)
-      .get()
-      .then((value) {
-    if (value.size == 0) {
-      fireStore.collection("users").doc(currentUser.uid).set({
-        "authID": currentUser.uid,
-        "name": name,
-        "displayName": name,
-        "email": email,
-        "npo": npo,
-        "profilePic": photoURL,
-        "total_lent": 0,
-        "total_reimbursed": 0,
-        "total_doughnated": 0,
-        "total_borrowed": 0,
-        "total_returned": 0,
-        "display_doughnated": display_doughnated,
-        "friends": [],
-        "friend_requests": [],
-        "transactions": []
-      });
-    } else {
-      userid = currentUser.uid;
-      print(value.docs[0].data()['userid']);
-    }
-  });
+  userCollection.where("authID", isEqualTo: currentUser.uid).get().then(
+    (value) {
+      if (value.size == 0) {
+        fireStore.collection("users").doc(currentUser.uid).set(
+          {
+            "authID": currentUser.uid,
+            "name": name,
+            "displayName": name,
+            "email": email,
+            "npo": npo,
+            "profilePic": photoURL,
+            "total_lent": 0,
+            "total_reimbursed": 0,
+            "total_doughnated": 0,
+            "total_borrowed": 0,
+            "total_returned": 0,
+            "display_doughnated": display_doughnated,
+            "friends": [],
+            "friend_requests": [],
+            "transactions": []
+          },
+        );
+      } else {
+        userid = currentUser.uid;
+        print(value.docs[0].data()['userid']);
+      }
+    },
+  );
 }
 
 Future<void> updateUser(user_id) async {

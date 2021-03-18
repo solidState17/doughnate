@@ -19,27 +19,42 @@ class _SearchTextFieldState extends State<Search> {
   final FirebaseFirestore fireStore = FirebaseFirestore.instance;
   String friendName = "";
   var index = 0;
-  final pages = [DefaultPage(), FriendsInfo(), ErrorMassage(), MyEmailAdress()];
+  final pages = [
+    DefaultPage(),
+    FriendsInfo(),
+    ErrorMassage(),
+    MyEmailAdress(),
+  ];
 
   searchFriends(userEmail) async {
     await fireStore
         .collection("users")
         .where("email", isEqualTo: friendName)
         .get()
-        .then((value) {
-      setState(() {
-        index = 1;
-        friendUserPic = value.docs[0].data()["profilePic"];
-        friendUserName = value.docs[0].data()["displayName"];
-        friendUserEmail = value.docs[0].data()["email"];
-        FriendsInfo();
-      });
-    }).catchError((err) {
-      setState(() {
-        index = 2;
-      });
-      print("Invalid Email Address");
-    });
+        .then(
+      (value) {
+        setState(
+          () {
+            index = 1;
+            friendUserPic = value.docs[0].data()["profilePic"];
+            friendUserName = value.docs[0].data()["displayName"];
+            friendUserEmail = value.docs[0].data()["email"];
+            FriendsInfo();
+          },
+        );
+      },
+    ).catchError(
+      (err) {
+        setState(
+          () {
+            index = 2;
+          },
+        );
+        print(
+          "Invalid Email Address",
+        );
+      },
+    );
   }
 
   Widget build(BuildContext context) {
@@ -111,7 +126,10 @@ class ErrorMassage extends StatelessWidget {
           child: Text(
             "Input email address is not registered",
             style: TextStyle(
-                fontSize: 18, fontWeight: FontWeight.bold, color: Colors.grey),
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: Colors.grey,
+            ),
           ),
         ),
       ),
@@ -174,8 +192,9 @@ class FriendsInfo extends StatelessWidget {
         .collection('users')
         .where("email", isEqualTo: friendUserEmail)
         .get();
-    final userB =
-        firestore.collection("users").doc(userBData.docs[0].data()['authID']);
+    final userB = firestore.collection("users").doc(
+          userBData.docs[0].data()['authID'],
+        );
 
     final haveFriend = await checkForFriend(friendUserEmail);
 
@@ -199,20 +218,22 @@ class FriendsInfo extends StatelessWidget {
   }
 
   Widget build(BuildContext context) {
-    return Column(children: [
-      Container(
-        padding: EdgeInsets.symmetric(horizontal: 30, vertical: 30),
-        child: CircleAvatar(
-          radius: 60,
-          backgroundImage: NetworkImage(friendUserPic),
+    return Column(
+      children: [
+        Container(
+          padding: EdgeInsets.symmetric(horizontal: 30, vertical: 30),
+          child: CircleAvatar(
+            radius: 60,
+            backgroundImage: NetworkImage(friendUserPic),
+          ),
         ),
-      ),
-      Container(
+        Container(
           child: Text(
-        friendUserName,
-        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-      )),
-      Container(
+            friendUserName,
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          ),
+        ),
+        Container(
           margin: EdgeInsets.only(top: 20),
           width: 120,
           color: Colors.green,
@@ -259,8 +280,9 @@ class DefaultPage extends StatelessWidget {
         .collection('users')
         .where("email", isEqualTo: friendUserEmail)
         .get();
-    final userB =
-        firestore.collection("users").doc(userBData.docs[0].data()['authID']);
+    final userB = firestore.collection("users").doc(
+          userBData.docs[0].data()['authID'],
+        );
 
     friendship.add({
       "userA": friendUserEmail,
@@ -303,15 +325,19 @@ class DefaultPage extends StatelessWidget {
     final userData = await userRef.get();
     var newArray = [];
 
-    userData['friend_requests'].forEach((item) {
-      if (item['email'] != invite) {
-        newArray.add(item);
-      }
-    });
+    userData['friend_requests'].forEach(
+      (item) {
+        if (item['email'] != invite) {
+          newArray.add(item);
+        }
+      },
+    );
 
-    userRef.update({
-      "friend_requests": newArray,
-    });
+    userRef.update(
+      {
+        "friend_requests": newArray,
+      },
+    );
   }
 
   Widget build(BuildContext context) {
