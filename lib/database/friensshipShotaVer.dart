@@ -28,30 +28,61 @@
 //     final friendship = db
 //         .collection('test')
 //         .doc("0zaa7QBCvhKIciHUXRmQ");
-//
+//     final friendsID = friendUser["authID"];
 //     final friendshipData = await friendship.get();
 //     var FriendTotalLent = 0;
 //     var FriendTotalBorrowed = 0;
-//     var userTotalLent;
-//     var userTotaBorrowt;
+//     var userTotalLent = 0;
+//     var userTotalBorrowed = 0;
 //
-//     print(friendUser.nickName);
+//     if(amount > 0) {
+//       // User lent money to friends
+//       friendship.get()
+//           .then((DocumentSnapshot doc) {
+//         print(friendship);
+//             print(doc["${friendsID}"]);
+//         FriendTotalBorrowed =  doc["${friendsID}"]["total_borrowed"];
+//         FriendTotalLent=  doc["${friendUser["authID"]}"]["total_lent"];
+//         userTotalBorrowed = doc["${userid}"]["total_borrowed"];
+//         userTotalLent = doc["${userid}"]["total_borrowed"];
 //
-//     friendship.get()
-//         .then((DocumentSnapshot doc) {
-//       FriendTotalBorrowed =  doc["${friendUser["authId"]}"]["total_lent"];
-//       userTotalLent = doc["${email}"]["total_borrowed"];
-//       friendship.update({
-//         "${friendUser["name"]}" : {
-//           "total_borrowed": FriendTotalBorrowed + amount,
-//         },
-//         "${email}": {
-//           "${friendUser["name"]}" : {
-//             "total_borrowed": userTotalLent + amount,
+//         friendship.update({
+//           "${friendUser["authID"]}" : {
+//             "total_borrowed": FriendTotalBorrowed + amount,
+//             "total_lent": FriendTotalLent,
+//           },
+//         });
+//         friendship.update({
+//           "${userid}": {
+//               "total_borrowed": userTotalBorrowed ,
+//               "total_lent": userTotalLent + amount,
+//             }
 //           }
-//         }
-//       // });
-//     });
+//         });
+//       });
+//     }else{
+//       // User borrowed money from friends
+//       friendship.get()
+//           .then((DocumentSnapshot doc) {
+//         FriendTotalBorrowed =  doc["${friendUser["authID"]}"]["total_borrowed"];
+//         FriendTotalLent=  doc["${friendUser["authID"]}"]["total_lent"];
+//         userTotalBorrowed = doc["${userid}"]["total_borrowed"];
+//         userTotalLent = doc["${userid}"]["total_borrowed"];
+//
+//         friendship.update({
+//           "${friendUser["authID"]}" : {
+//             "total_borrowed": FriendTotalBorrowed,
+//             "total_lent": FriendTotalLent + amount,
+//           },
+//           "${userid}": {
+//             "${friendUser["name"]}" : {
+//               "total_borrowed": userTotalBorrowed + amount,
+//               "total_lent": userTotalLent,
+//             }
+//           }
+//         });
+//       });
+//     }
 //   }
 //
 //   // {
