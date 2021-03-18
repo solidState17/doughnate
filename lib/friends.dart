@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:doughnate/database/friensshipShotaVer.dart';
 import 'package:doughnate/debtHistory/Debtlist.dart';
 import 'home.dart';
 import 'dart:ui' as ui show Image;
