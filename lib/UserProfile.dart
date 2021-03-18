@@ -264,7 +264,6 @@ class UserProfile extends StatelessWidget {
                                 size: 30,
                               )),
                           onDismissed: (_direction) {
-                            if (_direction == DismissDirection.startToEnd) {
                               var specificTimestamp = snapshot
                                   .data['transactions'][index]["timestamp"];
                               var newTransaction = [];
@@ -274,7 +273,6 @@ class UserProfile extends StatelessWidget {
                                 }
                               });
                               users.update({"transactions": newTransaction});
-                            }
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                                 content: Text("Transaction was Deleted")));
                           },
