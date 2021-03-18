@@ -1,19 +1,11 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:doughnate/neumorphic_pie/progress_rings.dart';
-import 'package:doughnate/pie_chart.dart';
-import 'package:doughnate/search.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'UI/colorsUI.dart';
 import 'UI/shapes.dart';
 import 'login.dart';
 import 'pie_chart_view.dart';
 import 'package:intl/intl.dart';
-import 'package:charts_flutter/flutter.dart' as charts;
-import 'pie_chart/categories.dart';
-import 'pie_chart/debt_chart.dart';
-import 'neumorphic_pie/neumorphic_pie.dart';
 
 var total_borrowed = 0;
 var total_lent = 0;
@@ -28,24 +20,6 @@ hexColor(String colorhexcode) {
 
 class UserProfile extends StatelessWidget {
   UserProfile({Key key}) : super(key: key);
-  static List<charts.Series<Expense, String>> _series = [
-    charts.Series<Expense, String>(
-        id: 'Expense',
-        domainFn: (Expense expense, _) => expense.category,
-        measureFn: (Expense expense, _) => expense.value,
-        labelAccessorFn: (Expense expense, _) => '\¥${expense.value}',
-        colorFn: (Expense expense, _) =>
-            charts.ColorUtil.fromDartColor(expense.color),
-        data: [
-          Expense('Owe', total_borrowed, Colors.pink),
-          Expense('Owed', total_lent, Color(0xFF47e544)),
-        ])
-  ];
-
-  final KCategories = [
-    Category('owe', amount: total_borrowed),
-    Category('owed', amount: total_lent),
-  ];
 
   final DocumentReference users =
       FirebaseFirestore.instance.collection("users").doc(userid);
@@ -65,9 +39,11 @@ class UserProfile extends StatelessWidget {
                 return Center(child: Text("No Transactions"));
               }
               total_borrowed = (snapshot.data["total_borrowed"] -
-                  snapshot.data['total_returned']).abs();
-              total_lent = snapshot.data["total_lent"] -
-                  snapshot.data['total_reimbursed'];
+                      snapshot.data['total_returned'])
+                  .abs();
+              total_lent = (snapshot.data["total_lent"] -
+                      snapshot.data['total_reimbursed'])
+                  .abs();
               final totalCalc = -total_borrowed + total_lent;
               totalAmount = totalCalc.abs();
 
@@ -100,39 +76,12 @@ class UserProfile extends StatelessWidget {
                             height: 180,
                             //child: Stack(
                             //children: [
-                            child: PieChartView(
-                              categories: KCategories,
-                            ),
-                            //       Container(
-                            //         child: Center(
-                            //           child: Column(
-                            //             mainAxisAlignment:
-                            //             MainAxisAlignment.center,
-                            //             children: [
-                            //               Text(
-                            //                 "Total",
-                            //                 style: TextStyle(
-                            //                   fontSize: 25,
-                            //                   fontWeight: FontWeight.w600,
-                            //                   color: const Color(0xff707070),
-                            //                 ),
-                            //               ),
-                            //               Text("¥${totalAmount}",
-                            //                 style: TextStyle(
-                            //                   fontSize: 25,
-                            //                   fontWeight: FontWeight.w600,
-                            //                   color: const Color(0xff707070),
-                            //                 ),
-                            //               ),
-                            //             ],
-                            //           ),
-                            //         ),
-                            //       ),
-                            //       //DebtChart(_series, animate: true,)
-                            //       NeumorphicPie(categories: kCategories,),
-                            //     ],
-                            //   ), //child: DebtChart(_series, animate: true),
-                            // ),
+                            child: PieChartView(categories: [
+                              Category('owe',
+                                  color: primaryRed2, amount: total_borrowed),
+                              Category('owed',
+                                  color: primaryGreen2, amount: total_lent),
+                            ]),
                           ),
                           Container(
                             child: Container(
@@ -315,7 +264,6 @@ class UserProfile extends StatelessWidget {
                                 size: 30,
                               )),
                           onDismissed: (_direction) {
-                            if (_direction == DismissDirection.startToEnd) {
                               var specificTimestamp = snapshot
                                   .data['transactions'][index]["timestamp"];
                               var newTransaction = [];
@@ -325,7 +273,6 @@ class UserProfile extends StatelessWidget {
                                 }
                               });
                               users.update({"transactions": newTransaction});
-                            }
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                                 content: Text("Transaction was Deleted")));
                           },
@@ -430,8 +377,9 @@ Card historyCard(transaction) {
 }
 
 class Category {
-  Category(this.name, {@required this.amount});
+  Category(this.name, {@required this.amount, this.color});
 
   final String name;
+  final Color color;
   final int amount;
 }
