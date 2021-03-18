@@ -77,7 +77,7 @@ Initial idea inspired by expense tracking applications like SplitWise.
     <a href="https://linkedin.com/in/Gukou4869"><img src="https://img.shields.io/badge/-Linkedin-000000?style=flat-square&logo=Linkedin"></a>
   <div>
     <h3>Seth - Frontend</h3>
-    <img src="./assets/sethPic.jpg" height="200px">
+    <img src="./assets/sethpic.jpg" height="200px">
     <br>
     <a href="https://github.com/sethwright"><img src="https://img.shields.io/badge/-Github-000000?style=flat-square&logo=Github"></a>
     <a href="https://linkedin.com/in/wseth"><img src="https://img.shields.io/badge/-Linkedin-000000?style=flat-square&logo=Linkedin"></a>
