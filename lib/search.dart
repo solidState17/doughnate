@@ -176,6 +176,7 @@ class FriendsInfo extends StatelessWidget {
   // }
 
   Future<bool> checkForFriend(friendEmail) async {
+    print(friendEmail);
     final userRef = firestore.collection('users').doc(userid);
     final userData = await userRef.get();
     for (var item in userData.data()['friends']) {
@@ -200,40 +201,40 @@ class FriendsInfo extends StatelessWidget {
 
     if (haveFriend) {
       return ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text("${userBData.docs[0].data()['displayName']} is already a friend")));
-    } 
+          content: Text(
+              "${userBData.docs[0].data()['displayName']} is already a friend")));
+    }
 
-      userB.update({
-        "friend_requests": FieldValue.arrayUnion([
-          {
-            "email": email,
-            "profilePic": photoURL,
-            "displayName": name,
-          }
-        ]),
-      });
-
-      return ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                content: Text("Sent friend request")));
+    userB.update({
+      "friend_requests": FieldValue.arrayUnion([
+        {
+          "email": email,
+          "profilePic": photoURL,
+          "displayName": name,
+        }
+      ]),
+    }).then((doc) {
+      return ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("Sent friend request")));
+    });
   }
 
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Container(
-          padding: EdgeInsets.symmetric(horizontal: 30, vertical: 30),
-          child: CircleAvatar(
-            radius: 60,
-            backgroundImage: NetworkImage(friendUserPic),
-          ),
+    return Column(children: [
+      Container(
+        padding: EdgeInsets.symmetric(horizontal: 30, vertical: 30),
+        child: CircleAvatar(
+          radius: 60,
+          backgroundImage: NetworkImage(friendUserPic),
         ),
-        Container(
-          child: Text(
-            friendUserName,
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-          ),
+      ),
+      Container(
+        child: Text(
+          friendUserName,
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         ),
-        Container(
+      ),
+      Container(
           margin: EdgeInsets.only(top: 20),
           width: 120,
           color: Colors.green,
