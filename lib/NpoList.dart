@@ -97,14 +97,14 @@ class _NpoList extends State<NpoList> {
         children: [
           ListTile(
             title: Text(currentNPO['name']),
-            subtitle: Text('Category of NPO'),
+            subtitle: Text(currentNPO['category']),
             trailing: ClickableIcon(
               iconData: Icons.favorite,
               color: currentNPO['name'] == npo ? primaryRed : Colors.black54,
               notificationNumber: 0,
               text: '',
               onTap: () {
-                updatePreferredNPO(currentNPO); // update pref NPO
+                updatePreferredNPO(currentNPO);
               },
             ),
           ),
@@ -112,7 +112,9 @@ class _NpoList extends State<NpoList> {
             height: 150,
             width: 120,
             child: FittedBox(
-              child: Image.network(currentNPO['logo']),
+              child: Image.network(
+                currentNPO['logo'],
+              ),
               fit: BoxFit.fitHeight,
             ),
           ),
