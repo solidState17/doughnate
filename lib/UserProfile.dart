@@ -354,14 +354,17 @@ Card historyCard(transaction) {
                     painter: CardShape(colorChoice),
                     child: Align(
                       alignment: Alignment.center,
-                      child: Padding(
-                        padding: const EdgeInsets.fromLTRB(12.0, 0.0, 0.0, 0.0),
-                        child: Text(
-                          "¥${transaction['amount'].abs().toString()}",
-                          style: DefaultTextUI(
-                            size: 27,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
+                      child: FittedBox(
+                        fit: BoxFit.fitWidth,
+                                              child: Padding(
+                          padding: const EdgeInsets.fromLTRB(12.0, 0.0, 0.0, 0.0),
+                          child: Text(
+                            "¥${transaction['amount'].abs().toString()}",
+                            style: DefaultTextUI(
+                              size: 27,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
                           ),
                         ),
                       ),

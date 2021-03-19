@@ -149,8 +149,8 @@ class _UpdateDebt extends State<UpdateDebt> {
     final friendshipId = friendId['friendship']['friendshipid'];
 
     await deleteFriendship(friendshipId);
-    await removeFriend(userid);
-    await removeFriend(friendId['authID']);
+    await removeFriend(userid, friendId['authID']);
+    await removeFriend(friendId['authID'], userid);
 
     getAllFriends();
   }
