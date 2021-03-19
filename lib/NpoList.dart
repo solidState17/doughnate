@@ -24,15 +24,6 @@ class NpoList extends StatefulWidget {
 final npoStream = FirebaseFirestore.instance.collection('npos').snapshots();
 
 class _NpoList extends State<NpoList> {
-  void rebuildAllChildren(BuildContext context) {
-    void rebuild(Element el) {
-      el.markNeedsBuild();
-      el.visitChildren(rebuild);
-    }
-
-    (context as Element).visitChildren(rebuild);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -99,34 +90,34 @@ class _NpoList extends State<NpoList> {
 
   Card npoCard(currentNPO) {
     return Card(
-        elevation: 8,
-        shadowColor: currentNPO['name'] == npo ? primaryRed : Colors.black,
-        clipBehavior: Clip.antiAlias,
-        child: Column(
-          children: [
-            ListTile(
-                title: Text(currentNPO['name']),
-                subtitle: Text('Category of NPO'),
-                trailing: ClickableIcon(
-                    iconData: Icons.favorite,
-                    color:
-                        currentNPO['name'] == npo ? primaryRed : Colors.black54,
-                    notificationNumber: 0,
-                    text: '',
-                    onTap: () {
-                      final String direction =
-                          currentNPO['name'] == npo ? 'down' : 'up';
-                      changeNPOActiveCount(currentNPO['npoid'], direction);
-                    })),
-            // ),
-            Container(
-              height: 150,
-              width: 120,
-              child: FittedBox(
-                child: Image.network(currentNPO['logo']),
-                fit: BoxFit.fitHeight,
-              ),
+      elevation: 8,
+      shadowColor: currentNPO['name'] == npo ? primaryRed : Colors.black,
+      clipBehavior: Clip.antiAlias,
+      child: Column(
+        children: [
+          ListTile(
+            title: Text(currentNPO['name']),
+            subtitle: Text(currentNPO['category']),
+            trailing: ClickableIcon(
+              iconData: Icons.favorite,
+              color: currentNPO['name'] == npo ? primaryRed : Colors.black54,
+              notificationNumber: 0,
+              text: '',
+              onTap: () {
+                updatePreferredNPO(currentNPO);
+              },
             ),
+          ),
+          Container(
+            height: 150,
+            width: 120,
+            child: FittedBox(
+              child: Image.network(
+                currentNPO['logo'],
+              ),
+              fit: BoxFit.fitHeight,
+            ),
+          ),
           ButtonBar(
             alignment: MainAxisAlignment.end,
             children: [
@@ -230,15 +221,11 @@ class _NpoList extends State<NpoList> {
           child: Column(
             children: [
               Container(
-                height: 150,
-                child: CircleAvatar(
-                  radius: 60,
-                  child: Text(
-                    'LOGO RENDER',
-                    style: TextStyle(
-                      fontSize: 12,
-                    ),
-                  ),
+                height: 170,
+                width: 150,
+                child: FittedBox(
+                  child: Image.network(currentNPO['logo']),
+                  fit: BoxFit.fitHeight,
                 ),
               ),
               Text("${currentNPO['supporters']} active d🍩ughnaters!",
@@ -259,21 +246,19 @@ class _NpoList extends State<NpoList> {
               ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 4.0),
-                child: Text(currentNPO['summary'],
-                    style: TextStyle(
-                      height: 2,
-                    )),
+                child: Text(
+                  currentNPO['summary'],
+                  style: TextStyle(
+                    height: 2,
+                  ),
+                ),
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   TextButton(
                     onPressed: () {
-                      print(currentNPO);
-                      npo = currentNPO['name'];
-                      print('🔥');
-                      UpdateUser();
-                      setState(() {});
+                      updatePreferredNPO(currentNPO); // update pref NPO
                       Navigator.of(context, rootNavigator: true).pop();
                     },
                     child: Text('Set To Prefered'),
@@ -282,7 +267,6 @@ class _NpoList extends State<NpoList> {
                   TextButton(
                     onPressed: () {
                       visitNPO(npo: currentNPO['name']);
-                      rebuildAllChildren(context);
                       Navigator.of(context, rootNavigator: true).pop();
                     },
                     child: Text('Visit Site'),
@@ -294,5 +278,16 @@ class _NpoList extends State<NpoList> {
         ),
       ),
     );
+  }
+
+  void updatePreferredNPO(currentNPO) {
+    //manage number of npo supporters
+    final String direction = currentNPO['name'] == npo ? 'down' : 'up';
+    changeNPOActiveCount(currentNPO['npoid'], direction);
+
+    //save preferred NPO and re-render
+    npo = currentNPO['name'];
+    UpdateUser();
+    setState(() {});
   }
 }
