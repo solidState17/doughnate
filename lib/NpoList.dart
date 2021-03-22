@@ -1,19 +1,12 @@
-import 'dart:async';
 import 'package:doughnate/UI/colorsUI.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'UI/iconButtons.dart';
-import 'UI/shapes.dart';
-import 'home.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'updateDebt.dart';
-import 'home.dart';
 import 'login.dart';
-import 'search.dart';
 import 'appsettings.dart';
 import "npo_apply.dart";
 import './database/npos.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class NpoList extends StatefulWidget {
   NpoList({Key key}) : super(key: key);
@@ -140,77 +133,6 @@ class _NpoList extends State<NpoList> {
     );
   }
 
-  // Card npoCard(currentNPO) {
-  //   return Card(
-  //     // margin: EdgeInsets.all(10),
-  //     shadowColor: currentNPO['name'] == npo ? Colors.pink : Colors.black,
-  //     elevation: 8,
-  //     shape: RoundedRectangleBorder(
-  //       borderRadius: BorderRadius.only(
-  //         topLeft: Radius.circular(15.0),
-  //         bottomLeft: Radius.circular(15.0),
-  //       ),
-  //     ),
-  //     child: InkWell(
-  //       onTap: () {
-  //         showDialog(
-  //           context: context,
-  //           builder: (context) {
-  //             return NPOProfile(currentNPO);
-  //           },
-  //         );
-  //       },
-  //       child: Container(
-  //         height: 150,
-  //         padding: EdgeInsets.all(10.0),
-  //         child: Row(
-  //           children: [
-  //             Expanded(
-  //               flex: 7,
-  //               child: Column(
-  //                 crossAxisAlignment: CrossAxisAlignment.start,
-  //                 children: [
-  //                   Text(
-  //                     currentNPO['name'],
-  //                     style: TextStyle(
-  //                       fontSize: 20,
-  //                       fontWeight: FontWeight.bold,
-  //                     ),
-  //                   ),
-  //                   // Text(
-  //                   //   currentNPO['summary'],
-  //                   // ),
-  //                 ],
-  //               ),
-  //             ),
-  //             Expanded(
-  //               flex: 3,
-  //               child: Container(
-  //                   height: 150,
-  //                   constraints: BoxConstraints.expand(),
-  //                   // child: CircleAvatar(
-  //                   //     backgroundColor: Colors.transparent,
-  //                   //     radius: 60,
-  //                   child: FittedBox(
-  //                       child: Image.network(currentNPO['logo']),
-  //                       fit: BoxFit.contain)
-  //                   // Text(
-  //                   //   'LOGO RENDER',
-  //                   //   style: TextStyle(
-  //                   //     fontSize: 12,
-  //                   //   ),
-  //                   // ),
-  //                   // backgroundImage: NetworkImage(npo['logo'])
-  //                   // backgroundImage: NetworkImage(currentNPO['logo']),
-  //                   // ),
-  //                   ),
-  //             ),
-  //           ],
-  //         ),
-  //       ),
-  //     ),
-  //   );
-  // }
 
   AlertDialog NPOProfile(currentNPO) {
     return AlertDialog(
@@ -292,18 +214,3 @@ class _NpoList extends State<NpoList> {
     setState(() {});
   }
 }
-
-// visitNPO({String npo}) async {
-//   final npoData = await FirebaseFirestore.instance
-//       .collection('npos')
-//       .where('name', isEqualTo: npo)
-//       .get();
-
-//   final url = npoData.docs[0].data()['url'];
-
-//   if (await canLaunch(url)) {
-//     await launch(url);
-//   } else {
-//     throw 'Could not launch $url';
-//   }
-// }

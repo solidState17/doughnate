@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'UI/colorsUI.dart';
@@ -281,7 +280,6 @@ class UserProfile extends StatelessWidget {
                     });
               },
             )
-                //friends.map((friend) => buildCard(friend)).toList(),
                 ),
           ]),
         ),

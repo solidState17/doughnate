@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../pie_chart_view.dart';
 
 class DebtList extends StatefulWidget{
   @override

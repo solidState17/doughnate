@@ -1,7 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import '../UserProfile.dart';
-import 'neumorphic_pie.dart';
 
 class ProgressRings extends CustomPainter {
   final double circleWidth;

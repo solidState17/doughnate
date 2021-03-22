@@ -15,8 +15,6 @@ class PieChart extends CustomPainter {
     Offset center = Offset(size.width / 2, size.height / 2);
     double radius = min(size.width / 2, size.height / 2);
 
-    Rect boundingSquare = Rect.fromCircle(center: center, radius: radius);
-
     var paint = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = width / 2;
@@ -30,7 +28,6 @@ class PieChart extends CustomPainter {
     for (var index = 0; index < categories.length; index++) {
       final currentCategory = categories.elementAt(index);
       final sweepRadian = currentCategory.amount / total * 2 * pi;
-      // paint.color = kNeumorphicColors.elementAt(index % categories.length);
       paint.color = currentCategory.color;
       canvas.drawArc(
         Rect.fromCircle(center: center, radius: radius),

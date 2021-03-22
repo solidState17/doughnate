@@ -21,7 +21,6 @@ class AppSettings extends StatefulWidget {
 class _AppSettings extends State<AppSettings> {
   FirebaseStorage _store = FirebaseStorage.instance;
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-  // make this bool equal to current value in firebase
   TextEditingController display_name = TextEditingController(
     text: name,
   );
@@ -37,14 +36,27 @@ class _AppSettings extends State<AppSettings> {
         _image = File(
           pickedFile.path,
         );
-        imageDialog();
+        uploadImage();
       } else {
         print('No image selected.');
       }
     });
   }
 
-  Future uploadImage() {}
+  Future<void> uploadImage() async {
+    String fileName = Path.basename(_image.path);
+    try {
+      final upload = await FirebaseStorage.instance
+          .ref('uploads/$fileName')
+          .putFile(_image);
+      final url = upload.ref.getDownloadURL();
+      FirebaseFirestore.instance.collection('users').doc(userid).update({
+        'profilePic': url,
+      });
+    } catch (e) {
+      print(e);
+    }
+  }
 
   void deleteOthers(doc) async {}
 
@@ -133,7 +145,7 @@ class _AppSettings extends State<AppSettings> {
                       builder: (context) => AlertDialog(
                         content: Container(
                           // width: 120,
-                          height: 180,
+                          height: 200,
                           child: Column(
                             children: [
                               Text(
@@ -206,12 +218,12 @@ class _AppSettings extends State<AppSettings> {
               ),
               onPressed: () async {
                 await getImage();
-                return showDialog(
-                  context: context,
-                  builder: (context) {
-                    return imageDialog();
-                  },
-                );
+                // return showDialog(
+                //   context: context,
+                //   builder: (context) {
+                //     return imageDialog();
+                //   },
+                // );
               },
               child: Text(
                 'Change Picture',
@@ -318,30 +330,6 @@ class _AppSettings extends State<AppSettings> {
               ],
             ),
           ),
-          // Padding(
-          //   padding: const EdgeInsets.fromLTRB(8.0, 0.0, 0.0, 0.0),
-          //   child: Row(
-          //     children: <Widget>[
-          //       Text("Display Doughnations?",
-          //           style: DefaultTextUI(
-          //             size: 14,
-          //             color: Colors.black54,
-          //             fontWeight: FontWeight.w700,
-          //           )),
-          //       Switch(
-          //           value: display_doughnated,
-          //           onChanged: (value) {
-          //             setState(
-          //               () {
-          //                 display_doughnated = value;
-          //               },
-          //             );
-          //           },
-          //           activeTrackColor: Colors.red,
-          //           activeColor: Colors.blue),
-          //     ],
-          //   ),
-          // ),
           Spacer(),
           Padding(
             padding: EdgeInsets.all(5.0),
@@ -406,6 +394,3 @@ Future<void> UpdateUser() async {
         },
       );
 }
-
-// Another exception was thrown: Incorrect use of
-// ParentDataWidget.
