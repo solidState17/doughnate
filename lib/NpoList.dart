@@ -13,6 +13,7 @@ import 'search.dart';
 import 'appsettings.dart';
 import "npo_apply.dart";
 import './database/npos.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class NpoList extends StatefulWidget {
   NpoList({Key key}) : super(key: key);
@@ -291,3 +292,18 @@ class _NpoList extends State<NpoList> {
     setState(() {});
   }
 }
+
+// visitNPO({String npo}) async {
+//   final npoData = await FirebaseFirestore.instance
+//       .collection('npos')
+//       .where('name', isEqualTo: npo)
+//       .get();
+
+//   final url = npoData.docs[0].data()['url'];
+
+//   if (await canLaunch(url)) {
+//     await launch(url);
+//   } else {
+//     throw 'Could not launch $url';
+//   }
+// }
