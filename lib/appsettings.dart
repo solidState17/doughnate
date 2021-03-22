@@ -9,6 +9,7 @@ import 'package:path/path.dart' as Path;
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class AppSettings extends StatefulWidget {
   AppSettings({Key key}) : super(key: key);
@@ -130,17 +131,41 @@ class _AppSettings extends State<AppSettings> {
                     return showDialog(
                       context: context,
                       builder: (context) => AlertDialog(
-                          content: Container(
-                        width: 120,
-                        height: 120,
-                        child: Column(
-                          children: [
-                            Text('About Solid State'),
-                            Text(
-                                "Solid State Kabushikigaishi is amazing. Founded by Shota, Nick, and Seth. Solid State exceeded 200 gajilion USD in reveneue in it's first year"),
-                          ],
+                        content: Container(
+                          // width: 120,
+                          height: 180,
+                          child: Column(
+                            children: [
+                              Text(
+                                'We are Solid State',
+                                style: DefaultTextUI(
+                                  size: 20,
+                                  color: Colors.black87,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                              Spacer(),
+                              Text(
+                                "This app written by us, Nick, Seth and Shota. We created this as a concept app while students at Code Chysalis, an immersive full stack software engineering bootcamp in Tokyo, Japan.",
+                              ),
+                              TextButton(
+                                child: Text(
+                                  "See us on Github.",
+                                ),
+                                onPressed: () async {
+                                  if (await canLaunch(
+                                      'https://github.com/solidState17/doughnate')) {
+                                    await launch(
+                                        'https://github.com/solidState17/doughnate');
+                                  } else {
+                                    throw 'Could not find solid state';
+                                  }
+                                },
+                              ),
+                            ],
+                          ),
                         ),
-                      )),
+                      ),
                     );
                   } else {
                     showDialog(
