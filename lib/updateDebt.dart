@@ -1,12 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'UI/colorsUI.dart';
 import 'login.dart';
 import 'home.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'NpoList.dart';
 import './database/users.dart';
 import './database/friendships.dart';
 
@@ -24,28 +22,42 @@ class _UpdateDebt extends State<UpdateDebt> {
 
   var friendToDelete;
 
+
   Future<void> adjustDebt(friendUser, amount, type) async {
     final friendship = db
         .collection('Friendship')
         .doc(friendUser['friendship']['friendshipid']);
     final friendshipData = await friendship.get();
-    print(friendshipData.data().toString());
     final friendshipDocument = friendshipData.data();
     final currentOwner = friendshipDocument['owner'];
     var setOwner;
+    var typeOfTransaction;
+    var remainder = friendshipDocument['debt'] + amount;
 
     //! Clarify ownership
 
     if (friendshipData.data()['debt'] == 0) {
       if (amount > 0) {
         setOwner = friendshipDocument['userA'] == email ? 'userA' : 'userB';
+        typeOfTransaction = 'lent';
       } else {
         setOwner = friendshipDocument['userA'] == email ? 'userB' : 'userA';
+        typeOfTransaction = 'borrowed';
       }
     } else if (friendshipData.data()['debt'] + amount < 0) {
       setOwner = currentOwner == 'userA' ? 'userB' : 'userA';
+      if (friendshipDocument[setOwner] == email) {
+        typeOfTransaction = 'lent';
+      } else {
+        typeOfTransaction = 'borrowed';
+      }
     } else {
       setOwner = currentOwner;
+      if (amount > 0) {
+        typeOfTransaction = 'lent';
+      } else {
+        typeOfTransaction = 'borrowed';
+      }
     }
 
     // if (friendshipDocument['debt'] + amount < 0) {
@@ -53,9 +65,9 @@ class _UpdateDebt extends State<UpdateDebt> {
 
     //? Create transaction notification for friend
     if (amount > 0) {
-      handleAddingTransactions(friendUser['authID'], amount, type);
+      handleAddingTransactions(friendUser['authID'], amount, typeOfTransaction);
     } else {
-      handleAddingTransactions(friendUser['authID'], amount, type);
+      handleAddingTransactions(friendUser['authID'], amount, typeOfTransaction);
     }
 
     if (friendshipDocument[setOwner] == email) {
@@ -98,9 +110,6 @@ class _UpdateDebt extends State<UpdateDebt> {
 
     //! Get both users Id from the database
 
-    print(lender);
-    print(borrower);
-
     final lendingUser = db.collection("users").doc(lender);
     final borrowingUser = db.collection("users").doc(borrower);
     final lendUserData = await lendingUser.get();
@@ -108,9 +117,11 @@ class _UpdateDebt extends State<UpdateDebt> {
 
     //! Handle Doughnation cases
     if (type == "Doughnation") {
-      total_doughnated = lendUserData.data()['total_doughnated'] + amount.abs();
+      if (amount)
+        total_doughnated =
+            lendUserData.data()['total_doughnated'] + amount.abs();
       total_reimbursed = lendUserData.data()['total_reimbursed'] + amount.abs();
-      total_returned = borrowUserData.data()['total_reimbursed'] + amount.abs();
+      total_returned = borrowUserData.data()['total_returned'] + amount.abs();
 
       lendingUser.update({
         "total_doughnated": total_doughnated,
@@ -149,8 +160,8 @@ class _UpdateDebt extends State<UpdateDebt> {
     final friendshipId = friendId['friendship']['friendshipid'];
 
     await deleteFriendship(friendshipId);
-    await removeFriend(userid);
-    await removeFriend(friendId['authID']);
+    await removeFriend(userid, friendId['authID']);
+    await removeFriend(friendId['authID'], userid);
 
     getAllFriends();
   }

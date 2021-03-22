@@ -4,7 +4,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
 import './home.dart';
-import 'UserProfile.dart';
 import './database/users.dart';
 
 String npo = 'Prefer to be reimbursed (No NPO)';
@@ -59,34 +58,6 @@ class _GoogleAuthState extends State<GoogleAuth> {
     // this is the first signup, creating user for firebase
     final User currentUser = _firebaseAuth.currentUser;
     await createUser(currentUser);
-    // await fireStore
-    //     .collection("users")
-    //     .where("authID", isEqualTo: currentUser.uid)
-    //     .get()
-    //     .then((value) {
-    //   if (value.size == 0) {
-    //     fireStore.collection("users").doc(currentUser.uid).set({
-    //       "authID": currentUser.uid,
-    //       "name": name,
-    //       "displayName": name,
-    //       "email": email,
-    //       "npo": npo,
-    //       "profilePic": photoURL,
-    //       "total_lent": 0,
-    //       "total_reimbursed": 0,
-    //       "total_doughnated": 0,
-    //       "total_borrowed": 0,
-    //       "total_returned": 0,
-    //       "display_doughnated": display_doughnated,
-    //       "friends": [],
-    //       "friend_requests": [],
-    //       "transactions": []
-    //     });
-    //   } else {
-    //     userid = currentUser.uid;
-    //     print(value.docs[0].data()['userid']);
-    //   }
-    // });
     return "success";
   }
 

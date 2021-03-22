@@ -23,9 +23,13 @@ Doughnate came out of interest to motivate people to participate more in social 
 
 ## Screenshots
 
-<img src="./assets/screenshot.png" alt="Home image of Doughnate app" height="400px">
-<img src="./assets/friendsview.png" alt="friends image of Doughnate app" height="400px">
-<img src="./assets/npoview.png" alt="npo image of Doughnate app" height="400px">
+<p align="center">
+  <img src="./assets/front.png" alt="Home image of Doughnate app" height="400px">
+  &nbsp; &nbsp;
+  <img src="./assets/friendsview.png" alt="friends image of Doughnate app" height="400px">
+  &nbsp; &nbsp;
+  <img src="./assets/npoview.png" alt="npo image of Doughnate app" height="400px">
+</p>
 
 ## Technologies
 
@@ -65,19 +69,19 @@ Initial idea inspired by expense tracking applications like SplitWise.
 ## Contact Team Solid State
 
   <div>
-    <h3>Nick - Tech Lead</h3>
+    <h3>Nick - Tech Lead/Fullstack</h3>
     <img src="./assets/mypic.jpg" height="200px">
     <br>
     <a href="https://github.com/ntaylor6422"><img src="https://img.shields.io/badge/-Github-000000?style=flat-square&logo=Github"></a>
     <a href="https://linkedin.com/in/nicktdev"><img src="https://img.shields.io/badge/-Linkedin-000000?style=flat-square&logo=Linkedin"></a>
   <div>
-    <h3>Shota - Firebase/Frontend</h3>
+    <h3>Shota - Fullstack</h3>
     <img src="./assets/ShotaPic.jpg" height="200px">
     <br>
     <a href="https://github.com/Gukou4869"><img src="https://img.shields.io/badge/-Github-000000?style=flat-square&logo=Github"></a>
     <a href="https://linkedin.com/in/Gukou4869"><img src="https://img.shields.io/badge/-Linkedin-000000?style=flat-square&logo=Linkedin"></a>
   <div>
-    <h3>Seth - Frontend</h3>
+    <h3>Seth - Fullstack</h3>
     <img src="./assets/sethpic.jpg" height="200px">
     <br>
     <a href="https://github.com/sethwright"><img src="https://img.shields.io/badge/-Github-000000?style=flat-square&logo=Github"></a>

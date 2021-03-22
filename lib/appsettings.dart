@@ -9,6 +9,7 @@ import 'package:path/path.dart' as Path;
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class AppSettings extends StatefulWidget {
   AppSettings({Key key}) : super(key: key);
@@ -20,7 +21,6 @@ class AppSettings extends StatefulWidget {
 class _AppSettings extends State<AppSettings> {
   FirebaseStorage _store = FirebaseStorage.instance;
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-  // make this bool equal to current value in firebase
   TextEditingController display_name = TextEditingController(
     text: name,
   );
@@ -36,21 +36,34 @@ class _AppSettings extends State<AppSettings> {
         _image = File(
           pickedFile.path,
         );
-        imageDialog();
+        uploadImage();
       } else {
         print('No image selected.');
       }
     });
   }
 
-  Future uploadImage() {}
+  Future<void> uploadImage() async {
+    String fileName = Path.basename(_image.path);
+    try {
+      final upload = await FirebaseStorage.instance
+          .ref('uploads/$fileName')
+          .putFile(_image);
+      final url = upload.ref.getDownloadURL();
+      FirebaseFirestore.instance.collection('users').doc(userid).update({
+        'profilePic': url,
+      });
+    } catch (e) {
+      print(e);
+    }
+  }
 
   void deleteOthers(doc) async {}
 
   void deleteSelf() async {
     final GoogleSignIn _googleSignIn = GoogleSignIn();
     final deletedUser =
-    FirebaseFirestore.instance.collection('users').doc(userid);
+        FirebaseFirestore.instance.collection('users').doc(userid);
 
     // final deletedData = await deletedUser.get();
 
@@ -90,10 +103,17 @@ class _AppSettings extends State<AppSettings> {
 
   AlertDialog imageDialog() {
     return AlertDialog(
-      content: Column(children: [
-        Container(child: Image.file(_image)),
-        TextButton(onPressed: () {}, child: Text('Upload Image')),
-      ]),
+      content: Column(
+        children: [
+          Container(
+            child: Image.file(_image),
+          ),
+          TextButton(
+            onPressed: () {},
+            child: Text('Upload Image'),
+          ),
+        ],
+      ),
     );
   }
 
@@ -102,37 +122,62 @@ class _AppSettings extends State<AppSettings> {
     return Container(
       child: Column(
         children: [
-          Row(children: [
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Text(
-                "Settings",
-                style: DefaultTextUI(
-                  size: textHeading,
-                  color: Colors.white,
-                  fontWeight: FontWeight.w700,
+          Row(
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+                child: Text(
+                  "Settings",
+                  style: DefaultTextUI(
+                    size: textHeading,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
               ),
-            ),
-            Spacer(),
-            PopupMenuButton(
-              color: Colors.white,
-              onSelected: (value) {
-                if (value == 'about') {
-                  return showDialog(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                      content: Container(
-                        width: 120,
-                        height: 120,
-                        child: Column(
-                          children: [
-                            Text('About Solid State'),
-                            Text(
-                                "Solid State Kabushikigaishi is amazing. Founded by Shota, Nick, and Seth. Solid State exceeded 200 gajilion USD in reveneue in it's first year"),
-                          ],
+              Spacer(),
+              PopupMenuButton(
+                color: Colors.white,
+                onSelected: (value) {
+                  if (value == 'about') {
+                    return showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        content: Container(
+                          // width: 120,
+                          height: 200,
+                          child: Column(
+                            children: [
+                              Text(
+                                'We are Solid State',
+                                style: DefaultTextUI(
+                                  size: 20,
+                                  color: Colors.black87,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                              Spacer(),
+                              Text(
+                                "This app written by us, Nick, Seth and Shota. We created this as a concept app while students at Code Chysalis, an immersive full stack software engineering bootcamp in Tokyo, Japan.",
+                              ),
+                              TextButton(
+                                child: Text(
+                                  "See us on Github.",
+                                ),
+                                onPressed: () async {
+                                  if (await canLaunch(
+                                      'https://github.com/solidState17/doughnate')) {
+                                    await launch(
+                                        'https://github.com/solidState17/doughnate');
+                                  } else {
+                                    throw 'Could not find solid state';
+                                  }
+                                },
+                              ),
+                            ],
+                          ),
                         ),
-                      )),
+                      ),
                     );
                   } else {
                     showDialog(
@@ -173,11 +218,12 @@ class _AppSettings extends State<AppSettings> {
               ),
               onPressed: () async {
                 await getImage();
-                return showDialog(
-                    context: context,
-                    builder: (context) {
-                      return imageDialog();
-                    });
+                // return showDialog(
+                //   context: context,
+                //   builder: (context) {
+                //     return imageDialog();
+                //   },
+                // );
               },
               child: Text(
                 'Change Picture',
@@ -210,25 +256,34 @@ class _AppSettings extends State<AppSettings> {
             child: Column(
               children: [
                 StreamBuilder<QuerySnapshot>(
-                  stream:
-                  FirebaseFirestore.instance.collection('npos').snapshots(),
-                  builder: (BuildContext content,
-                      AsyncSnapshot<QuerySnapshot> snapshot) {
+                  stream: FirebaseFirestore.instance
+                      .collection(
+                        'npos',
+                      )
+                      .snapshots(),
+                  builder: (
+                    BuildContext content,
+                    AsyncSnapshot<QuerySnapshot> snapshot,
+                  ) {
                     if (!snapshot.hasData)
-                      return Text('No NPOs',
-                          style: DefaultTextUI(
-                            size: 24,
-                            color: Colors.white,
-                            fontWeight: FontWeight.w700,
-                          ));
+                      return Text(
+                        'No NPOs',
+                        style: DefaultTextUI(
+                          size: 24,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      );
                     return Padding(
                       padding: const EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
                       child: DropdownSearch(
                         label: "NPO",
                         onChanged: (value) {
-                          setState(() {
-                            npo = value;
-                          });
+                          setState(
+                            () {
+                              npo = value;
+                            },
+                          );
                         },
                         selectedItem: npo,
                         validator: (item) {
@@ -240,7 +295,7 @@ class _AppSettings extends State<AppSettings> {
                             return null;
                         },
                         items: snapshot.data.docs.map(
-                              (doc) {
+                          (doc) {
                             return doc['name'];
                           },
                         ).toList(),
@@ -258,46 +313,23 @@ class _AppSettings extends State<AppSettings> {
                             fontWeight: FontWeight.w700,
                           )),
                       Switch(
-                          value: display_doughnated,
-                          onChanged: (value) {
-                            setState(
-                                  () {
-                                display_doughnated = value;
-                              },
-                            );
-                          },
-                          activeTrackColor: Colors.red,
-                          activeColor: Colors.blue),
+                        value: display_doughnated,
+                        onChanged: (value) {
+                          setState(
+                            () {
+                              display_doughnated = value;
+                            },
+                          );
+                        },
+                        activeTrackColor: Colors.red,
+                        activeColor: Colors.blue,
+                      ),
                     ],
                   ),
                 ),
               ],
             ),
           ),
-          // Padding(
-          //   padding: const EdgeInsets.fromLTRB(8.0, 0.0, 0.0, 0.0),
-          //   child: Row(
-          //     children: <Widget>[
-          //       Text("Display Doughnations?",
-          //           style: DefaultTextUI(
-          //             size: 14,
-          //             color: Colors.black54,
-          //             fontWeight: FontWeight.w700,
-          //           )),
-          //       Switch(
-          //           value: display_doughnated,
-          //           onChanged: (value) {
-          //             setState(
-          //               () {
-          //                 display_doughnated = value;
-          //               },
-          //             );
-          //           },
-          //           activeTrackColor: Colors.red,
-          //           activeColor: Colors.blue),
-          //     ],
-          //   ),
-          // ),
           Spacer(),
           Padding(
             padding: EdgeInsets.all(5.0),
@@ -308,12 +340,23 @@ class _AppSettings extends State<AppSettings> {
               onPressed: () {
                 UpdateUser();
                 final snackBar = SnackBar(
-                  content: Text('Saved changes successfully!'),
+                  content: Text(
+                    'Saved changes successfully!',
+                  ),
                   backgroundColor: Colors.pink,
                 );
-                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                ScaffoldMessenger.of(
+                  context,
+                ).showSnackBar(
+                  snackBar,
+                );
               },
-              child: Text("Save Changes", style: TextStyle(color: Colors.black87)),
+              child: Text(
+                "Save Changes",
+                style: TextStyle(
+                  color: Colors.black87,
+                ),
+              ),
               autofocus: true,
             ),
           ),
@@ -326,16 +369,28 @@ class _AppSettings extends State<AppSettings> {
 Future<void> UpdateUser() async {
   final FirebaseFirestore db = FirebaseFirestore.instance;
   await db
-      .collection('users')
+      .collection(
+        'users',
+      )
       .doc(userid)
-      .update({
-    "displayname": name,
-    "display_doughnated": display_doughnated,
-    "npo": npo,
-  })
-      .then((value) => print('Save to Firebase suceeded'))
-      .catchError((onError) => {print(onError)});
+      .update(
+        {
+          "displayname": name,
+          "display_doughnated": display_doughnated,
+          "npo": npo,
+        },
+      )
+      .then(
+        (value) => print(
+          'Save to Firebase suceeded',
+        ),
+      )
+      .catchError(
+        (
+          onError,
+        ) =>
+            {
+          print(onError),
+        },
+      );
 }
-
-// Another exception was thrown: Incorrect use of
-// ParentDataWidget.

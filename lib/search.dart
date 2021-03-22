@@ -60,7 +60,6 @@ class _SearchTextFieldState extends State<Search> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      // backgroundColor: Colors.transparent,
       appBar: AppBar(
           automaticallyImplyLeading: true,
           elevation: 0,
@@ -142,39 +141,6 @@ class FriendsInfo extends StatelessWidget {
   CollectionReference friendship =
       FirebaseFirestore.instance.collection('Friendship');
 
-  // Future<void> approveFriends() async {
-  //   final userA = firestore.collection("users").doc(userid);
-  //   final userBData = await firestore
-  //       .collection('users')
-  //       .where("email", isEqualTo: friendUserEmail)
-  //       .get();
-  //   final userB =
-  //       firestore.collection("users").doc(userBData.docs[0].data()['userid']);
-
-  //   return friendship
-  //       .add({
-  //         "userA": friendUserEmail,
-  //         "userB": email,
-  //         "debt": 0,
-  //         "owner": "",
-  //         "friendshipid": "",
-  //       })
-  //       .then((value) => {
-  //             friendship.doc(value.id).update({
-  //               "friendshipid": value.id,
-  //             }).then((_) {
-  //               userA.update({
-  //                 "friends": FieldValue.arrayUnion([value.id])
-  //               });
-  //               userB.update({
-  //                 "friends": FieldValue.arrayUnion([value.id])
-  //               });
-  //               getAllFriends();
-  //             })
-  //           })
-  //       .catchError((error) => print("Failed to add user: $error"));
-  // }
-
   Future<bool> checkForFriend(friendEmail) async {
     print(friendEmail);
     final userRef = firestore.collection('users').doc(userid);
@@ -188,7 +154,6 @@ class FriendsInfo extends StatelessWidget {
   }
 
   Future<void> sendFriendInvite(context) async {
-    // final userA = await firestore.collection("users").doc(userid).get();
     final userBData = await firestore
         .collection('users')
         .where("email", isEqualTo: friendUserEmail)
@@ -275,6 +240,7 @@ class DefaultPage extends StatelessWidget {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
   CollectionReference friendship =
       FirebaseFirestore.instance.collection('Friendship');
+
   Future<void> approveFriends() async {
     final userA = firestore.collection("users").doc(userid);
     final userBData = await firestore
@@ -316,9 +282,7 @@ class DefaultPage extends StatelessWidget {
     });
 
     removeFriendFromInvitations(friendUserEmail);
-    getAllFriends();
-
-    // .catchError((error) => print("Failed to add user: $error"));
+    // getAllFriends();
   }
 
   Future<void> removeFriendFromInvitations(invite) async {
@@ -389,6 +353,7 @@ class DefaultPage extends StatelessWidget {
                                                         invitation[index]
                                                             ['email'];
                                                     approveFriends();
+                                                    getAllFriends();
                                                     Navigator.of(context,
                                                             rootNavigator: true)
                                                         .pop();

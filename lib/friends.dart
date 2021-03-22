@@ -1,5 +1,3 @@
-import 'dart:async';
-import 'package:doughnate/debtHistory/Debtlist.dart';
 import 'home.dart';
 import 'dart:ui' as ui show Image;
 import 'package:flutter/material.dart';
@@ -32,7 +30,7 @@ class _Friends extends State<Friends> {
 
   final DocumentReference users =
       FirebaseFirestore.instance.collection("users").doc(userid);
-      
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -92,7 +90,6 @@ class _Friends extends State<Friends> {
                         return Center(
                           child: CircularProgressIndicator(),
                         );
-
                       return ListView.builder(
                         itemCount: snapshot.data.length,
                         itemBuilder: (context, int index) {

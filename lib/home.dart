@@ -5,7 +5,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'appsettings.dart';
 import 'friends.dart';
 import 'login.dart';
-import 'search.dart';
 import 'NpoList.dart';
 import 'UserProfile.dart';
 import 'UI/colorsUI.dart';
@@ -27,10 +26,6 @@ Future<void> getAllFriends() async {
         .collection('Friendship')
         .doc(userFriend['friendshipid'])
         .get();
-
-    // var user = obj.data()['userA'] == email
-    //     ? obj.data()['userB']
-    //     : obj.data()['userA'];
 
     FirebaseFirestore.instance
         .collection('users')
@@ -102,20 +97,6 @@ class _HomeState extends State<Home> {
         child: Scaffold(
           resizeToAvoidBottomInset: false,
           backgroundColor: Colors.transparent,
-          // appBar: AppBar(
-          //   backgroundColor: Colors.transparent,
-          //   elevation: 0,
-          //   centerTitle: true,
-          //   title: const Text('Doughnate',
-          //       style: TextStyle(
-          //         fontFamily: 'Futura',
-          //         fontSize: 30,
-          //         color: Colors.white,
-          //         fontWeight: FontWeight.w700,
-          //       )),
-          //   automaticallyImplyLeading: false,
-          // ),
-          // this is the home page
           body: Container(
             child: Center(
               child: Padding(

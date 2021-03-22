@@ -69,15 +69,20 @@ Future<void> deleteUser() async {
   userCollection.doc(userid).delete();
 }
 
-Future<void> removeFriend(friendid) async {
-  final allData = await userCollection.doc(userid).get();
-  final friendsData = allData.data()['friends'];
+Future<void> removeFriend(userA, userB) async {
+  final userRef = userCollection.doc(userA);
+  final userData = await userRef.get();
+  final friendsData = userData.data()['friends'];
 
   final newArr = [];
 
   friendsData.forEach((value) {
-    if (value != friendid) {
+    if (value['friendid'] != userB) {
       newArr.add(value);
     }
+  });
+
+  userRef.update({
+    'friends': newArr,
   });
 }
