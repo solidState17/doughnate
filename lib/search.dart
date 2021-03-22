@@ -275,6 +275,7 @@ class DefaultPage extends StatelessWidget {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
   CollectionReference friendship =
   FirebaseFirestore.instance.collection('Friendship');
+  
   Future<void> approveFriends() async {
     final userA = firestore.collection("users").doc(userid);
     final userBData = await firestore
