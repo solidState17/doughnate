@@ -68,18 +68,23 @@ Initial idea inspired by expense tracking applications like SplitWise.
 
 ## Contact Team Solid State
 
+<p align="center">
   <div>
     <h3>Nick - Tech Lead/Fullstack</h3>
     <img src="./assets/mypic.jpg" height="200px">
     <br>
     <a href="https://github.com/ntaylor6422"><img src="https://img.shields.io/badge/-Github-000000?style=flat-square&logo=Github"></a>
     <a href="https://linkedin.com/in/nicktdev"><img src="https://img.shields.io/badge/-Linkedin-000000?style=flat-square&logo=Linkedin"></a>
+  </div>
+  &nbsp; &nbsp;
   <div>
     <h3>Shota - Fullstack</h3>
     <img src="./assets/ShotaPic.jpg" height="200px">
     <br>
     <a href="https://github.com/Gukou4869"><img src="https://img.shields.io/badge/-Github-000000?style=flat-square&logo=Github"></a>
     <a href="https://linkedin.com/in/Gukou4869"><img src="https://img.shields.io/badge/-Linkedin-000000?style=flat-square&logo=Linkedin"></a>
+  </div>
+  &nbsp; &nbsp;
   <div>
     <h3>Seth - Fullstack</h3>
     <img src="./assets/sethpic.jpg" height="200px">
@@ -87,3 +92,4 @@ Initial idea inspired by expense tracking applications like SplitWise.
     <a href="https://github.com/sethwright"><img src="https://img.shields.io/badge/-Github-000000?style=flat-square&logo=Github"></a>
     <a href="https://linkedin.com/in/wseth"><img src="https://img.shields.io/badge/-Linkedin-000000?style=flat-square&logo=Linkedin"></a>
   <div>
+</p>

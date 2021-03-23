@@ -263,15 +263,15 @@ class UserProfile extends StatelessWidget {
                                 size: 30,
                               )),
                           onDismissed: (_direction) {
-                              var specificTimestamp = snapshot
-                                  .data['transactions'][index]["timestamp"];
-                              var newTransaction = [];
-                              snapshot.data['transactions'].forEach((val) {
-                                if (val["timestamp"] != specificTimestamp) {
-                                  newTransaction.add(val);
-                                }
-                              });
-                              users.update({"transactions": newTransaction});
+                            var specificTimestamp = snapshot
+                                .data['transactions'][index]["timestamp"];
+                            var newTransaction = [];
+                            snapshot.data['transactions'].forEach((val) {
+                              if (val["timestamp"] != specificTimestamp) {
+                                newTransaction.add(val);
+                              }
+                            });
+                            users.update({"transactions": newTransaction});
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                                 content: Text("Transaction was deleted")));
                           },
@@ -279,8 +279,7 @@ class UserProfile extends StatelessWidget {
                               snapshot.data["transactions"][index]));
                     });
               },
-            )
-                ),
+            )),
           ]),
         ),
       ],
@@ -290,8 +289,8 @@ class UserProfile extends StatelessWidget {
 
 Card historyCard(transaction) {
   DateTime myDateTime = (transaction['timestamp']).toDate();
-  final Color colorChoice =
-      transaction['amount'] < 0 ? primaryRed2 : primaryGreen2;
+  final Color colorChoice = bgColor2;
+  //transaction['amount'] < 0 ? primaryRed2 : primaryGreen2;
 
   return Card(
     shadowColor: Colors.black,
@@ -330,7 +329,7 @@ Card historyCard(transaction) {
                                 ),
                               ),
                               Text(
-                                "${transaction['name']}",
+                                "${transaction['name']} ${transaction['type']}",
                                 style: DefaultTextUI(
                                     color: Colors.black,
                                     size: 20,
@@ -354,8 +353,9 @@ Card historyCard(transaction) {
                       alignment: Alignment.center,
                       child: FittedBox(
                         fit: BoxFit.fitWidth,
-                                              child: Padding(
-                          padding: const EdgeInsets.fromLTRB(12.0, 0.0, 0.0, 0.0),
+                        child: Padding(
+                          padding:
+                              const EdgeInsets.fromLTRB(12.0, 0.0, 0.0, 0.0),
                           child: Text(
                             "¥${transaction['amount'].abs().toString()}",
                             style: DefaultTextUI(

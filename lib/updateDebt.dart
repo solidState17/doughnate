@@ -22,7 +22,6 @@ class _UpdateDebt extends State<UpdateDebt> {
 
   var friendToDelete;
 
-
   Future<void> adjustDebt(friendUser, amount, type) async {
     final friendship = db
         .collection('Friendship')
@@ -30,6 +29,7 @@ class _UpdateDebt extends State<UpdateDebt> {
     final friendshipData = await friendship.get();
     final friendshipDocument = friendshipData.data();
     final currentOwner = friendshipDocument['owner'];
+    final debt = friendshipDocument['debt'];
     var setOwner;
     var typeOfTransaction;
     var remainder = friendshipDocument['debt'] + amount;
@@ -51,17 +51,20 @@ class _UpdateDebt extends State<UpdateDebt> {
       } else {
         typeOfTransaction = 'borrowed';
       }
-    } else {
+    } else if (friendshipDocument[currentOwner] == email) {
       setOwner = currentOwner;
       if (amount > 0) {
         typeOfTransaction = 'lent';
       } else {
+        typeOfTransaction = 'received';
+      }
+    } else {
+      if (amount > 0) {
         typeOfTransaction = 'borrowed';
+      } else {
+        typeOfTransaction = 'returned';
       }
     }
-
-    // if (friendshipDocument['debt'] + amount < 0) {
-    // }
 
     //? Create transaction notification for friend
     if (amount > 0) {
@@ -71,9 +74,11 @@ class _UpdateDebt extends State<UpdateDebt> {
     }
 
     if (friendshipDocument[setOwner] == email) {
-      handleIndividualUserUpdates(userid, friendUser['authID'], amount, type);
+      handleIndividualUserUpdates(
+          userid, friendUser['authID'], debt, amount, type);
     } else {
-      handleIndividualUserUpdates(friendUser['authID'], userid, amount, type);
+      handleIndividualUserUpdates(
+          friendUser['authID'], userid, debt, amount, type);
     }
 
     final total = friendshipData.data()['debt'] + amount;
@@ -101,12 +106,13 @@ class _UpdateDebt extends State<UpdateDebt> {
   }
 
   Future<void> handleIndividualUserUpdates(
-      lender, borrower, amount, type) async {
+      lender, borrower, debt, amount, type) async {
     var total_lent;
     var total_reimbursed;
     var total_doughnated;
     var total_borrowed;
     var total_returned;
+    final remainder = debt + amount;
 
     //! Get both users Id from the database
 
@@ -114,6 +120,40 @@ class _UpdateDebt extends State<UpdateDebt> {
     final borrowingUser = db.collection("users").doc(borrower);
     final lendUserData = await lendingUser.get();
     final borrowUserData = await borrowingUser.get();
+
+    if (remainder < 0) {
+      total_lent = remainder.abs();
+      total_returned = debt;
+      total_reimbursed = debt;
+      total_borrowed = remainder.abs();
+      total_doughnated = debt;
+
+      if (type == "Doughnation") {
+        lendingUser.update({
+          "total_doughnated":
+              total_doughnated + lendUserData['total_doughnated'],
+          "total_returned": total_returned + lendUserData['total_returned'],
+          "total_lent": total_lent + lendUserData['total_lent'],
+        });
+        borrowingUser.update({
+          "total_borrowed": total_borrowed + borrowUserData['total_borrowed'],
+          "total_reimbursed":
+              total_reimbursed + borrowUserData['total_reimbursed'],
+        });
+        return getAllFriends();
+      } else {
+        lendingUser.update({
+          "total_returned": total_returned + lendUserData['total_returned'],
+          "total_lent": total_lent + lendUserData['total_lent'],
+        });
+        borrowingUser.update({
+          "total_borrowed": total_borrowed + borrowUserData['total_borrowed'],
+          "total_reimbursed":
+              total_reimbursed + borrowUserData['total_reimbursed'],
+        });
+        return getAllFriends();
+      }
+    }
 
     //! Handle Doughnation cases
     if (type == "Doughnation") {
