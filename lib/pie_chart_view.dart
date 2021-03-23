@@ -48,7 +48,7 @@ class PieChartView extends StatelessWidget {
                                 color: const Color(0xff707070)
                             ),
                           ),
-                          Text( "${totalAmount}",
+                          Text( "¥${totalAmount}",
                             style: TextStyle(
                                 fontSize: 23,
                                 fontWeight: FontWeight.bold,

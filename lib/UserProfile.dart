@@ -287,9 +287,17 @@ class UserProfile extends StatelessWidget {
   }
 }
 
+Color transactionColor(transactionType) {
+  if (transactionType == 'lent' || transactionType == 'received') {
+    return primaryRed2;
+  } else {
+    return primaryGreen2;
+  }
+}
+
 Card historyCard(transaction) {
   DateTime myDateTime = (transaction['timestamp']).toDate();
-  final Color colorChoice = bgColor1;
+  // final Color colorChoice = bgColor1;
   //transaction['amount'] < 0 ? primaryRed2 : primaryGreen2;
 
   return Card(
@@ -348,7 +356,7 @@ Card historyCard(transaction) {
                   height: 85,
                   padding: EdgeInsets.all(0.0),
                   child: CustomPaint(
-                    painter: CardShape(colorChoice),
+                    painter: CardShape(transactionColor(transaction['type'])),
                     child: Align(
                       alignment: Alignment.center,
                       child: FittedBox(
