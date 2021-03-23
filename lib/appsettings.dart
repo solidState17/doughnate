@@ -342,8 +342,9 @@ class _AppSettings extends State<AppSettings> {
                 final snackBar = SnackBar(
                   content: Text(
                     'Saved changes successfully!',
+                    style: DefaultTextUI(color: Colors.black87, size: 14, fontWeight: FontWeight.w600)
                   ),
-                  backgroundColor: Colors.pink,
+                  backgroundColor: primaryGreen,
                 );
                 ScaffoldMessenger.of(
                   context,

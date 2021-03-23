@@ -289,7 +289,7 @@ class UserProfile extends StatelessWidget {
 
 Card historyCard(transaction) {
   DateTime myDateTime = (transaction['timestamp']).toDate();
-  final Color colorChoice = bgColor2;
+  final Color colorChoice = bgColor1;
   //transaction['amount'] < 0 ? primaryRed2 : primaryGreen2;
 
   return Card(
