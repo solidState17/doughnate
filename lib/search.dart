@@ -96,8 +96,6 @@ class _SearchTextFieldState extends State<Search> {
                     child: IconButton(
                       icon: Icon(Icons.search),
                       onPressed: () {
-                        print(email);
-                        print(index);
                         name == email
                             ? setState(() {
                                 index = 3;
@@ -269,6 +267,8 @@ class DefaultPage extends StatelessWidget {
             'friendemail': userBData.docs[0].data()['email']
           }
         ])
+      }).then((doc) {
+        getAllFriends();
       });
       userB.update({
         "friends": FieldValue.arrayUnion([
@@ -280,7 +280,6 @@ class DefaultPage extends StatelessWidget {
         ])
       });
     });
-
     removeFriendFromInvitations(friendUserEmail);
     // getAllFriends();
   }

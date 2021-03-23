@@ -57,9 +57,10 @@ class UserProfile extends StatelessWidget {
                         color: Colors.white,
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.grey,
-                            blurRadius: 3,
-                            offset: Offset(0, 6),
+                            color: Colors.grey.withOpacity(0.6),
+                            spreadRadius: 3,
+                            blurRadius: 7,
+                            offset: Offset(0, 3),
                           ),
                         ],
                         borderRadius: BorderRadius.circular(20),
