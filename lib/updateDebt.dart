@@ -59,6 +59,7 @@ class _UpdateDebt extends State<UpdateDebt> {
         typeOfTransaction = 'received';
       }
     } else {
+      setOwner = currentOwner;
       if (amount > 0) {
         typeOfTransaction = 'borrowed';
       } else {
